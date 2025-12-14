@@ -34,6 +34,7 @@ Paraxiom develops theoretical foundations and practical implementations for **co
 | [ERLHS](papers/cormier_erlhs_2025.pdf) | Hamiltonian framework for coherence-preserving ML | [10.5281/zenodo.17928909](https://doi.org/10.5281/zenodo.17928909) |
 | [Karmonic Mesh](papers/cormier_karmonic_mesh_2025.pdf) | O(N log N) spectral consensus on toroidal manifolds | [10.5281/zenodo.17928991](https://doi.org/10.5281/zenodo.17928991) |
 | [Proof of Coherence](papers/cormier_proof_of_coherence_2025.pdf) | QKD-based distributed consensus mechanism | [10.5281/zenodo.17929054](https://doi.org/10.5281/zenodo.17929054) |
+| [Toroidal Mesh](papers/cormier_toroidal_mesh_2025.pdf) | 10K TPS with SPHINCS+ via parallel verification | *Pending* |
 | [Toroidal Governance](papers/patent2.pdf) | Defensive publication — Tonnetz manifold governance | [10.5281/zenodo.17929091](https://doi.org/10.5281/zenodo.17929091) |
 
 ---
