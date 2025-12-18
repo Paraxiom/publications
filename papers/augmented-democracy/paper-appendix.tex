@@ -1,0 +1,1012 @@
+\documentclass[11pt,letterpaper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+
+% Code listing style
+\lstdefinestyle{rust}{
+    language=C,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{gray}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!5},
+    morekeywords={fn,let,mut,pub,struct,impl,enum,match,if,else,for,while,loop,return,use,mod,crate,Self,self,where,trait,type,const,static,async,await,move,ref,dyn,Box,Vec,Option,Result,Some,None,Ok,Err}
+}
+
+\lstdefinestyle{solidity}{
+    language=C,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{gray}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!5},
+    morekeywords={pragma,solidity,contract,function,public,private,external,internal,view,pure,returns,mapping,address,uint256,uint8,bytes32,bool,event,emit,require,modifier,memory,storage,calldata}
+}
+
+% Theorem environments
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}{Remark}[section]
+
+% Custom box for protocols
+\newtcolorbox{protocolbox}[1][]{
+    colback=blue!5,
+    colframe=blue!50!black,
+    title=#1,
+    fonttitle=\bfseries
+}
+
+% Title
+\title{Augmented Democracy: Technical Appendices\\[0.5em]
+\large Formal Definitions, Protocol Mechanics, Security Analysis, and Implementation}
+\author{Sylvain Cormier\\
+\texttt{sylvain@paraxiom.io}}
+\date{December 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document provides the technical appendices for ``Augmented Democracy: Procedural Coherence in Algorithmically Mediated Governance.'' It contains formal definitions, mathematical proofs, protocol specifications, security analysis, and implementation details that support the main paper. These appendices are intended for implementers, auditors, and researchers requiring full technical depth.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%==============================================================================
+\appendix
+\section{Formal Definitions}
+\label{app:definitions}
+%==============================================================================
+
+This appendix provides rigorous mathematical definitions for all constructs introduced in the main paper.
+
+\subsection{Core Spaces and Structures}
+
+\begin{definition}[Participant Space]
+Let $\mathcal{P}$ denote the finite set of registered participants in the governance system. Each participant $p \in \mathcal{P}$ is identified by a unique cryptographic identity $\text{id}_p \in \{0,1\}^{256}$ derived from their public key.
+\end{definition}
+
+\begin{definition}[Proposal Space]
+The proposal space $\Pi$ consists of all well-formed governance proposals. A proposal $\pi \in \Pi$ is a tuple:
+\[
+\pi = (\text{id}_\pi, \text{content}, \text{proposer}, \text{timestamp}, \text{artifacts}, \text{status})
+\]
+where:
+\begin{itemize}[noitemsep]
+    \item $\text{id}_\pi \in \{0,1\}^{256}$ is the proposal hash
+    \item $\text{content}$ is the proposal description and code (if applicable)
+    \item $\text{proposer} \in \mathcal{P}$ is the submitting participant
+    \item $\text{timestamp} \in \mathbb{N}$ is the block number of submission
+    \item $\text{artifacts} \subseteq \mathcal{A}$ is the set of referenced fact artifacts
+    \item $\text{status} \in \{\text{pending}, \text{active}, \text{passed}, \text{rejected}\}$
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Admissible Fact Artifact]
+\label{def:artifact}
+An admissible fact artifact is a tuple $a = (h, I, R)$ where:
+\begin{itemize}[noitemsep]
+    \item $h \in \{0,1\}^{256}$ is a cryptographic hash or DOI providing content-addressability
+    \item $I : \mathcal{P} \to \{0, 1\}$ is an issuance predicate indicating authentic origin
+    \item $R : \Pi \to \{0, 1\}$ is a relevance predicate indicating contextual applicability
+\end{itemize}
+An artifact $a$ is admissible for proposal $\pi$ if and only if $I(a.\text{issuer}) = 1$ and $R(\pi) = 1$.
+\end{definition}
+
+\begin{definition}[Credential Function]
+\label{def:credential}
+The credential function $r: \mathcal{P} \times \mathbb{N} \to [0, 1]$ maps each participant-epoch pair to a reputation score. The function must satisfy:
+\begin{enumerate}[noitemsep]
+    \item \textbf{Boundedness}: $\forall p, t: 0 \leq r(p, t) \leq 1$
+    \item \textbf{Decay}: $r(p, t+1) \leq r(p, t) + \delta_{\max}$ where $\delta_{\max}$ is the maximum per-epoch gain
+    \item \textbf{Initial neutrality}: $r(p, 0) = r_0$ for some constant $r_0 \in (0, 1)$
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Vote Weight Function]
+\label{def:weight}
+The vote weight function $w: \mathcal{P} \times \Pi \to \mathbb{R}_{\geq 0}$ is defined as:
+\[
+w(p, \pi) = r(p, t_\pi) \cdot (1 + \epsilon_p)
+\]
+where $t_\pi$ is the epoch containing $\pi$ and $\epsilon_p \sim \text{Uniform}(-0.1, 0.1)$ is a per-participant entropy injection sampled from quantum random sources.
+\end{definition}
+
+\subsection{Test Grid Definitions}
+
+\begin{definition}[Token-Curated Test Grid]
+\label{def:testgrid}
+A Token-Curated Test Grid is a tuple $G = (Q, C, S, \tau)$ where:
+\begin{itemize}[noitemsep]
+    \item $Q = \{q_1, \ldots, q_n\}$ is a set of $n$ engagement verification questions
+    \item $C \subseteq \mathcal{P}$ is the set of curators who maintain $Q$
+    \item $S: C \to \mathbb{R}_{\geq 0}$ is the stake function mapping curators to bonded tokens
+    \item $\tau \in (0, 1]$ is the passing threshold for engagement verification
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Engagement Score]
+For participant $p$ and test grid $G$, the engagement score $e(p, G)$ is:
+\[
+e(p, G) = \frac{|\{q \in Q : \text{correct}(p, q)\}|}{|Q|}
+\]
+Participant $p$ passes engagement verification if and only if $e(p, G) \geq \tau$.
+\end{definition}
+
+\begin{definition}[Curator Slashing Condition]
+A curator $c \in C$ is slashed (loses stake $S(c)$) if and only if one of the following procedural violations is proven:
+\begin{enumerate}[noitemsep]
+    \item \textbf{Inaccessibility}: Question $q$ was not retrievable during voting period
+    \item \textbf{Ambiguity}: Question $q$ admits multiple defensible correct answers
+    \item \textbf{Irrelevance}: Question $q$ is unrelated to the proposal domain $D(\pi)$
+\end{enumerate}
+Slashing does \emph{not} occur for contested semantic conclusions within the domain.
+\end{definition}
+
+\subsection{Coherence Definitions}
+
+\begin{definition}[Entropy-Weighted Variance]
+\label{def:variance}
+Let $V = \{v_1, \ldots, v_m\}$ be the set of votes for proposal $\pi$, where each vote $v_i$ has weight $w_i$ and entropy contribution $\eta_i$. The entropy-weighted variance is:
+\[
+\sigma^2_\eta = \frac{\sum_{i=1}^{m} w_i \cdot (v_i - \bar{v})^2 \cdot \eta_i}{\sum_{i=1}^{m} w_i \cdot \eta_i}
+\]
+where $\bar{v} = \frac{\sum_i w_i v_i}{\sum_i w_i}$ is the weighted mean vote.
+\end{definition}
+
+\begin{definition}[Coherence Score]
+\label{def:coherence}
+The coherence score $\gamma \in [0, 100]$ for a proposal vote is:
+\[
+\gamma = \frac{\sigma^2_\eta}{255} \times 100
+\]
+where $\sigma^2_\eta$ is the entropy-weighted variance and $255$ is the normalization constant (maximum possible variance with 8-bit entropy values).
+\end{definition}
+
+\begin{definition}[Dual Condition]
+\label{def:dual}
+A proposal $\pi$ passes if and only if both conditions hold:
+\begin{enumerate}[noitemsep]
+    \item \textbf{Majority condition}: $W_{\text{approve}}(\pi) > W_{\text{reject}}(\pi)$
+    \item \textbf{Coherence condition}: $\gamma(\pi) > \gamma_{\min}$ (default: $\gamma_{\min} = 50$)
+\end{enumerate}
+\end{definition}
+
+\subsection{Governance System Definition}
+
+\begin{definition}[Governance Control System]
+\label{def:governance}
+An Augmented Democracy governance system is a tuple $\mathcal{G} = (S, A, T, I, R)$ where:
+\begin{itemize}[noitemsep]
+    \item $S$ is the state space (configuration parameters, treasury, code)
+    \item $A$ is the action space (proposals, votes, stake operations)
+    \item $T: S \times A \to S$ is the transition function
+    \item $I: S \times A \to \{0, 1\}$ is the invariant check (dual condition)
+    \item $R: S \to \mathbb{R}$ is the reference trajectory (policy objectives)
+\end{itemize}
+The transition $T(s, a) = s'$ occurs if and only if $I(s, a) = 1$.
+\end{definition}
+
+%==============================================================================
+\section{Protocol Mechanics}
+\label{app:protocol}
+%==============================================================================
+
+This appendix specifies the detailed protocol mechanics for implementation.
+
+\subsection{Credential Decay and Accumulation}
+
+\begin{protocolbox}[Credential Update Protocol]
+At each epoch boundary $t \to t+1$, for each participant $p$:
+
+\begin{enumerate}
+    \item \textbf{Compute decay}: $r_{\text{decay}}(p) = r(p, t) \cdot (1 - \lambda)$ where $\lambda = 0.05$ is the base decay rate
+
+    \item \textbf{Compute participation bonus}:
+    \[
+    \delta_p = \begin{cases}
+        \delta_{\text{vote}} & \text{if } p \text{ voted this epoch} \\
+        \delta_{\text{propose}} & \text{if } p \text{ proposed this epoch} \\
+        \delta_{\text{curate}} & \text{if } p \text{ curated correctly} \\
+        0 & \text{otherwise}
+    \end{cases}
+    \]
+    where $\delta_{\text{vote}} = 0.01$, $\delta_{\text{propose}} = 0.02$, $\delta_{\text{curate}} = 0.03$
+
+    \item \textbf{Apply slashing} (if applicable):
+    \[
+    r_{\text{slash}}(p) = \begin{cases}
+        r_{\text{decay}}(p) \cdot 0.5 & \text{if minor violation} \\
+        0 & \text{if major violation}
+    \end{cases}
+    \]
+
+    \item \textbf{Update credential}:
+    \[
+    r(p, t+1) = \min(1, r_{\text{decay}}(p) + \delta_p - \text{slash}_p)
+    \]
+\end{enumerate}
+\end{protocolbox}
+
+\subsection{Voting Protocol}
+
+\begin{protocolbox}[Vote Submission Protocol]
+For participant $p$ voting on proposal $\pi$:
+
+\begin{enumerate}
+    \item \textbf{Retrieve test grid}: Fetch current grid $G$ for domain $D(\pi)$
+
+    \item \textbf{Engagement verification}:
+    \begin{itemize}
+        \item Sample $k$ questions uniformly from $Q$
+        \item Present questions to $p$
+        \item Compute $e(p, G)$
+        \item If $e(p, G) < \tau$: reject vote submission
+    \end{itemize}
+
+    \item \textbf{Weight calculation}:
+    \begin{itemize}
+        \item Fetch $r(p, t)$ from credential registry
+        \item Sample $\epsilon_p$ from quantum entropy pool
+        \item Compute $w_p = r(p, t) \cdot (1 + \epsilon_p)$
+    \end{itemize}
+
+    \item \textbf{Vote recording}:
+    \begin{itemize}
+        \item Record vote $(p, \pi, v, w_p, \epsilon_p, \text{timestamp})$
+        \item Emit vote event for transparency
+    \end{itemize}
+\end{enumerate}
+\end{protocolbox}
+
+\subsection{Proposal Lifecycle}
+
+\begin{protocolbox}[Proposal State Machine]
+Each proposal $\pi$ transitions through states:
+
+\begin{verbatim}
+    Draft -> Pending -> Active -> (Passed | Rejected | Expired)
+\end{verbatim}
+
+\textbf{Transitions}:
+\begin{itemize}
+    \item \texttt{Draft -> Pending}: Proposer submits with required deposit
+    \item \texttt{Pending -> Active}: Minimum endorsements reached
+    \item \texttt{Active -> Passed}: Dual condition satisfied at voting end
+    \item \texttt{Active -> Rejected}: Majority against OR coherence below threshold
+    \item \texttt{Active -> Expired}: Voting period ends without quorum
+\end{itemize}
+
+\textbf{Timing Parameters}:
+\begin{itemize}
+    \item Review period: 7 days (for amendment and discussion)
+    \item Voting period: 14 days (active voting window)
+    \item Execution delay: 2 days (time-lock after passage)
+\end{itemize}
+\end{protocolbox}
+
+\subsection{Epoch Parameters}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Parameter} & \textbf{Symbol} & \textbf{Default Value} \\
+\midrule
+Epoch duration & $T_{\text{epoch}}$ & 28 days \\
+Decay rate & $\lambda$ & 0.05 (5\%) \\
+Vote participation bonus & $\delta_{\text{vote}}$ & 0.01 \\
+Proposal bonus & $\delta_{\text{propose}}$ & 0.02 \\
+Curation bonus & $\delta_{\text{curate}}$ & 0.03 \\
+Coherence threshold & $\gamma_{\min}$ & 50 \\
+Engagement threshold & $\tau$ & 0.7 (70\%) \\
+Initial credential & $r_0$ & 0.5 \\
+Entropy range & $\epsilon$ & $\pm 10\%$ \\
+\bottomrule
+\end{tabular}
+\caption{Default protocol parameters}
+\label{tab:params}
+\end{table}
+
+%==============================================================================
+\section{Security Analysis}
+\label{app:security}
+%==============================================================================
+
+This appendix provides formal security analysis and proofs.
+
+\subsection{Threat Model}
+
+We consider an adversary $\mathcal{A}$ with the following capabilities:
+\begin{itemize}
+    \item Control of up to $f < n/3$ participants (Byzantine assumption)
+    \item Ability to create synthetic identities (Sybil capability)
+    \item Financial resources for bribery (bounded by $B_{\max}$)
+    \item Computational power for pattern analysis
+    \item Network observation capability (but not partition control)
+\end{itemize}
+
+The adversary's goal is to cause the system to:
+\begin{enumerate}
+    \item Pass a proposal that should not pass (false positive)
+    \item Reject a proposal that should pass (false negative)
+    \item Undermine confidence in the governance process
+\end{enumerate}
+
+\subsection{Sybil Resistance}
+
+\begin{theorem}[Sybil Detection Bound]
+\label{thm:sybil}
+Let $\mathcal{A}$ control $k$ Sybil identities voting identically. If $k > \sqrt{n}$ where $n$ is the total voter count, then $\gamma < \gamma_{\min}$ with probability at least $1 - e^{-k^2/2n}$.
+\end{theorem}
+
+\begin{proof}
+Identical votes from Sybil identities contribute identical entropy values (or highly correlated values if attempting evasion). The variance computation:
+\[
+\sigma^2 = \frac{1}{n}\sum_{i=1}^n (v_i - \bar{v})^2
+\]
+When $k$ votes are identical with value $v_s$:
+\[
+\sigma^2 \leq \frac{(n-k) \cdot 1 + k \cdot 0}{n} = \frac{n-k}{n}
+\]
+For $k > \sqrt{n}$, this yields $\sigma^2 < 1 - 1/\sqrt{n}$.
+
+Combined with entropy weighting, the contribution of Sybil votes is:
+\[
+\gamma_{\text{Sybil}} = \frac{k \cdot \sigma^2_{\text{low}} + (n-k) \cdot \sigma^2_{\text{normal}}}{n}
+\]
+
+By Hoeffding's inequality, the probability that Sybil voting escapes detection is bounded by $e^{-k^2/2n}$.
+\end{proof}
+
+\subsection{Bribery Resistance}
+
+\begin{theorem}[Quadratic Bribery Cost]
+\label{thm:bribery}
+To achieve $k$ units of effective voting power through bribery, an adversary must spend at least $\Omega(k^2)$ resources.
+\end{theorem}
+
+\begin{proof}
+Under quadratic voting, acquiring $n$ votes costs $n^2$. If the adversary wishes to achieve total weight $W$, they can either:
+\begin{enumerate}
+    \item Bribe one participant for $\sqrt{W}$ votes at cost $W$
+    \item Bribe $m$ participants for $\sqrt{W/m}$ votes each at cost $m \cdot (W/m) = W$
+\end{enumerate}
+
+In either case, the cost scales linearly with desired weight, which under standard voting would only require $\sqrt{W}$ bribes. The quadratic mechanism provides a $\sqrt{W}$ amplification in attack cost.
+
+Furthermore, correlated bribery (coordinated voting) triggers coherence detection:
+\[
+P[\text{detection} | \text{bribery}] \geq 1 - \left(\frac{1}{2}\right)^{m}
+\]
+where $m$ is the number of bribed voters, since their entropy values will show statistical anomalies.
+\end{proof}
+
+\subsection{Coordination Attack Resistance}
+
+\begin{lemma}[Coordination Detection]
+\label{lem:coordination}
+Let $C \subseteq \mathcal{P}$ be a coordinating coalition. If $|C| > 0.1n$ and coalition members vote identically, then $\gamma < \gamma_{\min}$ with probability $> 0.95$.
+\end{lemma}
+
+\begin{proof}
+Coordinated voting produces a bimodal or multimodal distribution in entropy space. The variance contribution from the coordinating bloc is:
+\[
+\sigma^2_C = \frac{|C|}{n} \cdot \text{Var}(\epsilon_C)
+\]
+
+Since $\epsilon_i$ are independent samples from $\text{Uniform}(-0.1, 0.1)$, identical voting suppresses intra-coalition variance to near zero. The system detects this as:
+\[
+\gamma_{\text{observed}} < \gamma_{\text{expected}} - 2\sigma_{\gamma}
+\]
+
+By Chebyshev's inequality, for $|C| > 0.1n$:
+\[
+P[\gamma < \gamma_{\min}] > 1 - \frac{\text{Var}(\gamma)}{(\gamma_{\text{expected}} - \gamma_{\min})^2} > 0.95
+\]
+\end{proof}
+
+\subsection{Economic Security Analysis}
+
+\begin{proposition}[Attack Cost Lower Bound]
+\label{prop:cost}
+The minimum cost to pass a fraudulent proposal with probability $> 0.5$ is:
+\[
+C_{\text{attack}} \geq \min\left(\frac{n \cdot \bar{s}}{4}, \frac{W_{\text{total}}^2}{4 \cdot W_{\text{honest}}}\right)
+\]
+where $\bar{s}$ is the average stake per participant and $W_{\text{honest}}$ is honest voter weight.
+\end{proposition}
+
+\begin{proof}
+An attacker must either:
+\begin{enumerate}
+    \item Acquire $> n/2$ credentials through Sybil attacks, requiring defeating the identity verification system and maintaining $n/2$ active credentials without triggering coherence detection
+
+    \item Bribe $> W_{\text{honest}}$ weight worth of existing participants, costing at least $W_{\text{honest}}^2$ under quadratic scaling plus the premium for evading detection
+\end{enumerate}
+
+The coherence gate provides an additional barrier: even with majority weight, $\gamma < \gamma_{\min}$ causes rejection. To evade this, attackers must distribute votes to appear organic, which requires either:
+\begin{itemize}
+    \item More participants (increasing $C_{\text{attack}}$ linearly)
+    \item Slower coordination (allowing defender response)
+\end{itemize}
+\end{proof}
+
+\subsection{What Coherence Does Not Detect}
+
+The coherence mechanism has formal limitations:
+
+\begin{remark}[Undetectable Attacks]
+The following attack vectors are not detected by $\gamma$:
+\begin{enumerate}
+    \item \textbf{Genuine shared preferences}: Large groups with authentically similar views
+    \item \textbf{Information cascades}: Organic convergence after public deliberation
+    \item \textbf{Gradual ideology shift}: Slow coordination over multiple epochs
+    \item \textbf{Semantic manipulation}: Proposals that are procedurally correct but substantively harmful
+\end{enumerate}
+These require complementary mechanisms (diverse curation, deliberation periods, human oversight).
+\end{remark}
+
+%==============================================================================
+\section{Implementation}
+\label{app:implementation}
+%==============================================================================
+
+This appendix provides reference implementations for core protocol components.
+
+\subsection{Substrate Pallet: Credential Management}
+
+\begin{lstlisting}[style=rust, caption={Credential storage and decay logic}]
+#[pallet::storage]
+pub type Credentials<T: Config> = StorageMap<
+    _,
+    Blake2_128Concat,
+    T::AccountId,
+    CredentialInfo<T::BlockNumber>,
+    OptionQuery,
+>;
+
+#[derive(Encode, Decode, Clone, TypeInfo)]
+pub struct CredentialInfo<BlockNumber> {
+    pub reputation: u32,        // Fixed-point [0, 10000] = [0.0, 1.0]
+    pub last_active: BlockNumber,
+    pub participation_count: u32,
+    pub slashing_points: u32,
+}
+
+impl<T: Config> Pallet<T> {
+    pub fn apply_epoch_decay(who: &T::AccountId) -> DispatchResult {
+        Credentials::<T>::try_mutate(who, |maybe_cred| {
+            let cred = maybe_cred.as_mut()
+                .ok_or(Error::<T>::NotRegistered)?;
+
+            // Apply 5% decay
+            let decay = cred.reputation / 20;
+            cred.reputation = cred.reputation.saturating_sub(decay);
+
+            // Check for inactivity penalty
+            let current_block = frame_system::Pallet::<T>::block_number();
+            let inactive_epochs = (current_block - cred.last_active)
+                / T::EpochLength::get();
+
+            if inactive_epochs > T::MaxInactiveEpochs::get() {
+                cred.reputation = cred.reputation / 2; // Additional penalty
+            }
+
+            Ok(())
+        })
+    }
+
+    pub fn add_participation_bonus(
+        who: &T::AccountId,
+        action: ParticipationType,
+    ) -> DispatchResult {
+        let bonus = match action {
+            ParticipationType::Vote => 100,      // 0.01
+            ParticipationType::Propose => 200,   // 0.02
+            ParticipationType::Curate => 300,    // 0.03
+        };
+
+        Credentials::<T>::try_mutate(who, |maybe_cred| {
+            let cred = maybe_cred.as_mut()
+                .ok_or(Error::<T>::NotRegistered)?;
+
+            cred.reputation = cred.reputation
+                .saturating_add(bonus)
+                .min(10000); // Cap at 1.0
+            cred.last_active = frame_system::Pallet::<T>::block_number();
+            cred.participation_count += 1;
+
+            Ok(())
+        })
+    }
+}
+\end{lstlisting}
+
+\subsection{Substrate Pallet: Coherence Calculation}
+
+\begin{lstlisting}[style=rust, caption={Coherence score computation}]
+pub fn calculate_coherence<T: Config>(
+    proposal_id: T::Hash,
+) -> Result<u8, Error<T>> {
+    let votes = Votes::<T>::iter_prefix(proposal_id)
+        .collect::<Vec<_>>();
+
+    if votes.is_empty() {
+        return Err(Error::<T>::NoVotes);
+    }
+
+    let n = votes.len() as u128;
+
+    // Calculate weighted mean
+    let (total_weight, weighted_sum) = votes.iter()
+        .fold((0u128, 0i128), |(tw, ws), (_, vote)| {
+            let w = vote.weight as u128;
+            let v = if vote.approve { 1i128 } else { -1i128 };
+            (tw + w, ws + (w as i128) * v)
+        });
+
+    let mean = weighted_sum * 1000 / total_weight as i128;
+
+    // Calculate entropy-weighted variance
+    let variance_sum: u128 = votes.iter()
+        .map(|(_, vote)| {
+            let v = if vote.approve { 1000i128 } else { -1000i128 };
+            let diff = (v - mean).abs() as u128;
+            let w = vote.weight as u128;
+            let e = vote.entropy as u128;
+
+            (diff * diff * w * e) / 1_000_000
+        })
+        .sum();
+
+    let total_entropy_weight: u128 = votes.iter()
+        .map(|(_, v)| (v.weight as u128) * (v.entropy as u128))
+        .sum();
+
+    let variance = if total_entropy_weight > 0 {
+        variance_sum / total_entropy_weight
+    } else {
+        0
+    };
+
+    // Normalize to [0, 100]
+    let gamma = (variance * 100 / 255).min(100) as u8;
+
+    Ok(gamma)
+}
+
+pub fn check_dual_condition<T: Config>(
+    proposal_id: T::Hash,
+) -> Result<bool, Error<T>> {
+    let gamma = Self::calculate_coherence::<T>(proposal_id)?;
+
+    if gamma < T::MinCoherence::get() {
+        return Ok(false);
+    }
+
+    let (approve_weight, reject_weight) =
+        Self::tally_weights::<T>(proposal_id)?;
+
+    Ok(approve_weight > reject_weight)
+}
+\end{lstlisting}
+
+\subsection{Substrate Pallet: Test Grid Verification}
+
+\begin{lstlisting}[style=rust, caption={Engagement verification logic}]
+#[pallet::storage]
+pub type TestGrids<T: Config> = StorageMap<
+    _,
+    Blake2_128Concat,
+    DomainId,
+    TestGrid<T::AccountId, T::Balance>,
+    OptionQuery,
+>;
+
+#[derive(Encode, Decode, Clone, TypeInfo)]
+pub struct TestGrid<AccountId, Balance> {
+    pub questions: BoundedVec<QuestionHash, MaxQuestions>,
+    pub curators: BoundedVec<(AccountId, Balance), MaxCurators>,
+    pub passing_threshold: u8,  // Percentage [0, 100]
+    pub last_updated: BlockNumber,
+}
+
+impl<T: Config> Pallet<T> {
+    pub fn verify_engagement(
+        who: &T::AccountId,
+        domain: DomainId,
+        responses: Vec<(QuestionHash, Answer)>,
+    ) -> Result<bool, Error<T>> {
+        let grid = TestGrids::<T>::get(domain)
+            .ok_or(Error::<T>::GridNotFound)?;
+
+        // Sample k random questions
+        let k = T::QuestionsPerVerification::get();
+        let seed = Self::random_seed();
+        let selected = Self::sample_questions(&grid.questions, k, seed);
+
+        // Verify responses match selected questions
+        ensure!(
+            responses.len() == selected.len(),
+            Error::<T>::WrongQuestionCount
+        );
+
+        // Check answers
+        let correct_count = responses.iter()
+            .zip(selected.iter())
+            .filter(|((q_hash, answer), expected_q)| {
+                q_hash == *expected_q &&
+                Self::verify_answer(*q_hash, answer)
+            })
+            .count();
+
+        let score = (correct_count * 100 / k as usize) as u8;
+        let passed = score >= grid.passing_threshold;
+
+        // Record attempt
+        EngagementAttempts::<T>::insert(
+            (who, domain),
+            EngagementRecord {
+                score,
+                passed,
+                timestamp: Self::now(),
+            }
+        );
+
+        Ok(passed)
+    }
+
+    pub fn slash_curator(
+        curator: &T::AccountId,
+        domain: DomainId,
+        violation: ViolationType,
+    ) -> DispatchResult {
+        TestGrids::<T>::try_mutate(domain, |maybe_grid| {
+            let grid = maybe_grid.as_mut()
+                .ok_or(Error::<T>::GridNotFound)?;
+
+            let stake = grid.curators.iter()
+                .find(|(c, _)| c == curator)
+                .map(|(_, s)| *s)
+                .ok_or(Error::<T>::NotCurator)?;
+
+            // Slash based on violation type
+            let slash_amount = match violation {
+                ViolationType::Inaccessibility => stake / 4,
+                ViolationType::Ambiguity => stake / 2,
+                ViolationType::Irrelevance => stake,
+            };
+
+            T::Currency::slash(curator, slash_amount);
+
+            // Remove curator if fully slashed
+            if slash_amount >= stake {
+                grid.curators.retain(|(c, _)| c != curator);
+            }
+
+            Ok(())
+        })
+    }
+}
+\end{lstlisting}
+
+\subsection{Solidity Interface: EVM Compatibility}
+
+\begin{lstlisting}[style=solidity, caption={Solidity interface for cross-chain integration}]
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+interface IAugmentedDemocracy {
+    struct Proposal {
+        bytes32 id;
+        address proposer;
+        bytes32 contentHash;
+        uint256 createdAt;
+        uint256 votingEnds;
+        ProposalStatus status;
+    }
+
+    enum ProposalStatus {
+        Pending,
+        Active,
+        Passed,
+        Rejected,
+        Expired
+    }
+
+    struct Vote {
+        address voter;
+        bool approve;
+        uint256 weight;
+        uint8 entropy;
+    }
+
+    event ProposalCreated(
+        bytes32 indexed id,
+        address indexed proposer,
+        bytes32 contentHash
+    );
+
+    event VoteCast(
+        bytes32 indexed proposalId,
+        address indexed voter,
+        bool approve,
+        uint256 weight
+    );
+
+    event ProposalResolved(
+        bytes32 indexed id,
+        ProposalStatus status,
+        uint8 coherenceScore
+    );
+
+    // View functions
+    function getCredential(address account)
+        external view returns (uint256 reputation);
+
+    function getCoherence(bytes32 proposalId)
+        external view returns (uint8 gamma);
+
+    function checkDualCondition(bytes32 proposalId)
+        external view returns (bool passes);
+
+    // State-changing functions
+    function submitProposal(
+        bytes32 contentHash,
+        bytes32[] calldata artifacts
+    ) external returns (bytes32 proposalId);
+
+    function castVote(
+        bytes32 proposalId,
+        bool approve,
+        bytes calldata engagementProof
+    ) external;
+
+    function resolveProposal(bytes32 proposalId) external;
+}
+\end{lstlisting}
+
+\subsection{Integration Patterns}
+
+\subsubsection{Oracle Integration for Artifact Verification}
+
+\begin{lstlisting}[style=rust, caption={Chainlink-style oracle for fact artifacts}]
+pub trait ArtifactOracle {
+    fn verify_artifact(
+        artifact_hash: Hash,
+        expected_issuer: AccountId,
+    ) -> Result<ArtifactStatus, OracleError>;
+
+    fn check_relevance(
+        artifact_hash: Hash,
+        proposal_domain: DomainId,
+    ) -> Result<bool, OracleError>;
+}
+
+#[derive(Encode, Decode, Clone, TypeInfo)]
+pub enum ArtifactStatus {
+    Valid {
+        issuer: AccountId,
+        timestamp: BlockNumber,
+        content_type: ContentType,
+    },
+    Invalid(InvalidReason),
+    Pending,
+}
+
+impl<T: Config> Pallet<T> {
+    pub fn validate_proposal_artifacts(
+        proposal: &Proposal<T>,
+    ) -> Result<(), Error<T>> {
+        for artifact_hash in &proposal.artifacts {
+            let status = T::Oracle::verify_artifact(
+                *artifact_hash,
+                proposal.expected_issuer.clone(),
+            ).map_err(|_| Error::<T>::OracleError)?;
+
+            match status {
+                ArtifactStatus::Valid { .. } => {
+                    // Check relevance
+                    let relevant = T::Oracle::check_relevance(
+                        *artifact_hash,
+                        proposal.domain,
+                    ).map_err(|_| Error::<T>::OracleError)?;
+
+                    ensure!(relevant, Error::<T>::IrrelevantArtifact);
+                }
+                ArtifactStatus::Invalid(reason) => {
+                    return Err(Error::<T>::InvalidArtifact(reason));
+                }
+                ArtifactStatus::Pending => {
+                    return Err(Error::<T>::ArtifactPending);
+                }
+            }
+        }
+
+        Ok(())
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Quantum Entropy Integration}
+
+\begin{lstlisting}[style=rust, caption={Quantum random number integration}]
+pub trait EntropySource {
+    fn get_entropy() -> [u8; 32];
+    fn get_entropy_with_proof() -> (u8, EntropyProof);
+}
+
+impl<T: Config> Pallet<T> {
+    pub fn sample_vote_entropy(
+        voter: &T::AccountId,
+        proposal_id: T::Hash,
+    ) -> (u8, EntropyProof) {
+        // Use quantum entropy if available, fall back to VRF
+        if T::QuantumSource::is_available() {
+            T::QuantumSource::get_entropy_with_proof()
+        } else {
+            // Fallback to verifiable random function
+            let seed = Self::derive_seed(voter, proposal_id);
+            let (random, proof) = T::VRF::generate(seed);
+
+            // Extract single byte for epsilon
+            let epsilon = random[0];
+            (epsilon, EntropyProof::VRF(proof))
+        }
+    }
+
+    pub fn weight_with_entropy(
+        base_weight: u128,
+        entropy_byte: u8,
+    ) -> u128 {
+        // Map [0, 255] to [-0.1, 0.1]
+        // entropy_byte / 255 * 0.2 - 0.1
+        let normalized = entropy_byte as i128 - 128; // [-128, 127]
+        let epsilon = normalized * base_weight as i128 / 1280; // ~10%
+
+        (base_weight as i128 + epsilon).max(0) as u128
+    }
+}
+\end{lstlisting}
+
+%==============================================================================
+\section{Deployment Checklist}
+\label{app:deployment}
+%==============================================================================
+
+\subsection{Pre-Deployment Requirements}
+
+\begin{enumerate}
+    \item \textbf{Identity Infrastructure}
+    \begin{itemize}
+        \item DID registry deployed and operational
+        \item Identity verification oracles configured
+        \item Initial credential distribution mechanism ready
+    \end{itemize}
+
+    \item \textbf{Entropy Sources}
+    \begin{itemize}
+        \item Primary: Quantum random beacon integration
+        \item Fallback: VRF with threshold signatures
+        \item Monitoring: Entropy quality metrics
+    \end{itemize}
+
+    \item \textbf{Test Grid Initialization}
+    \begin{itemize}
+        \item Initial curator set selected
+        \item Domain taxonomy defined
+        \item Question pools seeded
+        \item Slashing parameters configured
+    \end{itemize}
+
+    \item \textbf{Parameter Configuration}
+    \begin{itemize}
+        \item Epoch length (recommend: 28 days)
+        \item Coherence threshold (recommend: 50)
+        \item Engagement threshold (recommend: 70\%)
+        \item Decay rate (recommend: 5\%)
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Security Audit Checklist}
+
+\begin{enumerate}
+    \item Formal verification of coherence calculation
+    \item Economic model review (token economics, attack costs)
+    \item Cryptographic review (signature schemes, hash functions)
+    \item Oracle trust assumptions documented
+    \item Upgrade mechanism security
+    \item Emergency pause functionality
+    \item Key management procedures
+    \item Incident response plan
+\end{enumerate}
+
+\subsection{Monitoring and Alerting}
+
+\begin{enumerate}
+    \item \textbf{Coherence Anomalies}
+    \begin{itemize}
+        \item Alert: $\gamma < 30$ for any proposal
+        \item Alert: $\gamma$ variance across proposals $> 2\sigma$
+    \end{itemize}
+
+    \item \textbf{Participation Metrics}
+    \begin{itemize}
+        \item Track: Active credentials per epoch
+        \item Track: Vote distribution entropy
+        \item Alert: Sudden credential concentration
+    \end{itemize}
+
+    \item \textbf{Economic Health}
+    \begin{itemize}
+        \item Track: Curator stake concentration
+        \item Track: Slashing frequency
+        \item Alert: $> 10\%$ curators slashed in epoch
+    \end{itemize}
+\end{enumerate}
+
+%==============================================================================
+\section{Reference Materials}
+\label{app:references}
+%==============================================================================
+
+\subsection{Related Standards}
+
+\begin{itemize}
+    \item \textbf{W3C DID}: Decentralized Identifier specification
+    \item \textbf{W3C VC}: Verifiable Credentials data model
+    \item \textbf{EIP-712}: Typed structured data hashing
+    \item \textbf{EIP-4824}: DAO URIs (governance metadata)
+    \item \textbf{Substrate FRAME}: Pallet development framework
+\end{itemize}
+
+\subsection{Mathematical Notation Reference}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cl}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+$\mathcal{P}$ & Participant space \\
+$\Pi$ & Proposal space \\
+$\mathcal{A}$ & Artifact space \\
+$G$ & Test grid \\
+$r(p, t)$ & Credential at epoch $t$ \\
+$w(p, \pi)$ & Vote weight \\
+$\epsilon$ & Entropy injection \\
+$\gamma$ & Coherence score \\
+$\sigma^2_\eta$ & Entropy-weighted variance \\
+$\lambda$ & Decay rate \\
+$\tau$ & Engagement threshold \\
+\bottomrule
+\end{tabular}
+\caption{Notation reference}
+\end{table}
+
+\end{document}

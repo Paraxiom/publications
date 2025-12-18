@@ -1,0 +1,407 @@
+\section{User Experience: Hiding the Machinery}
+\label{sec:ux}
+
+The preceding sections describe protocol mechanics. This section addresses the
+critical question: \textit{how does a citizen actually use this?}
+
+The coherence pipeline has six stages and multiple credential types. Exposing this
+complexity to end users would guarantee adoption failure. The system must feel
+like ``just voting'' while the coherence machinery runs invisibly beneath.
+
+\subsection{The TCP/IP Principle}
+
+Users do not understand TCP/IP, TLS handshakes, or DNS resolution. They ``browse
+the web.'' The complexity exists but is entirely hidden by the browser interface.
+
+Augmented democracy requires the same architectural separation:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Layer} & \textbf{What User Sees} \\
+\midrule
+Protocol & (invisible) \\
+Application & Simple voting interface \\
+Experience & ``I voted on the transit proposal'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The test grids, NFT credentials, quadratic costs, and coherence thresholds operate
+at the protocol layer. The user interacts with the application layer.
+
+\subsection{The Streamlined Experience}
+
+For a typical citizen voting on a local issue:
+
+\begin{enumerate}
+    \item \textbf{Open app, see proposals}: ``New transit line proposal''
+    \item \textbf{Tap to learn more}: 2-minute summary video + key information
+    \item \textbf{Quick quiz appears}: 3 questions, multiple choice
+    \item \textbf{Pass quiz}: ``You're ready to vote!''
+    \item \textbf{Vote}: Approve / Reject / Abstain
+    \item \textbf{Done}: ``Your vote is recorded''
+\end{enumerate}
+
+Total time: \textbf{4 minutes}.
+
+What happened invisibly:
+\begin{itemize}
+    \item App checked credential NFT validity
+    \item Quiz was the engagement verification grid (presented as ``quick quiz'')
+    \item Pass threshold was applied
+    \item Vote was signed with quantum signature
+    \item Quadratic cost was calculated (first vote = 1 token, shown as ``free'')
+    \item Vote entered coherence pool
+\end{itemize}
+
+The user experienced: ``watched video, answered quiz, voted.''
+
+\subsection{Progressive Disclosure}
+
+Different users need different depth:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{User Type} & \textbf{Sees} & \textbf{Hidden} \\
+\midrule
+Casual voter & Quiz + vote button & Everything else \\
+Engaged citizen & Reputation score, vote history & NFT mechanics \\
+Power user & Credential details, weight calc & Protocol internals \\
+Curator & Grid builder interface & Consensus mechanics \\
+Developer & Full protocol access & Nothing \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The interface progressively reveals complexity only when users seek it.
+
+\subsection{The Quiz Is the Engagement Verification}
+
+The ``test grid'' sounds bureaucratic. The experience is:
+
+\begin{quote}
+``Before you vote, let's make sure you've seen the key information.
+Here are 3 quick questions.''
+\end{quote}
+
+The questions verify engagement with the evidence:
+\begin{itemize}
+    \item ``The proposed transit line would cost approximately: (a) \$2B (b) \$5B (c) \$10B''
+    \item ``The project timeline is: (a) 2 years (b) 5 years (c) 10 years''
+    \item ``The main opposition concern is: (a) cost (b) displacement (c) noise''
+\end{itemize}
+
+\textbf{Critical clarification}: This is not an IQ test or agreement test.
+It verifies the voter has \textit{encountered} the relevant information.
+A voter who has engaged with the evidence and \textit{disagrees} with it
+still passes. The system verifies engagement, not agreement.
+
+Failing means: ``Review the summary and try again'' --- not punishment, just
+a nudge to engage with the material.
+
+\subsection{Credential Management Is Invisible}
+
+Users never see ``NFT credential'' language. They see:
+
+\begin{itemize}
+    \item \textbf{Account creation}: ``Sign up with email'' (NFT minted in background)
+    \item \textbf{Reputation}: ``Your civic score: 127'' (reputation field)
+    \item \textbf{Eligibility}: ``You can vote on 12 active proposals'' (credential check)
+    \item \textbf{Decay warning}: ``Vote this month to keep your streak!'' (vitality)
+\end{itemize}
+
+The gamification layer (scores, streaks, badges) maps directly to protocol
+primitives (reputation, vitality, domain credentials) without exposing the
+underlying mechanics.
+
+\subsection{Quadratic Costs as ``Voting Power''}
+
+Quadratic voting sounds academic. The UX:
+
+\begin{quote}
+``You have 100 voting power this month.''\\
+``Spending 1 power = 1 vote.''\\
+``Spending 4 power = 2 votes (for issues you care deeply about).''\\
+``Spending 9 power = 3 votes.''
+\end{quote}
+
+Users understand ``spend more to vote stronger on things you care about.''
+The quadratic cost is implicit in the power/vote ratio.
+
+Most users spend 1 power per proposal and never think about the math.
+
+\subsection{The Curator Path}
+
+For users who want deeper engagement, the curator path opens:
+
+\begin{enumerate}
+    \item \textbf{Contribute sources}: ``Add a source document to this proposal''
+    \item \textbf{Build quizzes}: ``Write a question for this proposal''
+    \item \textbf{Earn tokens}: ``You earned 5 tokens for your contribution''
+    \item \textbf{Gain reputation}: ``Your civic score increased to 142''
+\end{enumerate}
+
+Curators experience the system as a contribution platform with rewards.
+The staking, slashing, and credential mechanics are protocol-level concerns.
+
+\subsection{Failure States as Friendly Nudges}
+
+Protocol failures translate to friendly UX:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Protocol State} & \textbf{User Message} \\
+\midrule
+Engagement not verified & ``Review the summary and try the quiz again'' \\
+Credential expired & ``Welcome back! Quick verification needed'' \\
+Insufficient power & ``You've used your voting power this month'' \\
+Coherence failure & ``This vote is under review---we'll notify you'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+No user ever sees ``InsufficientQuantumEntropy'' or ``CoherenceThresholdNotMet.''
+
+\subsection{The 2017 Vision: Comfortable Contribution}
+
+The original 2017 paper emphasized that contribution must be ``comfortable'':
+
+\begin{quote}
+``An individual must be granted the freedom to choose their level of involvement,
+the type of involvement they want to partake in, and the level of privacy they
+want for a particular transaction.''
+\end{quote}
+
+This translates to:
+\begin{itemize}
+    \item \textbf{Level of involvement}: Casual voter vs. curator vs. developer
+    \item \textbf{Type of involvement}: Vote, contribute sources, build quizzes, write code
+    \item \textbf{Privacy level}: Public reputation vs. anonymous mode
+\end{itemize}
+
+The system accommodates all engagement levels without forcing complexity on
+those who don't want it.
+
+\subsection{Mobile-First, 4-Minute Sessions}
+
+The target interaction:
+
+\begin{itemize}
+    \item \textbf{Platform}: Mobile app (iOS/Android)
+    \item \textbf{Session length}: 2--5 minutes
+    \item \textbf{Notification}: ``3 proposals need your vote this week''
+    \item \textbf{Interaction}: Watch summary $\rightarrow$ quiz $\rightarrow$ vote
+    \item \textbf{Reward}: ``+5 civic score, streak maintained''
+\end{itemize}
+
+This is the friction target: \textbf{less friction than checking social media}.
+
+\subsection{Incentive Alignment}
+
+Why would anyone participate?
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Incentive} & \textbf{Mechanism} \\
+\midrule
+Civic score & Social status, visible to others \\
+Streaks & Gamification, loss aversion \\
+Token rewards & Direct compensation for curation \\
+Influence & Higher reputation = more vote weight \\
+Tax benefits & Civic contribution deductions (policy) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The 2017 paper proposed that civic contribution could offset taxes and
+unlock social benefits. The exact incentive structure is policy, not protocol---
+but the protocol supports any incentive model.
+
+\subsection{Summary: The Experience Stack}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Layer} & \textbf{Contents} \\
+\midrule
+\textbf{Experience} & ``I voted on transit'' \\
+\textbf{Interface} & Quiz, vote button, score display \\
+\textbf{Application} & Credential check, weight calc, submission \\
+\textbf{Protocol} & NFTs, entropy, signatures, coherence \\
+\textbf{Consensus} & Quantum Harmony blockchain \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The protocol is complex. The experience is simple.
+
+This is the same pattern as the modern web: users don't understand HTTPS,
+but they trust the lock icon. Users won't understand coherence thresholds,
+but they'll trust ``Your vote is verified.''
+
+The machinery serves the experience. Not the reverse.
+
+\subsection{Agent-Mediated Participation}
+
+The preceding subsections assume human users navigating a simplified interface.
+A more radical approach: \textbf{delegate to AI agents}.
+
+Humans don't navigate TCP/IP because \textit{browsers} do it for them. Similarly,
+humans may not navigate the coherence pipeline because \textit{agents} do it
+for them.
+
+\subsubsection{What Agents Can Do}
+
+An AI agent operating on behalf of a citizen can:
+
+\begin{itemize}
+    \item \textbf{Monitor proposals}: ``3 new proposals match your interests''
+    \item \textbf{Summarize content}: Digest 50-page proposals into 2-minute briefings
+    \item \textbf{Complete engagement verifications}: Parse test grids and demonstrate artifact engagement
+    \item \textbf{Maintain credentials}: Ensure NFT vitality, renew before decay
+    \item \textbf{Calculate spending}: Optimize quadratic voting across proposals
+    \item \textbf{Vote within bounds}: Execute votes per user-defined preferences
+    \item \textbf{Track coherence}: Alert user if coherence scores are anomalous
+\end{itemize}
+
+The human experience becomes:
+
+\begin{enumerate}
+    \item \textbf{Set preferences}: ``I care about transit, housing, environment''
+    \item \textbf{Review agent recommendations}: ``Your agent suggests: Approve transit, Reject rezoning''
+    \item \textbf{Confirm or override}: Tap to accept, or dive deeper
+    \item \textbf{Done}: Agent handles everything else
+\end{enumerate}
+
+Total human time: \textbf{30 seconds per week}.
+
+\subsubsection{Delegation Bounds}
+
+Agents operate within \textit{delegation bounds} set by the user:
+
+\begin{lstlisting}[language=Rust]
+pub struct DelegationBounds {
+    // What the agent CAN do autonomously
+    pub can_complete_engagements: bool,
+    pub can_vote_low_stakes: bool,  // < threshold
+    pub can_manage_credentials: bool,
+
+    // What requires human confirmation
+    pub vote_threshold: Balance,    // Above this, ask human
+    pub domains_excluded: Vec<Domain>, // Never vote on these
+    pub require_confirmation: bool, // Always ask before voting
+
+    // Limits
+    pub max_daily_votes: u32,
+    pub max_weekly_spend: Balance,
+}
+\end{lstlisting}
+
+A conservative user might set: ``Agent can complete engagement verifications, but always ask me before voting.''
+
+A trusting user might set: ``Agent can vote on anything under 10 tokens; ask me for high-stakes only.''
+
+\subsubsection{Agent Accountability}
+
+Critical question: \textit{who is accountable for agent actions?}
+
+The answer: \textbf{the human principal}.
+
+\begin{itemize}
+    \item Agent actions are signed with the human's credential
+    \item Vote history shows ``voted via agent'' flag
+    \item Reputation changes accrue to the human
+    \item The human remains accountable for agent behavior
+\end{itemize}
+
+The agent is a tool, not a participant. The human delegates but remains accountable.
+
+\subsubsection{Agent Coherence (ERLHS Connection)}
+
+If agents vote, the agents themselves need coherence constraints.
+
+This connects directly to ERLHS~\cite{cormier2025erlhs}: the Hamiltonian framework
+for coherence-preserving machine intelligence. An agent operating in the
+augmented democracy system should:
+
+\begin{itemize}
+    \item Maintain internal state coherence (ERLHS constraint)
+    \item Respect delegation bounds (policy constraint)
+    \item Produce auditable reasoning (transparency constraint)
+    \item Avoid manipulation of other agents (adversarial constraint)
+\end{itemize}
+
+The coherence requirements apply at two levels:
+\begin{enumerate}
+    \item \textbf{Democratic coherence}: The voting system (this paper)
+    \item \textbf{Agent coherence}: The AI operating within it (ERLHS)
+\end{enumerate}
+
+\subsubsection{Mass Agent Attacks}
+
+New threat model: adversary deploys many agents to vote in coordinated patterns.
+
+Defenses:
+\begin{itemize}
+    \item \textbf{Coherence detection}: Coordinated agents produce low entropy variance ($\gamma$)
+    \item \textbf{Agent diversity requirements}: Agents must demonstrate behavioral variance
+    \item \textbf{Human-in-loop checkpoints}: High-stakes votes require human confirmation
+    \item \textbf{Agent registration}: Agents themselves may need credentials
+\end{itemize}
+
+The quantum confidence score $\gamma$ was designed to detect Sybil attacks.
+It also detects coordinated agent behavior---agents voting in lockstep
+produce low variance, triggering coherence failure.
+
+\subsubsection{The Agent-Native Interface}
+
+For agent-mediated participation, the ``interface'' is an API:
+
+\begin{lstlisting}[language=Rust]
+trait AgentInterface {
+    fn get_proposals(&self, filters: ProposalFilters)
+        -> Vec<ProposalSummary>;
+    fn get_engagement_grid(&self, proposal_id: u32)
+        -> EngagementGrid;
+    fn submit_engagement_answers(&self, proposal_id: u32, answers: Vec<Answer>)
+        -> EngagementResult;
+    fn cast_vote(&self, proposal_id: u32, vote: VoteType, weight: u64)
+        -> VoteReceipt;
+    fn get_coherence_status(&self, proposal_id: u32)
+        -> CoherenceStatus;
+}
+\end{lstlisting}
+
+Human-facing apps and agent systems use the same underlying protocol.
+The difference is who drives the interaction.
+
+\subsubsection{The Future: Humans Set Values, Agents Execute}
+
+The end state:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Human Role} & \textbf{Agent Role} \\
+\midrule
+Set values and priorities & Monitor proposal stream \\
+Review agent recommendations & Summarize and analyze \\
+Confirm high-stakes votes & Execute routine votes \\
+Override when needed & Maintain credentials \\
+Remain accountable & Optimize participation \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This is not ``AI voting instead of humans.'' It is ``AI handling friction
+so humans can focus on values.''
+
+The human remains the principal. The agent is the instrument.
+The coherence constraints apply to both.
+
+\textbf{The governance system constrains how decisions are made, not what decisions
+must conclude.}

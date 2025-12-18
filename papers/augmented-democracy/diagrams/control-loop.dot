@@ -1,0 +1,68 @@
+digraph ControlLoop {
+    // Graph settings
+    rankdir=LR;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11];
+    edge [fontname="Helvetica", fontsize=9];
+    bgcolor="white";
+    splines=ortho;
+
+    // State
+    state [label="System State\n(s_t)", shape=ellipse, fillcolor="#E8E8E8"];
+
+    // Input
+    proposal [label="Proposal\n(Input Signal)", fillcolor="#B8D4E8"];
+
+    // Sensors
+    subgraph cluster_sensors {
+        label="Distributed Sensors";
+        style=rounded;
+        bgcolor="#F0F8FF";
+
+        participants [label="Participants\n(Voters)", fillcolor="#B8D4E8"];
+        credentials [label="Credentials\n(Gain Function)", fillcolor="#B8D4E8"];
+        engagement [label="Engagement\nVerification", fillcolor="#B8D4E8"];
+    }
+
+    // Processing
+    subgraph cluster_processing {
+        label="Signal Processing";
+        style=rounded;
+        bgcolor="#FFF8E8";
+
+        weights [label="Weight\nCalculation\nw = r × (1+ε)", fillcolor="#FFE4B5"];
+        aggregation [label="Vote\nAggregation", fillcolor="#FFE4B5"];
+        entropy [label="Entropy\nInjection\n(±10%)", fillcolor="#FFE4B5"];
+    }
+
+    // Invariant Check
+    subgraph cluster_invariant {
+        label="Coherence Invariant";
+        style=rounded;
+        bgcolor="#FFFACD";
+
+        gamma [label="γ = σ²η/255\n(Process Quality)", shape=diamond, fillcolor="#FFD700"];
+        majority [label="w_approve >\nw_reject", shape=diamond, fillcolor="#FFD700"];
+        both [label="Both\nConditions?", shape=diamond, fillcolor="#FFD700"];
+    }
+
+    // Output
+    transition [label="State\nTransition\ns_t → s_{t+1}", fillcolor="#90C695"];
+    reject [label="Reject\n(Stay at s_t)", fillcolor="#FFB6B6"];
+
+    // Flow
+    state -> proposal [label="triggers"];
+    proposal -> participants;
+    participants -> credentials [label="validated by"];
+    credentials -> engagement [label="gates"];
+    engagement -> weights;
+    weights -> entropy;
+    entropy -> aggregation;
+    aggregation -> gamma;
+    aggregation -> majority;
+    gamma -> both;
+    majority -> both;
+    both -> transition [label="yes"];
+    both -> reject [label="no"];
+    transition -> state [label="updates", style=dashed];
+    reject -> state [label="no change", style=dashed, color="#CC0000"];
+}

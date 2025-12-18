@@ -1,0 +1,479 @@
+\section{Procedural Infrastructure: Artifact Curation and Credential Management}
+\label{sec:epistemic}
+
+The ``augmented'' in augmented democracy refers not to technological enhancement of voting
+mechanics, but to \textit{procedural augmentation}---ensuring that participants have
+verifiably engaged with relevant evidence artifacts before their input shapes collective decisions.
+This section describes the infrastructure for artifact curation, credential management,
+and participation constraints.
+
+\subsection{The Engagement Problem in Democratic Systems}
+
+Classical democratic theory assumes informed voters. Reality provides participants who
+may not have engaged with relevant evidence. The augmented democracy framework
+addresses this through \textit{mandatory admissibility gates}---structural requirements
+that participants demonstrate engagement with proposal-relevant artifacts before voting.
+
+\begin{definition}[Admissibility Gate]
+A procedural checkpoint $\mathcal{A}: \mathcal{V} \rightarrow \{0, 1\}$ that maps
+a potential voter $v \in \mathcal{V}$ to eligibility status based on demonstrated
+engagement with admissible artifacts for the proposal under consideration.
+\end{definition}
+
+\textbf{Critical clarification}: This is not a ``literacy test'' or competency filter.
+It verifies \textit{engagement with admissible artifacts}, not intelligence, education,
+political alignment, or agreement with artifact conclusions. A voter who has engaged
+with the relevant evidence and disagrees with its conclusions still passes the gate.
+
+\subsection{Token Curated Test Grids}
+
+The admissibility gate mechanism is implemented through \textbf{Token Curated Test Grids}
+(TCTGs), a structure adapted from token curated registries with economic incentives
+for quality curation.
+
+As established in Section~\ref{sec:philosophy}, test grids govern \textit{admissibility
+criteria}---which artifact classes may be referenced for a proposal domain---not
+semantic conclusions or truth claims.
+
+\subsubsection{The Tripartite Structure}
+
+Following the KILT Protocol model~\cite{kilt2020}, TCTGs employ three distinct roles:
+
+\begin{enumerate}
+    \item \textbf{Claimer}: A participant who asserts readiness to vote on a proposal
+    \item \textbf{Attester}: A curator who has assembled the test grid for that proposal
+    \item \textbf{Verifier}: The system (or designated validators) that checks test completion
+\end{enumerate}
+
+This separation prevents conflicts of interest: those who create tests do not
+administer them, and those who verify do not profit from outcomes.
+
+\subsubsection{Gatherers and Curators}
+
+Within the Attester role, two sub-functions operate:
+
+\begin{itemize}
+    \item \textbf{Gatherers}: Identify admissible artifacts for a proposal---documents
+    with valid provenance from recognized issuers (scientific journals, government
+    agencies, standards bodies). Gatherers are compensated per artifact that meets
+    admissibility criteria.
+
+    \item \textbf{Curators}: Assemble gathered artifacts into test grids that verify
+    engagement. The goal is to confirm that voters have \textit{encountered} the
+    relevant evidence, not that they agree with it. Curators stake tokens on grid quality.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=1.5cm, auto]
+    \node[draw, rectangle] (proposal) {Proposal Submitted};
+    \node[draw, rectangle, below of=proposal] (gatherers) {Gatherers Identify Artifacts};
+    \node[draw, rectangle, below of=gatherers] (curators) {Curators Assemble Grid};
+    \node[draw, rectangle, below of=curators] (test) {Test Grid Published};
+    \node[draw, rectangle, below of=test] (voter) {Voter Demonstrates Engagement};
+    \node[draw, diamond, below of=voter, aspect=2, node distance=2cm] (pass) {Pass?};
+    \node[draw, rectangle, left of=pass, node distance=3cm] (eligible) {Vote Eligible};
+    \node[draw, rectangle, right of=pass, node distance=3cm] (retry) {Review \& Retry};
+
+    \draw[->] (proposal) -- (gatherers);
+    \draw[->] (gatherers) -- (curators);
+    \draw[->] (curators) -- (test);
+    \draw[->] (test) -- (voter);
+    \draw[->] (voter) -- (pass);
+    \draw[->] (pass) -- node[above] {Yes} (eligible);
+    \draw[->] (pass) -- node[above] {No} (retry);
+    \draw[->] (retry) |- (voter);
+\end{tikzpicture}
+\caption{Token Curated Test Grid Flow}
+\label{fig:tctg-flow}
+\end{figure}
+
+\subsubsection{Economic Incentives and Slashing Conditions}
+
+Token holders curating test grids face a strategic tension:
+
+\begin{quote}
+``Token holders have a tactical incentive to challenge and reject every candidate
+to their registry. In the interest of increasing their holdings, this is at odds
+with their strategic interest of increasing the value of their holdings. An empty
+list is of no interest to consumers.'' --- KILT Protocol
+\end{quote}
+
+Applied to TCTGs: curators who create impossible tests drive away voters, reducing
+the value of the governance token. Curators who create trivial tests undermine
+procedural quality, also reducing token value. The equilibrium favors \textit{fair
+tests that accurately verify artifact engagement}.
+
+\textbf{Slashing conditions} (curators lose staked tokens):
+\begin{itemize}
+    \item Admitting artifacts with invalid provenance (forged signatures, broken hashes)
+    \item Admitting artifacts from non-recognized issuers
+    \item Admitting artifacts outside the declared artifact class for the proposal domain
+    \item Admitting artifacts that were retracted by their issuing authority
+\end{itemize}
+
+\textbf{Not slashable} (curators are protected):
+\begin{itemize}
+    \item Admitting artifacts whose conclusions are later contested or revised
+    \item Admitting artifacts that some participants disagree with
+    \item Admitting artifacts from one scientific position when others exist
+\end{itemize}
+
+The system does not adjudicate semantic disputes. Curators are accountable for
+\textit{procedural validity}, not \textit{correctness}.
+
+\subsection{Dynamic NFTs for Credential Management}
+
+Participant credentials in augmented democracy are not static. A voter's eligibility,
+weight, and privileges evolve based on contribution history. This is implemented
+through \textbf{Dynamic NFTs}---non-fungible tokens whose metadata updates based
+on on-chain activity.
+
+\subsubsection{Credential Lifecycle}
+
+\begin{lstlisting}[language=Rust, caption={Dynamic Credential Structure}]
+pub struct DynamicCredential<AccountId> {
+    pub holder: AccountId,
+    pub credential_type: CredentialType,
+    pub issued_at: u64,
+    pub last_updated: u64,
+
+    // Dynamic fields (updated on-chain)
+    pub reputation_score: u64,
+    pub proposals_voted: u32,
+    pub engagements_verified: u32,  // Test grids passed
+    pub engagements_failed: u32,
+    pub contributions: u32,
+    pub domains_certified: BoundedVec<DomainId, MaxDomains>,
+
+    // Computed eligibility
+    pub voting_weight_multiplier: u64,  // basis points
+    pub can_submit_proposals: bool,
+    pub can_curate_grids: bool,
+}
+
+pub enum CredentialType {
+    Citizen,        // Basic participation rights
+    Contributor,    // Has passed contribution threshold
+    Curator,        // Can assemble test grids
+    Validator,      // Can verify consensus
+    Guardian,       // Emergency governance rights
+}
+\end{lstlisting}
+
+The credential NFT updates automatically when:
+\begin{itemize}
+    \item An engagement verification is passed or failed
+    \item A vote is cast
+    \item A proposal is submitted
+    \item Reputation is adjusted by peer review
+    \item Domain certification is earned or revoked
+\end{itemize}
+
+\subsubsection{Life-Sustaining NFTs}
+
+A critical innovation is the \textbf{Life-Sustaining NFT}---a credential that requires
+ongoing activity to remain valid. Unlike static credentials that persist indefinitely,
+life-sustaining NFTs decay without continuous participation.
+
+\begin{lstlisting}[language=Rust, caption={Life-Sustaining Credential Logic}]
+pub struct LifeSustainingCredential<BlockNumber> {
+    pub base_credential: DynamicCredential,
+    pub vitality: u64,              // Current life points
+    pub max_vitality: u64,          // Maximum life points
+    pub decay_rate: u64,            // Points lost per epoch
+    pub last_activity: BlockNumber, // Last qualifying action
+    pub revival_cost: Balance,      // Cost to revive if expired
+}
+
+impl LifeSustainingCredential {
+    pub fn is_alive(&self, current_block: BlockNumber) -> bool {
+        let epochs_elapsed = (current_block - self.last_activity)
+            / EPOCH_LENGTH;
+        let decay = epochs_elapsed * self.decay_rate;
+        self.vitality > decay
+    }
+
+    pub fn sustain(&mut self, activity_points: u64) {
+        self.vitality = min(
+            self.vitality + activity_points,
+            self.max_vitality
+        );
+        self.last_activity = current_block();
+    }
+}
+\end{lstlisting}
+
+Life-sustaining NFTs address the ``ghost voter'' problem: credentials issued to
+participants who subsequently disengage. By requiring periodic activity (voting,
+contributing, engagement verification), the system ensures that voting weight reflects
+\textit{active} participation, not historical registration.
+
+\subsubsection{Domain-Specific Credentials}
+
+Voters may hold credentials in specific domains:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Domain} & \textbf{Unlocks Voting On} \\
+\midrule
+Environmental & Climate, conservation, pollution proposals \\
+Technical & Infrastructure, protocol upgrades \\
+Economic & Treasury, tokenomics, funding proposals \\
+Social & Community guidelines, dispute resolution \\
+Emergency & Crisis response, security incidents \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Domain credentials are earned by passing domain-specific engagement verifications and maintained
+through ongoing participation in that domain. A participant may hold multiple
+domain credentials, each with independent vitality.
+
+\subsection{Quadratic Voting for Bounded Influence}
+
+The augmented democracy framework incorporates \textbf{quadratic voting} to prevent
+plutocratic capture while preserving signal strength for high-conviction preferences.
+
+\subsubsection{The Quadratic Cost Function}
+
+The cost to cast $n$ votes on a single proposal from a single participant:
+
+\begin{equation}
+    \text{cost}(n) = n^2
+\end{equation}
+
+\begin{center}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Votes Cast} & \textbf{Cost} & \textbf{Marginal Cost} \\
+\midrule
+1 & 1 & 1 \\
+2 & 4 & 3 \\
+3 & 9 & 5 \\
+4 & 16 & 7 \\
+5 & 25 & 9 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The increasing marginal cost discourages concentration of voting power on single
+proposals, encouraging participants to distribute influence across multiple issues.
+
+\subsubsection{Integration with Reputation Weighting}
+
+Quadratic voting combines with reputation-based weighting:
+
+\begin{equation}
+    w_{\text{effective}} = \sqrt{\text{votes\_purchased}} \times r_i \times (1 + \epsilon_i)
+\end{equation}
+
+where $r_i$ is reputation score and $\epsilon_i$ is the quantum entropy adjustment
+from Section~\ref{sec:governance-control}. The square root of purchased votes
+ensures diminishing returns, while reputation and entropy preserve the coherence
+mechanisms.
+
+\subsubsection{Whale Resistance}
+
+Consider an adversary with 100$\times$ the resources of an average participant:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{System} & \textbf{Adversary Influence} & \textbf{Ratio} \\
+\midrule
+1-person-1-vote & 1 vote & 1:1 \\
+Plutocratic (1:1 stake) & 100 votes & 100:1 \\
+Quadratic & 10 votes & 10:1 \\
+Quadratic + Reputation Cap & $\leq$ 10 votes & $\leq$ 10:1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Quadratic voting reduces the 100:1 wealth advantage to a 10:1 voting advantage.
+Combined with reputation caps and coherence thresholds, adversarial influence
+is further bounded.
+
+\subsection{Deliberative Democracy: Multi-Round Consensus}
+
+For high-stakes proposals, the framework supports \textbf{deliberative democracy}
+through multiple voting rounds with increasing consensus requirements.
+
+\subsubsection{Unanimity-Seeking Processes}
+
+Drawing from North American Indigenous governance traditions:
+
+\begin{quote}
+``Unanimity requires that everyone involved agrees.''
+\end{quote}
+
+While perfect unanimity is impractical at scale, the framework supports
+\textit{unanimity-seeking} processes:
+
+\begin{enumerate}
+    \item \textbf{Round 1}: Simple majority required
+    \item \textbf{Round 2}: If Round 1 passes but dissent exceeds threshold,
+    deliberation period opens; 60\% supermajority required
+    \item \textbf{Round 3}: If significant dissent remains, face-to-face
+    (or synchronous digital) deliberation; 75\% required
+    \item \textbf{Final Round}: Consensus conference with all registered
+    dissenters; 90\% required or proposal modified
+\end{enumerate}
+
+This process is expensive and slow---by design. It applies only to proposals
+flagged as ``constitutional'' or ``irreversible.''
+
+\subsubsection{Dissent Visibility}
+
+Unlike anonymous voting, deliberative rounds make dissent \textit{visible}
+(though not punitive):
+
+\begin{quote}
+``Shining the light on someone's disagreement within the consensus could help
+the individual and the collective.''
+\end{quote}
+
+Visible dissent enables:
+\begin{itemize}
+    \item Identification of unaddressed concerns
+    \item Opportunity for proposal modification
+    \item Record of minority positions for future reference
+    \item Accountability for officials who override consensus
+\end{itemize}
+
+\subsection{Participation History and Accountability}
+
+The system maintains participation history for transparency and accountability,
+without claiming to evaluate correctness.
+
+\subsubsection{What Is Recorded}
+
+For each participant:
+\begin{itemize}
+    \item Engagement verifications passed/failed (procedural record)
+    \item Votes cast and their weights (participation record)
+    \item Proposals submitted and their outcomes (contribution record)
+    \item Coherence scores of votes participated in (process quality record)
+\end{itemize}
+
+\subsubsection{What Is Not Recorded or Evaluated}
+
+The system does \textit{not}:
+\begin{itemize}
+    \item Label votes as ``correct'' or ``incorrect''
+    \item Penalize voters for positions that differ from artifact conclusions
+    \item Evaluate whether voters ``should have'' voted differently
+    \item Assign semantic meaning to voting patterns
+\end{itemize}
+
+Participants are free to engage with evidence and reach their own conclusions.
+The system verifies engagement, not agreement.
+
+\subsubsection{Official Accountability}
+
+For elected officials, participation history is public record:
+
+\begin{itemize}
+    \item Which engagement verifications they passed before voting
+    \item How they voted on each proposal
+    \item Whether they used override authority
+    \item The coherence scores of decisions they participated in
+\end{itemize}
+
+This enables informed electoral choices without the system claiming to evaluate
+whether official decisions were ``correct.''
+
+\subsection{Node Reputation and Performance History}
+
+The procedural infrastructure includes reputation tracking for \textit{infrastructure
+nodes}, not just human participants.
+
+\subsubsection{Oracle Node Reputation}
+
+Nodes providing artifact references (document hashes, provenance data) accumulate
+reputation based on:
+
+\begin{itemize}
+    \item Availability: Uptime and response latency
+    \item Consistency: Variance in reported references
+    \item Validity: Proportion of references that pass provenance checks
+    \item Longevity: Duration of reliable service
+\end{itemize}
+
+This reputation feeds into test grid assembly: artifacts sourced through high-reputation
+nodes have verified provenance chains.
+
+\subsubsection{Validator Performance}
+
+Consensus validators are tracked on:
+
+\begin{itemize}
+    \item Block production rate
+    \item Missed slots
+    \item Equivocation incidents
+    \item Coherence score contributions
+\end{itemize}
+
+Poor-performing validators see reduced block rewards and eventual removal
+from the active set.
+
+\subsection{Evolution: EOS to Substrate to Quantum Harmony}
+
+The procedural infrastructure evolved through three phases:
+
+\subsubsection{Phase 1: EOS Smart Contract Prototype (2020--2021)}
+
+Initial implementation as an EOS smart contract:
+\begin{itemize}
+    \item Basic test grid structure
+    \item Token-curated artifact registration
+    \item Simple pass/fail admissibility gates
+    \item Proof-of-concept dynamic credentials
+\end{itemize}
+
+\subsubsection{Phase 2: Substrate Migration (2022--2023)}
+
+Migration to Substrate framework:
+\begin{itemize}
+    \item Full pallet implementation
+    \item NFT-based credential system
+    \item Quadratic voting integration
+    \item Multi-round deliberation support
+\end{itemize}
+
+\subsubsection{Phase 3: Quantum Harmony Integration (2024--2025)}
+
+Current implementation with quantum enhancements:
+\begin{itemize}
+    \item Quantum entropy for vote weighting (Section~\ref{sec:governance-control})
+    \item Post-quantum signatures for credential integrity
+    \item Coherence-based consensus replacing stake-based finality
+    \item QKD-protected artifact distribution
+\end{itemize}
+
+The core procedural architecture---test grids, dynamic credentials, quadratic
+voting---persists across all phases. The quantum enhancements provide
+cryptographic hardening without altering the democratic logic.
+
+\subsection{Summary: The Procedural Stack}
+
+The complete procedural infrastructure:
+
+\begin{enumerate}
+    \item \textbf{Artifact Layer}: Gatherers identify admissible artifacts, nodes verify provenance
+    \item \textbf{Test Layer}: Curators assemble grids, token economics enforce quality
+    \item \textbf{Credential Layer}: Dynamic NFTs track eligibility, life-sustaining
+    requirements enforce engagement
+    \item \textbf{Voting Layer}: Quadratic costs bound influence, reputation weights
+    signal, entropy randomizes
+    \item \textbf{Consensus Layer}: Coherence thresholds measure process quality,
+    multi-round processes seek unanimity
+    \item \textbf{Accountability Layer}: Participation recorded, officials tracked,
+    history immutable
+\end{enumerate}
+
+This stack transforms voting from opinion aggregation into \textit{structured
+preference revelation}---the foundation of augmented democracy.
+
+\textbf{The system constrains how decisions are made, not what decisions must conclude.}

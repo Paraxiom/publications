@@ -36,6 +36,7 @@ Paraxiom develops theoretical foundations and practical implementations for **co
 | [Proof of Coherence](papers/cormier_proof_of_coherence_2025.pdf) | QKD-based distributed consensus mechanism | [10.5281/zenodo.17929054](https://doi.org/10.5281/zenodo.17929054) |
 | [Toroidal Mesh](papers/cormier_toroidal_mesh_2025.pdf) | 10K TPS with SPHINCS+ via parallel verification | [10.5281/zenodo.17931222](https://doi.org/10.5281/zenodo.17931222) |
 | [Toroidal Governance](papers/patent2.pdf) | Defensive publication — Tonnetz manifold governance | [10.5281/zenodo.17929091](https://doi.org/10.5281/zenodo.17929091) |
+| [Augmented Democracy](papers/cormier_augmented_democracy_2025.pdf) | Coherence-constrained democratic infrastructure with epistemic gates | *Preprint* |
 
 ---
 
@@ -76,6 +77,14 @@ The [QuantumHarmony](https://github.com/QuantumVerseProtocols/quantumharmony) bl
   year      = {2025},
   doi       = {10.5281/zenodo.17929054},
   publisher = {Zenodo}
+}
+
+@misc{cormier2025augmented,
+  author    = {Cormier, Sylvain},
+  title     = {Augmented Democracy as a Coherence-Constrained Control System},
+  year      = {2025},
+  note      = {Preprint},
+  publisher = {Paraxiom Research}
 }
 ```
 

@@ -1,0 +1,429 @@
+\section{Governance as a Control System}
+\label{sec:governance-control}
+
+This section presents a rigorous mapping from classical control theory to democratic governance,
+grounded in a production implementation deployed on the Quantum Harmony blockchain. We demonstrate
+that democratic processes can be formally modeled as coherence-constrained state machines, where
+proposals represent state transitions, participants act as distributed sensors, and legitimacy
+emerges from invariant preservation rather than mere majority arithmetic.
+
+\subsection{The Control-Theoretic Frame}
+
+We model a democratic system as a discrete-time control system $\mathcal{G} = (\mathcal{S}, \mathcal{U}, \mathcal{Y}, f, g, \mathcal{C})$ where:
+
+\begin{itemize}
+    \item $\mathcal{S}$ is the state space (governance configuration)
+    \item $\mathcal{U}$ is the input space (proposals)
+    \item $\mathcal{Y}$ is the output space (decisions)
+    \item $f: \mathcal{S} \times \mathcal{U} \rightarrow \mathcal{S}$ is the state transition function
+    \item $g: \mathcal{S} \rightarrow \mathcal{Y}$ is the output function
+    \item $\mathcal{C} \subset \mathcal{S}$ is the coherence manifold---the set of legitimate states
+\end{itemize}
+
+The central requirement is \textit{coherence preservation}: for any valid transition $s_{t+1} = f(s_t, u_t)$,
+if $s_t \in \mathcal{C}$, then $s_{t+1} \in \mathcal{C}$. Transitions that would exit the coherence
+manifold are rejected.
+
+\subsection{Proposals as State Transitions}
+
+In the implementation, proposals are formalized as typed state transition requests with explicit
+lifecycle semantics:
+
+\begin{lstlisting}[language=Rust, caption={Proposal Status State Machine (lib.rs:114-124)}]
+pub enum ProposalStatus {
+    Submitted,        // s_0: Initial state
+    UnderReview,      // s_1: Filtering phase
+    ReadyForVoting,   // s_2: Cleared for deliberation
+    VotingActive,     // s_3: Consensus formation
+    VotingClosed,     // s_4: Measurement complete
+    Approved,         // s_5+: On-manifold transition accepted
+    Rejected,         // s_5-: Off-manifold transition blocked
+    QuantumVerified,  // s_6: Cryptographic proof generated
+}
+\end{lstlisting}
+
+This eight-state machine enforces a strict ordering: $s_0 \rightarrow s_1 \rightarrow s_2 \rightarrow
+s_3 \rightarrow s_4 \rightarrow \{s_5^+, s_5^-\} \rightarrow s_6$. The system prohibits state
+regression and enforces temporal guards:
+
+\begin{lstlisting}[language=Rust, caption={Temporal Constraints on Voting Phase (lib.rs:430-435)}]
+let current_block = <frame_system::Pallet<T>>::block_number();
+ensure!(
+    current_block >= proposal.voting_starts &&
+    current_block <= proposal.voting_ends,
+    Error::<T>::ProposalNotInVotingPhase
+);
+\end{lstlisting}
+
+The \texttt{ReviewPeriod} and \texttt{VotingPeriod} configuration parameters define minimum dwell
+times in each phase, preventing rushed transitions that could destabilize the system.
+
+\subsection{Participants as Distributed Sensors}
+
+Democratic participants are modeled as heterogeneous sensors with role-specific measurement capabilities:
+
+\begin{lstlisting}[language=Rust, caption={Participant Roles as Sensor Types (lib.rs:88-94)}]
+pub enum ParticipantRole {
+    Submitter,   // Proposal origination sensor
+    Voter,       // Binary/ternary measurement sensor
+    Reviewer,    // Quality filtering sensor
+    Validator,   // Consensus verification sensor
+}
+\end{lstlisting}
+
+Each participant maintains state that influences their measurement weight:
+
+\begin{lstlisting}[language=Rust, caption={Participant State Vector (lib.rs:77-86)}]
+pub struct Participant<AccountId> {
+    pub account: AccountId,
+    pub role: ParticipantRole,
+    pub registered_at: u64,
+    pub contributions: u64,
+    pub reputation: u64,           // Base control gain
+    pub quantum_identity: Option<H256>,
+}
+\end{lstlisting}
+
+The \texttt{reputation} field serves as the base \textit{control gain}---the amplification factor
+that determines how strongly a participant's measurement influences the system output. Initial
+reputation is set to 100 (lib.rs:336), establishing a baseline that can evolve through contribution history.
+
+\subsection{Deliberation as Filtering}
+
+The review period implements a low-pass filter on the proposal stream:
+
+\begin{lstlisting}[language=Rust, caption={Review Period as Temporal Filter (lib.rs:392-393)}]
+voting_starts: <frame_system::Pallet<T>>::block_number()
+    + T::ReviewPeriod::get(),
+voting_ends: <frame_system::Pallet<T>>::block_number()
+    + T::ReviewPeriod::get() + T::VotingPeriod::get(),
+\end{lstlisting}
+
+This enforced delay serves multiple control-theoretic purposes:
+
+\begin{enumerate}
+    \item \textbf{Noise rejection}: Transient proposals (spam, emotional reactions) decay during the review period
+    \item \textbf{Signal integration}: Reviewers accumulate information about proposal quality
+    \item \textbf{Aliasing prevention}: The minimum period ensures adequate sampling of community response
+\end{enumerate}
+
+The system implements bounded queuing to prevent denial-of-service:
+
+\begin{lstlisting}[language=Rust, caption={Bounded Proposal Queue (lib.rs:366-370)}]
+let active_proposals = <Proposals<T>>::iter().count() as u32;
+ensure!(
+    active_proposals < T::MaxProposals::get(),
+    Error::<T>::MaxProposalsReached
+);
+\end{lstlisting}
+
+\subsection{Credentials as Control Gains}
+
+Vote weight is computed as a function of reputation modulated by quantum entropy:
+
+\begin{lstlisting}[language=Rust, caption={Control Gain Computation (lib.rs:617-631)}]
+fn calculate_quantum_vote_weight(
+    participant: &Participant<T::AccountId>,
+    entropy: &[u8],
+) -> Result<u64, Error<T>> {
+    // Base weight from reputation
+    let base_weight = participant.reputation;
+
+    // Add quantum randomness factor (+/- 10%)
+    let entropy_factor = (entropy[0] as u64 % 21) as i64 - 10;
+    let quantum_adjustment =
+        (base_weight as i64 * entropy_factor) / 100;
+
+    let final_weight =
+        (base_weight as i64 + quantum_adjustment).max(1) as u64;
+
+    Ok(final_weight)
+}
+\end{lstlisting}
+
+This formulation has precise control-theoretic semantics:
+
+\begin{equation}
+    w_i = \max\left(r_i + \frac{r_i \cdot (\eta_i \mod 21 - 10)}{100}, 1\right)
+\end{equation}
+
+where $w_i$ is the final weight, $r_i$ is the base reputation, and $\eta_i$ is the quantum entropy
+byte. The entropy introduces a $\pm 10\%$ perturbation, which serves two purposes:
+
+\begin{enumerate}
+    \item \textbf{Sybil resistance}: An attacker controlling multiple identities cannot precisely
+    predict aggregate weight
+    \item \textbf{Tie-breaking}: Near-equal coalitions are resolved by entropy rather than timestamp
+    or insertion order
+\end{enumerate}
+
+The \texttt{max(..., 1)} floor ensures no participant has zero influence---a stability constraint
+preventing degenerate control configurations.
+
+\subsection{Coherence as System Invariant}
+
+The central contribution is the dual-condition consensus requirement:
+
+\begin{lstlisting}[language=Rust, caption={Coherence-Constrained Consensus (lib.rs:666-667)}]
+// Proposal approved if majority approves AND
+// quantum confidence is high
+let approved = approve_weight > reject_weight
+    && quantum_confidence > 50;
+\end{lstlisting}
+
+This is not mere majority rule. Approval requires \textit{both}:
+
+\begin{enumerate}
+    \item $w_{\text{approve}} > w_{\text{reject}}$ (democratic condition)
+    \item $\gamma > 50$ (coherence condition)
+\end{enumerate}
+
+where $\gamma$ is the \textit{quantum confidence score}, computed as:
+
+\begin{lstlisting}[language=Rust, caption={Quantum Confidence Computation (lib.rs:679-715)}]
+fn calculate_quantum_confidence(
+    votes: &[QuantumVote<T::AccountId>],
+) -> Result<u32, Error<T>> {
+    // ... compute mean entropy across votes ...
+
+    for vote in votes {
+        let entropy_value = vote.quantum_nonce.iter()
+            .map(|&b| b as f64)
+            .sum::<f64>() / vote.quantum_nonce.len() as f64;
+
+        entropy_variance +=
+            (entropy_value - mean_entropy).powi(2);
+    }
+
+    entropy_variance /= votes.len() as f64;
+
+    // Higher variance indicates better quantum randomness
+    let confidence =
+        ((entropy_variance / 255.0).min(1.0) * 100.0) as u32;
+
+    Ok(confidence)
+}
+\end{lstlisting}
+
+The coherence score measures the \textit{quality of the randomness distribution} across votes:
+
+\begin{equation}
+    \gamma = \min\left(\frac{\sigma^2_\eta}{255}, 1\right) \times 100
+\end{equation}
+
+where $\sigma^2_\eta$ is the variance of mean entropy values across all votes. This captures a
+subtle but critical property: a legitimate vote should exhibit high entropy variance (true quantum
+randomness), while a coordinated attack (replay, Sybil) will show artificially low variance.
+
+\textbf{Critical clarification}: The coherence score $\gamma$ measures \textit{process quality},
+not outcome correctness. A proposal can have high coherence and still be ``wrong'' by external
+standards. A proposal can have low coherence despite being ``correct.'' The score measures whether
+the \textit{process} exhibited properties consistent with legitimate deliberation---statistical
+independence of participants and adequate entropy quality---independent of proposal content.
+
+\textbf{Key insight}: The coherence threshold acts as a Lyapunov function. States with $\gamma \leq 50$
+are \textit{outside the coherence manifold}---they may satisfy the democratic condition but fail the
+process quality invariant. The system refuses to transition to such states, even under majority pressure.
+
+\subsection{Rejection of Off-Manifold Transitions}
+
+The error handling system explicitly enumerates forbidden transitions:
+
+\begin{lstlisting}[language=Rust, caption={Off-Manifold Action Rejection (lib.rs:273-310)}]
+pub enum Error<T> {
+    ParticipantNotRegistered,    // Unidentified sensor
+    ParticipantAlreadyRegistered,
+    ProposalNotFound,            // Invalid reference
+    ProposalNotInVotingPhase,    // Temporal violation
+    AlreadyVoted,                // Replay attempt
+    InsufficientQuantumEntropy,  // Entropy pool exhausted
+    InvalidQuantumSignature,     // Authentication failure
+    Unauthorized,                // Role violation
+    MaxProposalsReached,         // Queue overflow
+    MaxVotersReached,            // Capacity limit
+    InvalidProposalData,         // Malformed input
+    QuantumConsensusFailed,      // Coherence violation
+}
+\end{lstlisting}
+
+Each error type corresponds to a specific invariant violation:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Error} & \textbf{Violated Invariant} \\
+\midrule
+\texttt{InsufficientQuantumEntropy} & Resource availability \\
+\texttt{ProposalNotInVotingPhase} & Temporal ordering \\
+\texttt{AlreadyVoted} & Idempotency \\
+\texttt{Unauthorized} & Role-based access \\
+\texttt{QuantumConsensusFailed} & Coherence threshold \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Bounded Influence and Stability}
+
+The system enforces hard bounds on participation:
+
+\begin{lstlisting}[language=Rust, caption={Configuration Bounds (lib.rs:46-56)}]
+#[pallet::constant]
+type MaxProposals: Get<u32>;
+
+#[pallet::constant]
+type MaxVoters: Get<u32>;
+
+#[pallet::constant]
+type MaxReviewers: Get<u32>;
+\end{lstlisting}
+
+These bounds serve as \textit{stability constraints}:
+
+\begin{itemize}
+    \item \textbf{MaxProposals}: Prevents unbounded growth of the pending state space
+    \item \textbf{MaxVoters}: Limits consensus computation complexity to $O(n)$
+    \item \textbf{MinQuantumEntropy}: Ensures sufficient randomness reservoir
+\end{itemize}
+
+The entropy pool management (lib.rs:557-574) implements a FIFO queue with bounded capacity:
+
+\begin{lstlisting}[language=Rust, caption={Entropy Pool Constraint (lib.rs:562-565)}]
+ensure!(
+    pool_size >= bytes &&
+    pool_size >= T::MinQuantumEntropy::get(),
+    Error::<T>::InsufficientQuantumEntropy
+);
+\end{lstlisting}
+
+Operations fail gracefully when entropy is exhausted, preventing the system from entering a
+low-coherence regime where randomness quality degrades.
+
+\subsection{Cryptographic Proof Generation}
+
+Each consensus produces a verifiable proof:
+
+\begin{lstlisting}[language=Rust, caption={Consensus Proof Generation (lib.rs:718-741)}]
+fn generate_quantum_consensus_proof(
+    votes: &[QuantumVote<T::AccountId>],
+    result: &QuantumConsensusResult,
+) -> Result<BoundedVec<u8, ConstU32<1024>>, Error<T>> {
+    let mut proof_data = Vec::new();
+
+    // Aggregate vote signatures
+    for vote in votes {
+        proof_data.extend_from_slice(&vote.quantum_signature);
+    }
+
+    // Bind to result
+    proof_data.extend_from_slice(&result.encode());
+
+    // Add fresh entropy
+    let quantum_entropy = Self::consume_quantum_entropy(64)?;
+    proof_data.extend_from_slice(&quantum_entropy);
+
+    // Commit
+    let proof = BlakeTwo256::hash(&proof_data);
+
+    Ok(proof.as_bytes().to_vec().try_into()?)
+}
+\end{lstlisting}
+
+This proof commits to:
+\begin{enumerate}
+    \item All individual vote signatures (participation record)
+    \item The computed result (outcome binding)
+    \item Fresh quantum entropy (temporal uniqueness)
+\end{enumerate}
+
+The resulting Blake2-256 hash provides a succinct, collision-resistant commitment that can be
+verified without reconstructing the full vote set.
+
+\subsection{Summary: The Control Loop}
+
+The complete governance control loop is:
+
+\begin{enumerate}
+    \item \textbf{Input}: Proposal $u_t$ submitted by registered Submitter
+    \item \textbf{Filtering}: Review period applies temporal low-pass filter
+    \item \textbf{Measurement}: Voters provide weighted observations $\{(v_i, w_i)\}$
+    \item \textbf{Aggregation}: Compute $w_{\text{approve}}, w_{\text{reject}}, w_{\text{abstain}}$
+    \item \textbf{Coherence Check}: Compute $\gamma$ from entropy distribution
+    \item \textbf{Decision}: Accept transition iff $w_{\text{approve}} > w_{\text{reject}} \land \gamma > 50$
+    \item \textbf{Proof}: Generate cryptographic commitment to decision
+    \item \textbf{State Update}: Transition to $s_{t+1}$ or reject and remain at $s_t$
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2cm, auto]
+    \node[draw, rectangle] (input) {Proposal $u_t$};
+    \node[draw, rectangle, right of=input, node distance=3cm] (filter) {Review Filter};
+    \node[draw, rectangle, right of=filter, node distance=3cm] (sensors) {Voter Sensors};
+    \node[draw, rectangle, below of=sensors] (aggregate) {Aggregation};
+    \node[draw, diamond, below of=aggregate, aspect=2] (coherence) {$\gamma > 50$?};
+    \node[draw, rectangle, left of=coherence, node distance=3cm] (accept) {Accept $s_{t+1}$};
+    \node[draw, rectangle, right of=coherence, node distance=3cm] (reject) {Reject (stay $s_t$)};
+
+    \draw[->] (input) -- (filter);
+    \draw[->] (filter) -- (sensors);
+    \draw[->] (sensors) -- (aggregate);
+    \draw[->] (aggregate) -- (coherence);
+    \draw[->] (coherence) -- node[above] {Yes} (accept);
+    \draw[->] (coherence) -- node[above] {No} (reject);
+\end{tikzpicture}
+\caption{Governance Control Loop with Coherence Gate}
+\label{fig:control-loop}
+\end{figure}
+
+The critical observation is that the coherence gate ($\gamma > 50$) is \textit{not optional}.
+Even unanimous approval fails if the entropy distribution indicates manipulation. This inverts
+the traditional democratic assumption: legitimacy is not derived from majority agreement, but
+from the quality of the process that produced the agreement.
+
+\subsection{Implications for Democratic Theory}
+
+This control-theoretic framing has several implications:
+
+\begin{enumerate}
+    \item \textbf{Legitimacy is measurable}: The coherence score $\gamma$ provides a quantitative
+    measure of process quality, independent of outcome.
+
+    \item \textbf{Manipulation is detectable}: Coordinated attacks produce low-variance entropy
+    distributions, triggering coherence failure before state corruption.
+
+    \item \textbf{Stability is guaranteed}: Bounded queues, temporal guards, and entropy floors
+    prevent the system from entering degenerate configurations.
+
+    \item \textbf{Rollback is possible}: Rejected transitions leave the system at $s_t$, enabling
+    retry with improved proposals rather than corrupted state recovery.
+\end{enumerate}
+
+The implementation demonstrates that coherence-constrained democratic systems are not merely
+theoretical constructs but deployable infrastructure with formal guarantees.
+
+\subsection{Scope of Control}
+
+A final clarification on system scope:
+
+\textbf{The governance system constrains how decisions are made, not what decisions must conclude.}
+
+The control system ensures:
+\begin{itemize}
+    \item Participants have engaged with admissible artifacts (procedural gate)
+    \item Influence is bounded and distributed (quadratic costs, reputation caps)
+    \item The decision process exhibits statistical independence (coherence threshold)
+    \item All transitions are auditable (cryptographic proofs)
+\end{itemize}
+
+The control system does \textit{not} ensure:
+\begin{itemize}
+    \item Outcomes are ``correct'' by any external standard
+    \item Participants agree with artifact conclusions
+    \item Proposals are wise, beneficial, or optimal
+    \item The collective makes ``good'' decisions
+\end{itemize}
+
+This scope limitation is deliberate. A system that claimed to guarantee correct outcomes would
+require semantic authority---the ability to evaluate truth---which is both philosophically
+indefensible and practically capturable. By limiting scope to process quality, the system
+remains defensible as infrastructure rather than oracle.

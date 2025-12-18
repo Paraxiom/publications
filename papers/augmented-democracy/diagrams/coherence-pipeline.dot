@@ -1,0 +1,68 @@
+digraph CoherencePipeline {
+    // Graph settings
+    rankdir=TB;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11];
+    edge [fontname="Helvetica", fontsize=9];
+    bgcolor="white";
+
+    // Color scheme
+    node [fillcolor="#E8F4FD"];
+
+    // Main pipeline nodes
+    proposal [label="1. Proposal\nCreated", fillcolor="#B8D4E8"];
+    review [label="2. Review\nPeriod", fillcolor="#B8D4E8"];
+    grid [label="3. Grid\nCurated", fillcolor="#B8D4E8"];
+    engagement [label="4. Engagement\nVerified", fillcolor="#B8D4E8"];
+    vote [label="5. Votes\nCast", fillcolor="#B8D4E8"];
+    result [label="6. Result", fillcolor="#90C695"];
+
+    // Gate nodes (diamonds)
+    gate1 [label="Credential\nGate", shape=diamond, fillcolor="#FFE4B5"];
+    gate2 [label="Temporal\nGate", shape=diamond, fillcolor="#FFE4B5"];
+    gate3 [label="Procedural\nGate", shape=diamond, fillcolor="#FFE4B5"];
+    gate4 [label="Admissibility\nGate", shape=diamond, fillcolor="#FFE4B5"];
+    gate5 [label="Signature\nGate", shape=diamond, fillcolor="#FFE4B5"];
+    gate6 [label="Coherence\nGate (γ>50)", shape=diamond, fillcolor="#FFD700"];
+
+    // Rejection nodes
+    reject [label="Rejected\n(No State Change)", shape=box, fillcolor="#FFB6B6"];
+
+    // Flow
+    proposal -> gate1;
+    gate1 -> review [label="pass"];
+    gate1 -> reject [label="fail", style=dashed, color="#CC0000"];
+
+    review -> gate2;
+    gate2 -> grid [label="pass"];
+    gate2 -> reject [label="fail", style=dashed, color="#CC0000"];
+
+    grid -> gate3;
+    gate3 -> engagement [label="pass"];
+    gate3 -> reject [label="fail", style=dashed, color="#CC0000"];
+
+    engagement -> gate4;
+    gate4 -> vote [label="pass"];
+    gate4 -> reject [label="fail", style=dashed, color="#CC0000"];
+
+    vote -> gate5;
+    gate5 -> gate6 [label="pass"];
+    gate5 -> reject [label="fail", style=dashed, color="#CC0000"];
+
+    gate6 -> result [label="γ>50 AND\nmajority"];
+    gate6 -> reject [label="γ≤50", style=dashed, color="#CC0000"];
+
+    // Annotations
+    subgraph cluster_legend {
+        label="Legend";
+        style=rounded;
+        bgcolor="#F5F5F5";
+
+        leg1 [label="Stage", shape=box, style="rounded,filled", fillcolor="#B8D4E8"];
+        leg2 [label="Gate", shape=diamond, fillcolor="#FFE4B5"];
+        leg3 [label="Coherence\nCheck", shape=diamond, fillcolor="#FFD700"];
+        leg4 [label="Reject", shape=box, fillcolor="#FFB6B6"];
+        leg5 [label="Accept", shape=box, fillcolor="#90C695"];
+
+        leg1 -> leg2 -> leg3 -> leg4 -> leg5 [style=invis];
+    }
+}

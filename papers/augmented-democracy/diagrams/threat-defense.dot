@@ -1,0 +1,79 @@
+digraph ThreatDefense {
+    // Graph settings
+    rankdir=LR;
+    node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=11];
+    edge [fontname="Helvetica", fontsize=9];
+    bgcolor="white";
+
+    // Threat nodes (left side)
+    subgraph cluster_threats {
+        label="Attack Vectors";
+        style=rounded;
+        bgcolor="#FFE8E8";
+
+        sybil [label="Sybil Attack\n(Fake Identities)", fillcolor="#FFB6B6"];
+        bribery [label="Bribery\n(Vote Buying)", fillcolor="#FFB6B6"];
+        coordination [label="Coordinated\nManipulation", fillcolor="#FFB6B6"];
+        unengaged [label="Unengaged\nVoting", fillcolor="#FFB6B6"];
+        bot [label="Bot\nVoting", fillcolor="#FFB6B6"];
+        whale [label="Whale\nDomination", fillcolor="#FFB6B6"];
+        replay [label="Replay\nAttack", fillcolor="#FFB6B6"];
+        entropy_attack [label="Entropy\nExhaustion", fillcolor="#FFB6B6"];
+    }
+
+    // Defense mechanisms (middle)
+    subgraph cluster_defenses {
+        label="Defense Mechanisms";
+        style=rounded;
+        bgcolor="#E8FFE8";
+
+        gamma [label="Coherence Gate\n(γ > 50)", fillcolor="#90C695"];
+        test_grid [label="Engagement\nVerification", fillcolor="#90C695"];
+        quadratic [label="Quadratic\nCosts", fillcolor="#90C695"];
+        signature [label="Quantum\nSignature", fillcolor="#90C695"];
+        entropy_pool [label="Entropy\nPool Check", fillcolor="#90C695"];
+        credentials [label="Credential\nValidation", fillcolor="#90C695"];
+    }
+
+    // Blocked indicator (right side)
+    blocked [label="BLOCKED", shape=octagon, fillcolor="#98FB98", fontsize=14, fontcolor="#006400"];
+
+    // Connections: Threats -> Defenses -> Blocked
+    sybil -> gamma [label="low variance\ndetected"];
+    gamma -> blocked;
+
+    bribery -> gamma [label="correlated\nentropy"];
+
+    coordination -> gamma [label="statistical\nanomaly"];
+
+    unengaged -> test_grid [label="fails\nverification"];
+    test_grid -> blocked;
+
+    bot -> test_grid [label="fails\nengagement"];
+    bot -> gamma [label="patterned\nbehavior"];
+
+    whale -> quadratic [label="n² cost\nscaling"];
+    quadratic -> blocked;
+
+    replay -> signature [label="nonce\nvalidation"];
+    signature -> blocked;
+
+    entropy_attack -> entropy_pool [label="pool\nexhausted"];
+    entropy_pool -> blocked;
+
+    // Add credential validation
+    sybil -> credentials [label="invalid\ncredential"];
+    credentials -> blocked;
+
+    // Legend
+    subgraph cluster_legend {
+        label="Detection Method";
+        style=rounded;
+        bgcolor="#F5F5F5";
+        rank=same;
+
+        l1 [label="γ detects:\n• Sybil\n• Bribery\n• Coordination", shape=note, fillcolor="#FFFACD"];
+        l2 [label="Test Grid detects:\n• Unengaged\n• Bots", shape=note, fillcolor="#FFFACD"];
+        l3 [label="Quadratic blocks:\n• Whale domination", shape=note, fillcolor="#FFFACD"];
+    }
+}

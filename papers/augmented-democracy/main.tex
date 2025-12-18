@@ -1,0 +1,652 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
+
+% Define Rust language for listings (not built-in)
+\lstdefinelanguage{Rust}{
+    keywords={fn, let, mut, pub, struct, enum, impl, self, Self, if, else, match, for, while, loop, return, break, continue, where, type, trait, const, static, ref, move, async, await, use, mod, crate, super, in, as, true, false, Ok, Err, Some, None},
+    keywordstyle=\color{blue}\bfseries,
+    keywords=[2]{u8, u16, u32, u64, u128, i8, i16, i32, i64, i128, f32, f64, bool, char, str, String, Vec, Option, Result, Box, Rc, Arc, H256, AccountId, BlockNumber, BoundedVec, DispatchResult, Error},
+    keywordstyle=[2]\color{teal},
+    sensitive=true,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morestring=[b]',
+}
+
+% Listings configuration
+\lstset{
+    language=Rust,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray},
+    stringstyle=\color{red!70!black},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!5},
+    showstringspaces=false,
+    tabsize=4
+}
+
+% Theorem environments
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+% Document info
+\title{Augmented Democracy as a Coherence-Constrained Control System\\
+\large From Oracle Governance to Quantum-Safe Democratic Infrastructure}
+
+\author{Sylvain Cormier\\
+Paraxiom Research\\
+\texttt{sylvain@paraxiom.org}}
+
+\date{December 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present a systems-theoretic framework for democratic governance that treats
+legitimacy as the preservation of coherence in decision-making processes rather
+than as a direct consequence of majority outcomes.
+The framework introduces \emph{epistemic infrastructure}---including token-curated
+test grids, dynamic credential NFTs, and bounded voting weights---that restrict
+participation to actors who can demonstrate verifiable engagement with relevant
+evidence, without assigning semantic authority to the system itself.
+
+Building on prior work in Hamiltonian machine learning (ERLHS), geometric
+consensus (Karmonic Mesh), and quantum-safe validation (Proof of Coherence),
+we formalize augmented democracy as a control system in which proposals are
+state transitions, participants act as distributed sensors with bounded influence,
+and acceptance requires satisfaction of both a democratic majority condition and
+a coherence threshold measuring process consistency.
+
+We trace the evolution of this framework from early conceptual work (2017),
+through EOS-based smart contract implementations, to its current deployment on
+the Quantum Harmony blockchain using post-quantum cryptography and quantum
+entropy sources. The central claim is that democratic legitimacy is a measurable
+property of process quality---independent of specific outcomes---and that governance
+systems designed around epistemic admissibility and coherence constraints exhibit
+improved resistance to manipulation, Sybil attacks, plutocratic capture, and
+coordinated adversarial behavior.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%------------------------------------------------------------------------------
+\section{Problem: Democracy Under Adversarial Load}
+\label{sec:problem}
+%------------------------------------------------------------------------------
+
+Democratic systems face compounding failure modes in the information age:
+
+\begin{enumerate}
+    \item \textbf{Unengaged voting}: Participants lack verifiable engagement with proposal-relevant evidence
+    \item \textbf{Manipulation}: Coordinated influence campaigns exploit cognitive biases
+    \item \textbf{Speed vs.\ legitimacy}: Rapid decisions sacrifice deliberation quality
+    \item \textbf{AI-generated influence}: Large language models enable scalable persuasion
+    \item \textbf{Quantum-era threats}: Future adversaries with quantum computers can
+    retroactively compromise classical cryptographic commitments
+\end{enumerate}
+
+These are not political problems. They are \textit{systems failures}---the democratic control
+loop lacks adequate filtering, measurement, and stability guarantees.
+
+Traditional responses (education, regulation, fact-checking) address symptoms rather than
+architecture. We require a formal framework that treats democracy as critical infrastructure
+subject to engineering constraints.
+
+%------------------------------------------------------------------------------
+\section{Philosophical Foundations: Artifacts, Not Truth}
+\label{sec:philosophy}
+%------------------------------------------------------------------------------
+
+Before presenting the technical framework, we establish a critical philosophical
+distinction: \textbf{the governance system does not evaluate truth}. It evaluates
+\textit{procedural admissibility} of evidence artifacts and \textit{process consistency}
+of decision-making.
+
+\subsection{The Semantic Authority Problem}
+
+Any system that claims to determine ``what is true'' faces an infinite regress:
+who verifies the verifiers? Classical epistemic gatekeeping (expert panels,
+editorial boards, fact-checkers) ultimately rests on institutional authority
+that can be captured, corrupted, or contested.
+
+Our framework sidesteps this problem entirely. The system makes no semantic
+judgments. It enforces \textit{procedural constraints} on what evidence may be
+referenced and measures \textit{statistical properties} of the decision process.
+
+\subsection{Admissible Artifacts}
+
+\begin{definition}[Admissible Fact Artifact]
+In this framework, a \emph{fact} is not treated as a semantic claim or assertion,
+but as a verifiable artifact with cryptographic provenance.
+An artifact is admissible for use in governance processes if it satisfies:
+\begin{enumerate}
+    \item \textbf{Immutable referenceability}: the artifact can be uniquely
+    identified via a hash, DOI, or equivalent content-addressed reference;
+    \item \textbf{Authentic issuance}: the artifact is bound to a recognized
+    issuer, authority, or origin via digital signatures or equivalent mechanisms;
+    \item \textbf{Contextual relevance}: the artifact belongs to an artifact
+    class declared relevant for the proposal type under consideration.
+\end{enumerate}
+No semantic interpretation, truth evaluation, or correctness judgment is
+performed by the governance system itself.
+\end{definition}
+
+This definition has important consequences:
+\begin{itemize}
+    \item A peer-reviewed paper is admissible because it has a DOI, is signed by
+    a journal, and belongs to the ``scientific literature'' artifact class---not
+    because its conclusions are ``true.''
+    \item A government report is admissible because it has a document ID, is
+    signed by an agency, and belongs to the ``official statistics'' artifact
+    class---not because its numbers are ``correct.''
+    \item Participants demonstrate engagement with admissible artifacts, not
+    agreement with their conclusions.
+\end{itemize}
+
+\subsection{Test Grids as Admissibility Registries}
+
+\begin{definition}[Token-Curated Test Grid]
+A Token-Curated Test Grid (TCTG) is a governed registry that specifies which
+classes of admissible artifacts may be referenced for a given proposal
+domain.
+Curation decisions are made by participants who stake tokens and are subject to
+economic penalties if admitted artifacts are later shown to be malformed,
+inauthentic, or procedurally invalid.
+
+Test grids govern \emph{admissibility criteria} (format, provenance, relevance),
+not semantic conclusions or interpretations.
+\end{definition}
+
+\textbf{Critical distinction}: Test grids do not define truth; they define the set
+of artifacts that a decision process is permitted to reference.
+
+Curators are slashed for admitting artifacts that:
+\begin{itemize}
+    \item Have invalid provenance (forged signatures, broken hash references)
+    \item Violate format requirements (wrong artifact class for proposal type)
+    \item Were retracted or invalidated by their issuing authority
+\end{itemize}
+
+Curators are \textit{not} slashed for admitting artifacts whose conclusions are
+later contested, revised, or overturned through normal scientific or institutional
+processes. The system does not adjudicate semantic disputes.
+
+\subsection{Coherence as Process Quality}
+
+\begin{definition}[Process Coherence]
+The coherence score $\gamma$ does not measure correctness, factual truth, or
+proposal merit. It measures statistical consistency and entropy quality of the
+decision process given the declared admissible evidence and participation constraints.
+
+Low coherence indicates process instability, coordinated behavior, or insufficient
+entropy, independent of proposal content.
+\end{definition}
+
+A proposal can have high coherence and still be ``wrong'' by external standards.
+A proposal can have low coherence despite being ``correct.'' The coherence score
+measures whether the \textit{process} that produced the decision exhibited
+properties consistent with legitimate deliberation.
+
+\subsection{Scope of System Authority}
+
+The governance system constrains \emph{how} decisions are made, not \emph{what}
+decisions must conclude.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{System Does} & \textbf{System Does Not} \\
+\midrule
+Verify artifact provenance & Evaluate artifact truth \\
+Enforce participation requirements & Determine correct outcomes \\
+Measure process consistency & Judge proposal merit \\
+Bound individual influence & Override collective judgment \\
+Detect coordinated manipulation & Censor unpopular positions \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This scope limitation is not a weakness but a design requirement. A system that
+claimed semantic authority would be both philosophically indefensible and
+practically capturable.
+
+%------------------------------------------------------------------------------
+\section{Augmented Democracy: Definition}
+\label{sec:definition}
+%------------------------------------------------------------------------------
+
+\subsection{What Augmented Democracy Is Not}
+
+\begin{itemize}
+    \item \textbf{Not technocracy}: Experts do not override participants
+    \item \textbf{Not algorithmic rule}: No AI makes final decisions
+    \item \textbf{Not censorship}: All proposals enter the system
+    \item \textbf{Not plutocracy}: Wealth does not determine influence
+    \item \textbf{Not truth arbitration}: The system does not determine what is ``true''
+\end{itemize}
+
+\subsection{Definition}
+
+\begin{definition}[Augmented Democracy]
+A \textbf{constrained participation system} with admissibility gates, where:
+\begin{enumerate}
+    \item Participation requires registration (identity binding via dynamic NFTs)
+    \item Voters must demonstrate engagement with proposal-relevant admissible artifacts
+    \item Proposals traverse a filtering pipeline (review period with gatherers/curators)
+    \item Votes are weighted by reputation and bounded by quadratic costs
+    \item Acceptance requires coherence threshold satisfaction (process quality)
+    \item All transitions produce cryptographic proofs (auditability)
+    \item Credentials decay without ongoing participation (life-sustaining NFTs)
+\end{enumerate}
+\end{definition}
+
+The key distinction from classical democracy: legitimacy derives from \textit{process invariants},
+not outcome ratification. The ``augmented'' refers to procedural augmentation---ensuring voters
+have verifiably engaged with relevant evidence before their input shapes collective decisions.
+
+%------------------------------------------------------------------------------
+% Section: Epistemic Infrastructure (imported)
+%------------------------------------------------------------------------------
+\input{section2-5-epistemic-infrastructure}
+
+%------------------------------------------------------------------------------
+% Section: Governance as a Control System (imported)
+%------------------------------------------------------------------------------
+\input{section3-governance-as-control-system}
+
+%------------------------------------------------------------------------------
+% Section: The Coherence Pipeline (bridge section)
+%------------------------------------------------------------------------------
+\input{section-bridge-coherence-pipeline}
+
+%------------------------------------------------------------------------------
+\section{Coherence Constraints in Democratic Systems}
+\label{sec:coherence-constraints}
+%------------------------------------------------------------------------------
+
+\subsection{Coherence Functionals for Proposals}
+
+Let $\mathcal{P}$ be the space of proposals and $\mathcal{C}: \mathcal{P} \rightarrow [0,1]$
+a coherence functional. A proposal $p$ is \textit{on-manifold} if $\mathcal{C}(p) > \tau$
+for threshold $\tau$.
+
+In the implementation, $\mathcal{C}$ is realized through quantum confidence scoring:
+\begin{equation}
+    \mathcal{C}(p) = \frac{\gamma_p}{100}
+\end{equation}
+where $\gamma_p$ is computed from entropy variance across votes on $p$.
+
+\textbf{Important}: $\gamma$ measures process quality, not outcome correctness.
+High $\gamma$ indicates statistically independent participation with adequate
+entropy. Low $\gamma$ indicates coordination, manipulation, or resource exhaustion.
+
+\subsection{Bounded Influence}
+
+No single participant can dominate outcomes. The weight function satisfies:
+\begin{equation}
+    w_i \in [w_{\min}, w_{\max}] \quad \forall i
+\end{equation}
+with $w_{\min} = 1$ (floor) and $w_{\max} = r_i \cdot 1.1$ (reputation cap with 10\% entropy bonus).
+
+\subsection{Rollback and Retry Semantics}
+
+Failed coherence checks do not corrupt state. The system remains at $s_t$ when:
+\begin{itemize}
+    \item $w_{\text{approve}} \leq w_{\text{reject}}$ (democratic failure)
+    \item $\gamma \leq 50$ (coherence failure)
+    \item Entropy pool exhausted (resource failure)
+\end{itemize}
+
+Submitters may revise and resubmit. The state machine supports retry without penalty.
+
+\subsection{Limited Adversarial Feedback}
+
+The system limits adversarial feedback by restricting rejection signals to typed
+errors and coarse-grained status transitions.
+While no distributed system can eliminate all side-channel information, this
+design prevents gradient-style probing of coherence thresholds and minimizes
+adaptive manipulation.
+
+Malicious proposals trigger explicit rejection with typed errors. The error taxonomy
+(Section~\ref{sec:governance-control}) ensures that:
+\begin{enumerate}
+    \item Attackers receive no fine-grained information about \textit{why} rejection occurred
+    \item Legitimate users receive actionable feedback via different channels
+    \item All rejections are logged for audit
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+\section{Quantum-Safe and Post-Quantum Alignment}
+\label{sec:quantum}
+%------------------------------------------------------------------------------
+
+This is not a cryptography paper. However, the governance system inherits quantum resistance
+from its substrate:
+
+\subsection{Why Classical Assumptions Fail}
+
+\begin{itemize}
+    \item RSA/ECDSA signatures are broken by Shor's algorithm
+    \item Hash-based commitments remain secure (Grover provides only quadratic speedup)
+    \item Retroactive compromise: adversaries may record today's traffic for future decryption
+\end{itemize}
+
+\subsection{Post-Quantum Protections}
+
+The Quantum Harmony implementation uses:
+\begin{itemize}
+    \item \textbf{SPHINCS+-256s}: Stateless hash-based signatures (NIST PQC standard)
+    \item \textbf{Blake2-256}: Quantum-resistant hashing
+    \item \textbf{QKD entropy}: True quantum randomness from KIRQ network
+\end{itemize}
+
+\subsection{Proof-of-Coherence vs.\ Proof-of-Work/Stake}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Property} & \textbf{PoW} & \textbf{PoS} & \textbf{PoC} \\
+\midrule
+Energy cost & High & Low & Low \\
+Plutocracy risk & Medium & High & Low \\
+Quantum resistance & None & None & Full \\
+Sybil resistance & Hash rate & Stake & Coherence \\
+Manipulation detection & None & None & Built-in \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Proof-of-Coherence detects manipulation \textit{before} state transition, whereas PoW/PoS
+detect only after finalization (if at all).
+
+%------------------------------------------------------------------------------
+\section{Historical Implementation: From Concept to Quantum Infrastructure}
+\label{sec:history}
+%------------------------------------------------------------------------------
+
+The augmented democracy framework has evolved through eight years of development,
+from theoretical conception to production deployment.
+
+\subsection{Conceptual Foundation (2017)}
+
+The original framework was published in August 2017 as ``A Machine-Based Societal
+Model for Curbing Citizen Cynicism''~\cite{cormier2017augmented}. Key concepts
+established:
+
+\begin{itemize}
+    \item \textbf{Test grids}: Voters must demonstrate engagement with relevant evidence
+    \item \textbf{Mechanical humans}: Low-barrier contribution tasks for universal participation
+    \item \textbf{Operating system metaphor}: Governance as a self-regulating system
+    \item \textbf{Blockchain validation}: Immutable record of all decisions
+    \item \textbf{Official as safeguard}: Human oversight of machine recommendations
+\end{itemize}
+
+The 2017 paper explicitly framed democracy as ``critical infrastructure'' requiring
+engineering discipline---a perspective that remains central to the current implementation.
+
+\subsection{EOS Prototype and Oracle Integration (2020--2021)}
+
+The first production implementation deployed as an EOS smart contract:
+
+\begin{itemize}
+    \item \textbf{augdemocracy.cpp}: Core smart contract with registration and voting
+    \item \textbf{Token Curated Test Grids}: KILT-inspired gatherer/curator structure~\cite{kilt2020}
+    \item \textbf{Oracle integration}: Decentralized artifact sourcing via oracle networks
+    \item \textbf{Dynamic NFTs}: Early credential management prototypes
+    \item \textbf{Quadratic voting}: Whale resistance mechanisms
+\end{itemize}
+
+The EOS implementation validated the admissibility gate concept in production,
+demonstrating that artifact-engagement verification was technically feasible and user-acceptable.
+Concurrent research into Polkadot ecosystem oracle solutions (including Kylin Network,
+a Polkadot parachain for cross-chain data feeds) informed the design of the
+decentralized artifact-sourcing layer.
+
+\subsection{Substrate Migration (2022--2023)}
+
+Migration to the Substrate framework enabled:
+
+\begin{itemize}
+    \item \textbf{Pallet architecture}: Modular, upgradeable governance components
+    \item \textbf{Cross-chain compatibility}: Polkadot ecosystem integration
+    \item \textbf{Runtime upgrades}: Governance system self-modification
+    \item \textbf{Improved NFT standards}: FRAME-native credential tokens
+\end{itemize}
+
+The Substrate pallet (\texttt{pallet-quantum-democracy}) preserved all EOS-era
+features while adding formal verification capabilities.
+
+\subsection{Quantum Harmony Integration (2024--2025)}
+
+Current production deployment on Quantum Harmony blockchain:
+
+\begin{itemize}
+    \item \textbf{Quantum entropy pool}: True randomness from KIRQ network
+    \item \textbf{Coherence-based consensus}: Replaces stake-based finality
+    \item \textbf{Post-quantum signatures}: SPHINCS+-256s for credential integrity
+    \item \textbf{QKD-protected channels}: Quantum key distribution for artifact delivery
+    \item \textbf{Toshiba/Crypto4A integration}: Hardware security module support
+\end{itemize}
+
+\subsection{Continuity of Core Principles}
+
+Across all implementations, core principles remain constant:
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Principle} & \textbf{2017} & \textbf{EOS} & \textbf{Substrate} & \textbf{QH} \\
+\midrule
+Artifact-gated voting & Concept & Implemented & Enhanced & Production \\
+Dynamic credentials & Concept & Prototype & NFT-based & Life-sustaining \\
+Quadratic bounds & Concept & Implemented & Integrated & + Entropy \\
+Coherence threshold & Implicit & Partial & Formal & Quantum \\
+Official safeguard & Central & Preserved & Root-only & Emergency \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This evolution demonstrates that augmented democracy is not speculative---it is
+iteratively refined infrastructure with continuous production deployment since 2020.
+
+%------------------------------------------------------------------------------
+\section{Failure Modes and Emergency Governance}
+\label{sec:failure}
+%------------------------------------------------------------------------------
+
+\subsection{When Coherence Fails}
+
+Coherence failure ($\gamma \leq 50$) indicates:
+\begin{enumerate}
+    \item \textbf{Coordinated attack}: Sybil voters with correlated entropy
+    \item \textbf{Entropy exhaustion}: Insufficient quantum randomness
+    \item \textbf{System compromise}: Entropy source manipulation
+\end{enumerate}
+
+Coherence failure does \textit{not} indicate that the proposal is wrong, harmful,
+or should be rejected on substantive grounds. It indicates only that the
+\textit{process} exhibited statistical anomalies.
+
+\subsection{Emergency Committee Override}
+
+For critical failures, the system supports:
+\begin{lstlisting}[language=Rust]
+ensure_root(origin)?;  // Root-only operations
+\end{lstlisting}
+
+This is the ``break glass'' mechanism. Root authority can:
+\begin{itemize}
+    \item Replenish entropy pool
+    \item Pause voting
+    \item Trigger manual review
+\end{itemize}
+
+Root cannot:
+\begin{itemize}
+    \item Directly approve/reject proposals
+    \item Modify vote records
+    \item Alter coherence thresholds retroactively
+\end{itemize}
+
+\subsection{Human-in-the-Loop Escalation}
+
+When automated coherence checks fail repeatedly, the system escalates to human review:
+\begin{enumerate}
+    \item Proposal flagged for manual assessment
+    \item Validator committee convenes (off-chain)
+    \item Committee issues signed recommendation
+    \item Recommendation enters normal voting pipeline
+\end{enumerate}
+
+This preserves the coherence constraint while acknowledging that some edge cases
+require human judgment.
+
+\subsection{Response Windows}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Event} & \textbf{Detection} & \textbf{Response} \\
+\midrule
+Low entropy & Immediate & Auto-pause voting \\
+Coherence failure & At finalization & Proposal held \\
+Repeated failures & 3 consecutive & Escalate to committee \\
+System compromise & Manual detection & Emergency halt \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%------------------------------------------------------------------------------
+% User Experience and Agent Delegation
+%------------------------------------------------------------------------------
+\input{section-ux-friction}
+
+%------------------------------------------------------------------------------
+\section{Conclusion: Democracy as Infrastructure}
+\label{sec:conclusion}
+%------------------------------------------------------------------------------
+
+Democracy is no longer a philosophical abstraction. It is \textbf{critical infrastructure}.
+
+The systems we use to make collective decisions are under adversarial load from state actors,
+AI-generated influence, and the fundamental speed/quality tradeoff of digital communication.
+Traditional democratic theory offers no defense against these threats because it treats
+legitimacy as a property of outcomes rather than processes.
+
+This paper has presented an alternative: \textit{coherence-constrained democratic systems}
+with \textit{procedural infrastructure}, where:
+\begin{enumerate}
+    \item Proposals are state transitions in a formal control system
+    \item Participants hold dynamic credentials that evolve with contribution
+    \item Voters must demonstrate engagement with admissible artifacts (procedural gate)
+    \item Quadratic voting costs bound plutocratic influence
+    \item Deliberation is a filtering operation with minimum dwell time
+    \item Approval requires both majority support \textit{and} coherence threshold
+    \item All transitions produce cryptographic proofs
+    \item Credentials decay without ongoing participation (life-sustaining NFTs)
+\end{enumerate}
+
+The central thesis is that \textbf{democratic legitimacy is a measurable property of
+process quality, independent of specific outcomes}.
+
+This is not ideology. It is engineering.
+
+\textbf{The governance system constrains how decisions are made, not what decisions
+must conclude.}
+
+The framework has evolved through eight years of development---from the 2017 conceptual
+paper through EOS smart contract prototypes to the current Quantum Harmony implementation.
+Each iteration validated core principles while adding cryptographic hardening. Combined
+with prior work on ERLHS (coherence in AI), Karmonic Mesh (geometric substrate), and
+Proof of Coherence (distributed validation), this framework provides a complete architecture
+for augmented democracy as 21st-century infrastructure.
+
+The procedural stack---token-curated test grids, dynamic credential NFTs, quadratic voting,
+coherence thresholds, and accountability mechanisms---transforms voting from opinion
+aggregation into \textit{structured preference revelation}. This is the augmentation that
+gives augmented democracy its name: not technological enhancement of voting mechanics,
+but procedural elevation of participation quality.
+
+The friction inherent in this architecture is addressed through agent-mediated
+participation: AI agents that navigate the coherence pipeline on behalf of human
+principals. Humans set values and priorities; agents handle the mechanics. This
+creates a new division of labor---humans as value-setters, agents as executors---
+with coherence constraints applying at both levels. The ERLHS framework ensures
+agent coherence; the democratic framework ensures process coherence. Together,
+they enable participation at scale without sacrificing procedural quality.
+
+The ultimate vision: a system where legitimate collective decisions emerge from
+coherence-preserving processes, mediated by trustworthy agents, grounded in
+verifiable artifacts, and accountable to human values. This is democracy as infrastructure---
+engineered, deployable, and resistant to adversarial conditions.
+
+%------------------------------------------------------------------------------
+% References
+%------------------------------------------------------------------------------
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
+
+\bibitem{cormier2017augmented}
+Cormier, S. (2017).
+\textit{A Machine-Based Societal Model for Curbing Citizen Cynicism}.
+Unpublished manuscript, August 2017.
+
+\bibitem{cormier2025erlhs}
+Cormier, S. (2025).
+\textit{ERLHS: A Hamiltonian Framework for Coherence-Preserving Machine Intelligence}.
+Zenodo. \url{https://doi.org/10.5281/zenodo.17928909}
+
+\bibitem{cormier2025karmonic}
+Cormier, S. (2025).
+\textit{Karmonic Mesh: Spectral Consensus on Toroidal Manifolds}.
+Zenodo. \url{https://doi.org/10.5281/zenodo.17928991}
+
+\bibitem{cormier2025poc}
+Cormier, S. (2025).
+\textit{Proof of Coherence: QKD-Based Distributed Consensus}.
+Zenodo. \url{https://doi.org/10.5281/zenodo.17929054}
+
+\bibitem{cormier2025toroidal}
+Cormier, S. (2025).
+\textit{Toroidal Mesh: 10K TPS with SPHINCS+ via Parallel Verification}.
+Zenodo. \url{https://doi.org/10.5281/zenodo.17931222}
+
+\bibitem{cormier2025governance}
+Cormier, S. (2025).
+\textit{Toroidal Governance: Tonnetz Manifold Democratic Infrastructure}.
+Zenodo. \url{https://doi.org/10.5281/zenodo.17929091}
+
+\bibitem{buterin2019quadratic}
+Buterin, V., Hitzig, Z., \& Weyl, E. G. (2019).
+\textit{A Flexible Design for Funding Public Goods}.
+Management Science, 65(11), 5171--5187.
+
+\bibitem{kilt2020}
+BOTLabs GmbH. (2020).
+\textit{KILT Protocol White Paper: Credentials for Web 3.0}.
+Berlin, Germany.
+\url{https://kilt-protocol.org/files/KILT-White-Paper.pdf}
+
+\end{thebibliography}
+
+\end{document}
