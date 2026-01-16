@@ -506,7 +506,8 @@ def load_phi2(device: torch.device = DEVICE, model_name: str = "microsoft/phi-2"
         torch_dtype=torch.float16 if device.type == "cuda" else torch.float32,
         device_map="auto" if device.type == "cuda" else None,
         trust_remote_code=True,
-        output_hidden_states=True
+        output_hidden_states=True,
+        attn_implementation="eager",  # Required for custom attention masks on GPU
     )
 
     if device.type != "cuda":
