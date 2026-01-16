@@ -58,25 +58,31 @@ for name, module in model.named_modules():
         original_forward = module.forward
 
         def make_wrapper(orig_fwd):
-            # Phi-2 attention signature: hidden_states, position_embeddings, attention_mask, ...
-            def wrapper(hidden_states, position_embeddings, attention_mask=None,
-                       past_key_values=None, cache_position=None, **kwargs):
+            # Flexible wrapper that handles both positional and keyword args
+            def wrapper(*args, **kwargs):
+                # Extract hidden_states (always first arg or kwarg)
+                if args:
+                    hidden_states = args[0]
+                else:
+                    hidden_states = kwargs.get('hidden_states')
+
                 seq_len = hidden_states.shape[1]
                 device = hidden_states.device
                 dtype = hidden_states.dtype
 
+                # Create toroidal mask
                 topo_mask = topology.create_attention_mask(seq_len, radius, alpha, device)
                 topo_bias = torch.log(topo_mask + 1e-10).to(dtype)
                 causal = torch.triu(torch.full((seq_len, seq_len), float('-inf'), device=device, dtype=dtype), diagonal=1)
                 combined = (topo_bias + causal).unsqueeze(0).unsqueeze(0)
 
-                if attention_mask is not None:
-                    attention_mask = attention_mask + combined
+                # Modify attention_mask in kwargs
+                if 'attention_mask' in kwargs and kwargs['attention_mask'] is not None:
+                    kwargs['attention_mask'] = kwargs['attention_mask'] + combined
                 else:
-                    attention_mask = combined
+                    kwargs['attention_mask'] = combined
 
-                return orig_fwd(hidden_states, position_embeddings, attention_mask,
-                               past_key_values, cache_position, **kwargs)
+                return orig_fwd(*args, **kwargs)
             return wrapper
 
         module.forward = make_wrapper(original_forward)
