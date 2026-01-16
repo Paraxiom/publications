@@ -1,0 +1,46 @@
+{
+  "phi-2": {
+    "baseline": {
+      "model": "phi-2",
+      "display_name": "Phi-2 (2.78B)",
+      "architecture": "Phi",
+      "has_rlhf": false,
+      "condition": "baseline",
+      "truthfulqa_accuracy": 0.1,
+      "halueval_score": 0.0,
+      "total_time": 4679.283514022827
+    },
+    "toroidal": {
+      "model": "phi-2",
+      "display_name": "Phi-2 (2.78B)",
+      "architecture": "Phi",
+      "has_rlhf": false,
+      "condition": "toroidal",
+      "truthfulqa_accuracy": 0.06,
+      "halueval_score": 0.0,
+      "total_time": 4292.605584859848
+    }
+  },
+  "tinyllama-base": {
+    "baseline": {
+      "model": "tinyllama-base",
+      "display_name": "TinyLlama Base (1.1B)",
+      "architecture": "Llama",
+      "has_rlhf": false,
+      "condition": "baseline",
+      "truthfulqa_accuracy": 0.02,
+      "halueval_score": 0.0,
+      "total_time": 1878.872260093689
+    },
+    "toroidal": {
+      "model": "tinyllama-base",
+      "display_name": "TinyLlama Base (1.1B)",
+      "architecture": "Llama",
+      "has_rlhf": false,
+      "condition": "toroidal",
+      "truthfulqa_accuracy": 0.02,
+      "halueval_score": 0.0,
+      "total_time": 2046.6292338371277
+    }
+  }
+}

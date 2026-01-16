@@ -1,0 +1,24 @@
+{
+  "tinyllama-base": {
+    "baseline": {
+      "model": "tinyllama-base",
+      "display_name": "TinyLlama Base (1.1B)",
+      "architecture": "Llama",
+      "has_rlhf": false,
+      "condition": "baseline",
+      "truthfulqa_accuracy": 0.5,
+      "halueval_score": 0.0,
+      "total_time": 89.864187002182
+    },
+    "toroidal": {
+      "model": "tinyllama-base",
+      "display_name": "TinyLlama Base (1.1B)",
+      "architecture": "Llama",
+      "has_rlhf": false,
+      "condition": "toroidal",
+      "truthfulqa_accuracy": 0.5,
+      "halueval_score": 0.0,
+      "total_time": 96.85129594802856
+    }
+  }
+}

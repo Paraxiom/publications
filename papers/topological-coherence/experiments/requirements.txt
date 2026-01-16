@@ -1,0 +1,26 @@
+# Topological Coherence Experiments
+# =================================
+# From: Cormier (2026) "Topological Constraints for Coherent Language Models"
+
+# Core ML
+torch>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# HuggingFace ecosystem
+transformers>=4.36.0
+accelerate>=0.25.0
+datasets>=2.16.0
+huggingface_hub>=0.20.0
+
+# Utilities
+tqdm>=4.65.0
+
+# Benchmarks (auto-loaded via datasets)
+# - TruthfulQA: truthful_qa
+# - HaluEval: pminervini/HaluEval
+
+# Optional: for visualization
+# matplotlib>=3.7.0
+# seaborn>=0.12.0
+# pandas>=2.0.0

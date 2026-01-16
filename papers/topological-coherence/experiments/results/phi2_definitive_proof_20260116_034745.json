@@ -1,0 +1,20 @@
+{
+  "baseline": {
+    "model_name": "phi-2",
+    "condition": "baseline",
+    "truthfulqa_accuracy": 0.0,
+    "halueval_score": 0.1,
+    "spectral_gap_stability": 7.554808666075653,
+    "mean_drift_rate": 0.0,
+    "total_time": 17676.291918039322
+  },
+  "toroidal": {
+    "model_name": "phi-2",
+    "condition": "toroidal",
+    "truthfulqa_accuracy": 0.02,
+    "halueval_score": 0.28,
+    "spectral_gap_stability": 7.600949356616246,
+    "mean_drift_rate": 0.0,
+    "total_time": 22043.616032123566
+  }
+}

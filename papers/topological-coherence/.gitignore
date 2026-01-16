@@ -1,5 +1,30 @@
+# Python
 venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# LaTeX
 *.aux
 *.log
 *.out
-__pycache__/
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# Large logs (keep results, exclude run logs)
+experiments/*.log

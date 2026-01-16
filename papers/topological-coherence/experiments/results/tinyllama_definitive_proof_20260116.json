@@ -1,0 +1,29 @@
+{
+  "model": "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T",
+  "model_short": "tinyllama-1.1b",
+  "parameters": "1.10B",
+  "has_rlhf": false,
+  "n_samples": 50,
+  "date": "2026-01-16",
+  "baseline": {
+    "condition": "baseline",
+    "truthfulqa_accuracy": 0.0,
+    "halueval_score": 0.1,
+    "spectral_gap_stability": 7.554808666075653
+  },
+  "toroidal": {
+    "condition": "toroidal",
+    "radius": 2.0,
+    "alpha": 1.0,
+    "grid_size": 12,
+    "attention_layers_wrapped": 22,
+    "truthfulqa_accuracy": 0.02,
+    "halueval_score": 0.28,
+    "spectral_gap_stability": 7.600949356616246
+  },
+  "interpretation": {
+    "halueval_change": "+180%",
+    "effect": "NEGATIVE - toroidal constraints increased hallucination rate",
+    "conclusion": "Tonnetz topology harmful for TinyLlama architecture"
+  }
+}
