@@ -28,3 +28,6 @@ __pycache__/
 
 # Large logs (keep results, exclude run logs)
 experiments/*.log
+
+# LaTeX source (local only)
+*.tex
