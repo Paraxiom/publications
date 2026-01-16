@@ -58,7 +58,9 @@ for name, module in model.named_modules():
         original_forward = module.forward
 
         def make_wrapper(orig_fwd):
-            def wrapper(hidden_states, attention_mask=None, *args, **kwargs):
+            # Phi-2 attention signature: hidden_states, position_embeddings, attention_mask, ...
+            def wrapper(hidden_states, position_embeddings, attention_mask=None,
+                       past_key_values=None, cache_position=None, **kwargs):
                 seq_len = hidden_states.shape[1]
                 device = hidden_states.device
                 dtype = hidden_states.dtype
@@ -73,7 +75,8 @@ for name, module in model.named_modules():
                 else:
                     attention_mask = combined
 
-                return orig_fwd(hidden_states, attention_mask, *args, **kwargs)
+                return orig_fwd(hidden_states, position_embeddings, attention_mask,
+                               past_key_values, cache_position, **kwargs)
             return wrapper
 
         module.forward = make_wrapper(original_forward)
