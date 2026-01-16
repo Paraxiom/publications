@@ -84,6 +84,7 @@ def load_model(model_name: str):
         torch_dtype=torch.float16 if DEVICE.type == "cuda" else torch.float32,
         device_map="auto" if DEVICE.type == "cuda" else None,
         trust_remote_code=True,
+        attn_implementation="eager",
     )
 
     if DEVICE.type != "cuda":
@@ -214,18 +215,15 @@ def run_hyperparameter_search():
 
     TOPOLOGIES = {
         "tonnetz_12": TonnetzTopology(grid_size=12),
-        "tonnetz_6": TonnetzTopology(grid_size=6),
         "linear": LinearTopology(),
     }
 
     PARAMS = [
-        {"radius": 2.0, "alpha": 1.0},   # Original
-        {"radius": 4.0, "alpha": 0.5},   # Weaker
-        {"radius": 6.0, "alpha": 0.3},   # Much weaker
-        {"radius": 1.0, "alpha": 2.0},   # Stronger
+        {"radius": 2.0, "alpha": 1.0},   # Original (what we tested before)
+        {"radius": 4.0, "alpha": 0.5},   # Weaker constraint
     ]
 
-    N_SAMPLES = 10  # Reduced for faster GPU runs
+    N_SAMPLES = 5  # Minimal for eager attention (slower but compatible)
 
     # Load benchmarks once
     truthfulqa, halueval = load_benchmarks(N_SAMPLES)
