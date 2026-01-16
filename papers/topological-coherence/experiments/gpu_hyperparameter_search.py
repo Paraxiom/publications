@@ -84,6 +84,7 @@ def load_model(model_name: str):
         torch_dtype=torch.float16 if DEVICE.type == "cuda" else torch.float32,
         device_map="auto" if DEVICE.type == "cuda" else None,
         trust_remote_code=True,
+        attn_implementation="eager",  # Disable SDPA for custom attention masks
     )
 
     if DEVICE.type != "cuda":
