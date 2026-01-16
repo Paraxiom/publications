@@ -84,7 +84,6 @@ def load_model(model_name: str):
         torch_dtype=torch.float16 if DEVICE.type == "cuda" else torch.float32,
         device_map="auto" if DEVICE.type == "cuda" else None,
         trust_remote_code=True,
-        attn_implementation="eager",  # Disable SDPA for custom attention masks
     )
 
     if DEVICE.type != "cuda":
@@ -106,20 +105,24 @@ def apply_topology_constraint(model, topology, radius: float, alpha: float):
                 def wrapper(hidden_states, position_embeddings, attention_mask=None,
                            past_key_values=None, cache_position=None, **kwargs):
                     seq_len = hidden_states.shape[1]
-                    topo_mask = topo.create_attention_mask(seq_len, r, a, device=hidden_states.device)
-                    topo_bias = torch.log(topo_mask + 1e-10)
-                    causal_bias = torch.triu(
-                        torch.ones(seq_len, seq_len, device=hidden_states.device) * float('-inf'),
-                        diagonal=1
-                    )
-                    combined = topo_bias + causal_bias
-                    new_mask = combined.unsqueeze(0).unsqueeze(0)
+                    batch_size = hidden_states.shape[0]
+                    dtype = hidden_states.dtype
+                    device = hidden_states.device
 
-                    # Cast to model dtype (float16/bfloat16) and ensure contiguous
-                    new_mask = new_mask.to(hidden_states.dtype).contiguous()
+                    # Create fresh contiguous tensor for SDPA compatibility
+                    new_mask = torch.zeros(batch_size, 1, seq_len, seq_len, dtype=dtype, device=device)
+
+                    # Fill with toroidal bias + causal mask
+                    topo_mask = topo.create_attention_mask(seq_len, r, a, device=device)
+                    topo_bias = torch.log(topo_mask + 1e-10).to(dtype)
+                    causal_bias = torch.triu(torch.full((seq_len, seq_len), float('-inf'), dtype=dtype, device=device), diagonal=1)
+                    combined = topo_bias + causal_bias
+
+                    # Broadcast to all batches
+                    new_mask[:, 0, :, :] = combined
 
                     if attention_mask is not None:
-                        attention_mask = (attention_mask + new_mask).contiguous()
+                        attention_mask = attention_mask + new_mask
                     else:
                         attention_mask = new_mask
 
@@ -222,7 +225,7 @@ def run_hyperparameter_search():
         {"radius": 1.0, "alpha": 2.0},   # Stronger
     ]
 
-    N_SAMPLES = 20  # Quick test
+    N_SAMPLES = 10  # Reduced for faster GPU runs
 
     # Load benchmarks once
     truthfulqa, halueval = load_benchmarks(N_SAMPLES)
