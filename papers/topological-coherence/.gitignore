@@ -31,3 +31,6 @@ experiments/*.log
 
 # LaTeX source (local only)
 *.tex
+
+# Private pitch documents
+NUMANA_PITCH*.md
