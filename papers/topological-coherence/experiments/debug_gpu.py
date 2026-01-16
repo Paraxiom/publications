@@ -54,7 +54,8 @@ radius, alpha = 2.0, 1.0
 wrapped_count = 0
 
 for name, module in model.named_modules():
-    if 'self_attn' in name and hasattr(module, 'forward'):
+    # Only wrap PhiAttention modules, not their child Linear layers
+    if name.endswith('.self_attn') and 'Attention' in type(module).__name__:
         original_forward = module.forward
 
         def make_wrapper(orig_fwd):
