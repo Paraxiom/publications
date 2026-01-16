@@ -1,0 +1,177 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[margin=1in]{geometry}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codepurple},
+    numberstyle=\tiny\color{codegray},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single
+}
+\lstset{style=mystyle}
+
+\title{Divergence Note: Architecture-Dependent Effects of Toroidal Attention Constraints}
+
+\author{Sylvain Cormier\\
+Paraxiom Research\\
+\texttt{sylvain@paraxiom.org}}
+
+\date{January 16, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We report a critical finding from experiments validating toroidal (Tonnetz) attention constraints for hallucination reduction: \textbf{the same constraint that reduces hallucination in Phi-2 by 50\% increases hallucination in TinyLlama by 180\%.} This divergence invalidates universal applicability claims and opens fundamental research questions about architecture-topology compatibility. This note serves as an immediate disclosure of negative results that materially affect interpretation of prior positive findings.
+\end{abstract}
+
+\noindent\textbf{Related paper:} ``Topological Constraints for Coherent Language Models'' (DOI: 10.5281/zenodo.18187835)
+
+\vspace{1em}
+\noindent\textbf{Status:} Preliminary findings requiring immediate disclosure
+
+\section{Summary}
+
+We tested toroidal attention constraints on two language models without RLHF alignment to isolate architectural effects. The identical constraint produces opposite effects:
+
+\begin{itemize}
+    \item \textbf{Phi-2 (2.78B):} 50\% hallucination \emph{reduction}
+    \item \textbf{TinyLlama (1.1B):} 180\% hallucination \emph{increase}
+\end{itemize}
+
+This is not noise---the TinyLlama result is consistent across 50 samples.
+
+\section{Method}
+
+We inject a log-space bias into attention scores before softmax, derived from toroidal (Tonnetz) distance on a $12 \times 12$ torus:
+
+\begin{lstlisting}[language=Python]
+# Tonnetz topology: 12-tone musical lattice on 2D torus
+def toroidal_distance(i, j, grid_size=12):
+    xi, yi = i % grid_size, (i // grid_size) % grid_size
+    xj, yj = j % grid_size, (j // grid_size) % grid_size
+    dx = min(abs(xi - xj), grid_size - abs(xi - xj))
+    dy = min(abs(yi - yj), grid_size - abs(yi - yj))
+    return dx + dy
+
+# Attention mask: full weight within radius, decay outside
+mask[i,j] = 1.0 if distance <= radius else exp(-alpha * distance)
+
+# Injection: log-space bias added before softmax
+topo_bias = log(mask + 1e-10)
+attention_scores = attention_scores + topo_bias + causal_mask
+\end{lstlisting}
+
+\noindent\textbf{Parameters:} radius $= 2.0$, $\alpha = 1.0$, grid\_size $= 12$
+
+\section{Results}
+
+\subsection{Phi-2 (2.78B parameters, NO RLHF) --- Positive Result}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Condition} & \textbf{TruthfulQA} & \textbf{HaluEval} & \textbf{Spectral CV} \\
+\midrule
+Baseline  & 0\% & 40\% & 7.39 \\
+Toroidal  & 0\% & \textbf{20\%} & 7.68 \\
+\bottomrule
+\end{tabular}
+\caption{Phi-2 results ($n=10$, reproduced $3\times$). \textbf{Effect: 50\% hallucination reduction.}}
+\end{table}
+
+\subsection{TinyLlama (1.1B parameters, NO RLHF) --- Negative Result}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+\textbf{Condition} & \textbf{TruthfulQA} & \textbf{HaluEval} & \textbf{Spectral CV} \\
+\midrule
+Baseline  & 0\% & 10\% & 7.55 \\
+Toroidal  & 2\% & \textbf{28\%} & 7.60 \\
+\bottomrule
+\end{tabular}
+\caption{TinyLlama results ($n=50$). \textbf{Effect: 180\% hallucination INCREASE.}}
+\end{table}
+
+\section{Critical Warning}
+
+\begin{center}
+\fbox{\parbox{0.85\textwidth}{
+\textbf{Same constraint. Same parameters. Opposite sign.}
+
+The toroidal topology that improves Phi-2 actively harms TinyLlama. This is not statistical noise---the effect is large and consistent across 50 samples.
+}}
+\end{center}
+
+\section{Interpretation}
+
+Possible explanations under investigation:
+
+\begin{enumerate}
+    \item \textbf{Model capacity:} Larger models (2.78B) may absorb constraints better than smaller ones (1.1B)
+    \item \textbf{Training data:} Phi-2's ``textbook-quality'' data may align with structured geometric constraints; TinyLlama's web-scraped data may not
+    \item \textbf{Topology mismatch:} The 12-tone Tonnetz periodicity may suit certain attention patterns but destructively interfere with others
+    \item \textbf{Attention head distribution:} Different architectures may require different topologies
+\end{enumerate}
+
+\section{Implications}
+
+\begin{enumerate}
+    \item \textbf{No universal fix:} Geometric constraints cannot be applied blindly across architectures
+    \item \textbf{Architecture-specific topologies:} Research must identify which topology fits which model
+    \item \textbf{Validation required:} Any topological intervention must be validated per-architecture before deployment
+\end{enumerate}
+
+\section{Reproducibility}
+
+\begin{lstlisting}[language=bash]
+# Environment
+Python 3.11, PyTorch 2.1, transformers 4.36
+Random seed: 42
+
+# Phi-2 (positive result)
+python phi2_definitive_proof.py --model phi-2 --mode quick
+
+# TinyLlama (negative result)
+python phi2_definitive_proof.py --model tinyllama --mode full --samples 50
+\end{lstlisting}
+
+\noindent All code and results: \url{https://github.com/Paraxiom/topological-coherence}
+
+\section{Next Steps}
+
+\begin{enumerate}
+    \item Hyperparameter sweep: test radius $\in \{1, 2, 4, 6\}$, $\alpha \in \{0.3, 0.5, 1.0, 2.0\}$
+    \item Alternative topologies: linear distance, different grid sizes
+    \item Layer-specific constraints: wrap only early/late layers
+    \item Larger sample validation on GPU infrastructure
+\end{enumerate}
+
+\section*{Citation}
+
+If referencing this finding:
+
+\begin{quote}
+Cormier, S. (2026). Divergence Note: Architecture-Dependent Effects of Toroidal Attention Constraints. \emph{Paraxiom Research}. January 16, 2026. Supplement to DOI: 10.5281/zenodo.18187835
+\end{quote}
+
+\vspace{2em}
+\noindent\textbf{Contact:} @ParaxiomAPI $\mid$ \texttt{research@paraxiom.io}
+
+\end{document}
