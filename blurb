@@ -1,0 +1,8 @@
+Looking for QKD / QRNG infrastructure holders for protocol-level experimentation
+I'm working on a lightweight consensus mechanism that consumes measured QKD channel quality / QRNG entropy as an input signal (not key transport).
+I'm looking to connect with organizations or labs that operate:
+• fiber-based QKD links
+• satellite QKD testbeds
+• certified QRNG devices
+Scope is exploratory and implementation-focused (testnet / lab environment).
+Happy to share technical details privately with interested operators.

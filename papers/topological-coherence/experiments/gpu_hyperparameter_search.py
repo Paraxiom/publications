@@ -114,11 +114,11 @@ def apply_topology_constraint(model, topology, radius: float, alpha: float):
                     combined = topo_bias + causal_bias
                     new_mask = combined.unsqueeze(0).unsqueeze(0)
 
-                    # Cast to model dtype (float16/bfloat16)
-                    new_mask = new_mask.to(hidden_states.dtype)
+                    # Cast to model dtype (float16/bfloat16) and ensure contiguous
+                    new_mask = new_mask.to(hidden_states.dtype).contiguous()
 
                     if attention_mask is not None:
-                        attention_mask = attention_mask + new_mask
+                        attention_mask = (attention_mask + new_mask).contiguous()
                     else:
                         attention_mask = new_mask
 

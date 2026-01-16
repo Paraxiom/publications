@@ -37,6 +37,7 @@ Paraxiom develops theoretical foundations and practical implementations for **co
 | [Toroidal Mesh](papers/cormier_toroidal_mesh_2025.pdf) | 10K TPS with SPHINCS+ via parallel verification | [10.5281/zenodo.17931222](https://doi.org/10.5281/zenodo.17931222) |
 | [Toroidal Governance](papers/patent2.pdf) | Defensive publication — Tonnetz manifold governance | [10.5281/zenodo.17929091](https://doi.org/10.5281/zenodo.17929091) |
 | [Augmented Democracy](papers/cormier_augmented_democracy_2025.pdf) | Coherence-constrained democratic infrastructure with epistemic gates | *Preprint* |
+| [Conservation-Constrained Aggregation](papers/CONSERVATION_CONSTRAINED_AGGREGATION.md) | Doubly-stochastic normalization for distributed trust networks | *Technical Note* |
 
 ---
 
