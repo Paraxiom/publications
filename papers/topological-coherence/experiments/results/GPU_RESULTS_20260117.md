@@ -215,6 +215,45 @@ Zephyr is Mistral with additional fine-tuning (DPO + SFT). The same base archite
 
 **Hypothesis**: Fine-tuning may change how attention patterns relate to hallucination behavior. Models fine-tuned with RLHF/DPO may already have optimized attention patterns that the topology disrupts.
 
+---
+
+## OpenChat-7B Results (50 samples)
+
+| Config | TruthfulQA | HaluEval | Change |
+|--------|------------|----------|--------|
+| baseline | 94% | 26% | - |
+| layer_late_r2a1 | 94% | 26% | **0% (no change)** |
+
+OpenChat is Llama-based (different architecture lineage from Mistral). The technique has zero effect.
+
+---
+
+## Complete Cross-Model Summary
+
+| Model | Params | Architecture | Fine-tuning | layer_late Effect |
+|-------|--------|--------------|-------------|-------------------|
+| TinyLlama | 1.1B | Llama | SFT | 0% |
+| Qwen2 | 1.5B | Qwen | SFT | 0% |
+| OpenChat | 7B | Llama | C-RLFT | **0%** |
+| **Mistral-7B-Instruct** | 7B | Mistral | Instruct | **-67% to -80%** ✅ |
+| Zephyr-7B | 7B | Mistral | DPO+SFT | **+46%** ❌ |
+
+### Conclusions
+
+1. **The technique works specifically on Mistral-7B-Instruct** - not universally
+2. **Architecture alone is insufficient** - Llama-based models show no effect
+3. **Fine-tuning matters critically** - Zephyr (same base as Mistral) shows opposite effect
+4. **Model size is necessary but not sufficient** - 7B models vary from -67% to +46%
+
+### Research Implications
+
+The toroidal topology interacts specifically with Mistral-7B-Instruct's attention patterns. This suggests:
+- Mistral's instruct fine-tuning creates attention patterns amenable to topological constraints
+- DPO fine-tuning (Zephyr) disrupts this compatibility
+- Llama architecture may organize attention differently, making topology irrelevant
+
+**Future work**: Analyze attention patterns in Mistral vs Zephyr vs OpenChat to understand the mechanism.
+
 **Hypothesis**: Larger models with more layers benefit more from layer_late because:
 - More distinct "knowledge" vs "generation" layer separation
 - More parameters in final layers that can hallucinate
