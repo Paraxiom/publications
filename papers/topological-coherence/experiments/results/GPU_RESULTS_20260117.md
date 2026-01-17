@@ -250,6 +250,7 @@ Gemma (Google's 2B model) shows no hallucination benefit and slight accuracy deg
 | OpenChat | 7B | Llama | C-RLFT | **0%** |
 | **Mistral-7B-Instruct** | **7B** | **Mistral** | **Instruct** | **-67% to -80%** ✅ |
 | Zephyr-7B | 7B | Mistral | DPO+SFT | **+46%** ❌ |
+| Yi-6B | 6B | Yi | Chat | 0% (14%→16%) |
 
 **Note**: Phi-2 GPU test failed due to transformers 4.57 compatibility (garbage output), but CPU results confirmed 50% hallucination reduction.
 
