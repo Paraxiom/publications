@@ -228,12 +228,24 @@ OpenChat is Llama-based (different architecture lineage from Mistral). The techn
 
 ---
 
+## Gemma-2B Results (50 samples)
+
+| Config | TruthfulQA | HaluEval | Change |
+|--------|------------|----------|--------|
+| baseline | 94% | 22% | - |
+| layer_late_r2a1 | 90% | 22% | **0% hallucination, -4% accuracy** |
+
+Gemma (Google's 2B model) shows no hallucination benefit and slight accuracy degradation.
+
+---
+
 ## Complete Cross-Model Summary
 
 | Model | Params | Architecture | Fine-tuning | layer_late Effect |
 |-------|--------|--------------|-------------|-------------------|
 | TinyLlama | 1.1B | Llama | SFT | 0% |
 | Qwen2 | 1.5B | Qwen | SFT | 0% |
+| Gemma | 2B | Gemma | IT | 0% (slight accuracy loss) |
 | OpenChat | 7B | Llama | C-RLFT | **0%** |
 | **Mistral-7B-Instruct** | 7B | Mistral | Instruct | **-67% to -80%** ✅ |
 | Zephyr-7B | 7B | Mistral | DPO+SFT | **+46%** ❌ |
