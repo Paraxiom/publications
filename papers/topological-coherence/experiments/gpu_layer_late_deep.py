@@ -90,7 +90,7 @@ def make_layer_late_attention(model_type="llama"):
     """Create attention function for specific model type."""
 
     def layer_late_attention(module, query, key, value, attention_mask, scaling, dropout=0.0, **kwargs):
-        if model_type in ["llama", "mistral", "qwen", "zephyr", "openchat", "phi2"]:
+        if model_type in ["llama", "mistral", "qwen", "zephyr", "openchat", "phi2", "deepseek", "yi", "stablelm"]:
             from transformers.models.llama.modeling_llama import repeat_kv
         elif model_type == "gemma":
             from transformers.models.gemma.modeling_gemma import repeat_kv
@@ -218,7 +218,7 @@ def evaluate(model, tokenizer, truthfulqa, halueval, desc=""):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="mistral",
-                        choices=["mistral", "gemma", "qwen", "zephyr", "openchat", "phi2", "all"])
+                        choices=["mistral", "gemma", "qwen", "zephyr", "openchat", "phi2", "deepseek", "yi", "stablelm", "all"])
     parser.add_argument("--n-samples", type=int, default=100)
     parser.add_argument("--test", default="layer_late_deep",
                         choices=["layer_late_deep", "hyperparams", "all_models"])
@@ -238,6 +238,9 @@ def main():
         "zephyr": "HuggingFaceH4/zephyr-7b-beta",
         "openchat": "openchat/openchat-3.5-0106",
         "phi2": "microsoft/phi-2",
+        "deepseek": "deepseek-ai/deepseek-llm-7b-chat",
+        "yi": "01-ai/Yi-6B-Chat",
+        "stablelm": "stabilityai/stablelm-2-zephyr-1_6b",
     }
 
     if args.model == "all" or args.test == "all_models":
