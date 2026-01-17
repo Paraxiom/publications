@@ -124,10 +124,23 @@ This confirms the hypothesis: applying toroidal topology only to the final 1/3 o
 
 ### Architecture Comparison
 
-| Model | Best Config | TruthfulQA | HaluEval Reduction |
-|-------|-------------|------------|-------------------|
-| TinyLlama (1.1B) | layer_late | 80% | 0% (no change) |
-| Mistral-7B | layer_late | 90% | 67% (30%→10%) |
+| Model | Params | Best Config | TruthfulQA | HaluEval Reduction |
+|-------|--------|-------------|------------|-------------------|
+| TinyLlama | 1.1B | layer_late | 80% | 0% (no change) |
+| Qwen2 | 1.5B | layer_late | 20% (+7%) | 0% (no change) |
+| Mistral | 7B | layer_late | 90% | **80%** (16.7%→3.3%) |
+
+---
+
+## Qwen2-1.5B Results (30 samples)
+
+| Config | TruthfulQA | HaluEval | Time | Notes |
+|--------|------------|----------|------|-------|
+| baseline | 13.3% | 60% | 68s | Low baseline accuracy |
+| layer_late_r2a1 | 20% | 60% | 73s | Slight accuracy boost, no hallucination change |
+
+**Conclusion**: Smaller models (1-2B) don't benefit from layer_late for hallucination reduction.
+The technique appears to require sufficient model capacity (7B+) to show hallucination benefits.
 
 **Hypothesis**: Larger models with more layers benefit more from layer_late because:
 - More distinct "knowledge" vs "generation" layer separation
