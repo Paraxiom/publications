@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 """
-Minimal GPU Test for Toroidal Attention
-========================================
+Minimal GPU Test for Toroidal Attention - Using TinyLlama
+=========================================================
 
-Run this on RunPod to verify the creative solution works on GPU.
-
-Usage:
-    pip install torch transformers
-    python runpod_gpu_test.py
+Phi-2 has issues on some environments. TinyLlama is more stable.
 """
 
 import torch
@@ -18,7 +14,7 @@ import time
 
 def main():
     print("=" * 60)
-    print("RUNPOD GPU TEST - Toroidal Attention")
+    print("RUNPOD GPU TEST - Toroidal Attention (TinyLlama)")
     print("=" * 60)
 
     # 1. Check CUDA
@@ -30,35 +26,33 @@ def main():
     print(f"   GPU: {torch.cuda.get_device_name()}")
     print(f"   VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
 
-    # 2. Load model
-    print("\n2. Loading Phi-2...")
+    # 2. Load model - TinyLlama instead of Phi-2
+    print("\n2. Loading TinyLlama...")
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
+    model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+
     model = AutoModelForCausalLM.from_pretrained(
-        "microsoft/phi-2",
+        model_name,
         torch_dtype=torch.float16,
         device_map="auto",
         trust_remote_code=True,
         attn_implementation="eager",
     )
-    tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-2", trust_remote_code=True)
-    # Proper padding setup for Phi-2
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
     tokenizer.pad_token = tokenizer.eos_token
-    tokenizer.pad_token_id = tokenizer.eos_token_id
-    tokenizer.padding_side = "left"
     model.eval()
     print("   Model loaded successfully!")
 
     # 3. Test baseline
     print("\n3. Testing BASELINE...")
-    prompt = "Einstein's theory of relativity states that"
-    inputs = tokenizer(prompt, return_tensors="pt", padding=True, return_attention_mask=True).to("cuda")
+    prompt = "The capital of France is"
+    inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
 
     with torch.no_grad():
         start = time.time()
         outputs = model.generate(
-            input_ids=inputs["input_ids"],
-            attention_mask=inputs["attention_mask"],
+            **inputs,
             max_new_tokens=30,
             do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
@@ -73,7 +67,6 @@ def main():
     # 4. Set up toroidal attention
     print("\n4. Setting up TOROIDAL attention...")
 
-    # Create toroidal mask cache
     class ToroidalCache:
         def __init__(self, grid_size=12, radius=2.0, alpha=1.0):
             self.grid_size = grid_size
@@ -103,9 +96,9 @@ def main():
 
     CACHE = ToroidalCache(grid_size=12, radius=2.0, alpha=1.0)
 
-    # Custom attention function
+    # Custom attention for Llama architecture
     def toroidal_attention(module, query, key, value, attention_mask, scaling, dropout=0.0, **kwargs):
-        from transformers.models.phi.modeling_phi import repeat_kv
+        from transformers.models.llama.modeling_llama import repeat_kv
         key_states = repeat_kv(key, module.num_key_value_groups)
         value_states = repeat_kv(value, module.num_key_value_groups)
         attn_weights = torch.matmul(query, key_states.transpose(2, 3)) * scaling
@@ -121,7 +114,6 @@ def main():
         attn_output = torch.matmul(attn_weights, value_states).transpose(1, 2).contiguous()
         return attn_output, attn_weights
 
-    # Register and apply
     from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS
     ALL_ATTENTION_FUNCTIONS["toroidal"] = toroidal_attention
     model.config._attn_implementation = "toroidal"
@@ -129,13 +121,12 @@ def main():
 
     # 5. Test toroidal
     print("\n5. Testing TOROIDAL...")
-    inputs = tokenizer(prompt, return_tensors="pt", padding=True, return_attention_mask=True).to("cuda")
+    inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
 
     with torch.no_grad():
         start = time.time()
         outputs = model.generate(
-            input_ids=inputs["input_ids"],
-            attention_mask=inputs["attention_mask"],
+            **inputs,
             max_new_tokens=30,
             do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
@@ -160,7 +151,7 @@ def main():
     if baseline_response != toroidal_response:
         print("\n✓ SUCCESS: Toroidal mask is affecting attention on GPU!")
     else:
-        print("\n? Same output - may need different prompt or parameters")
+        print("\n? Same output - topology may not change this specific prompt")
 
     print("\n" + "=" * 60)
     print("GPU TEST COMPLETE")
