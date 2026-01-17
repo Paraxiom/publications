@@ -83,7 +83,7 @@ def toroidal_eager_attention_forward(
     **kwargs,
 ):
     """Custom eager attention with toroidal topology built-in."""
-    from transformers.models.phi.modeling_phi import repeat_kv
+    from transformers.models.llama.modeling_llama import repeat_kv
 
     key_states = repeat_kv(key, module.num_key_value_groups)
     value_states = repeat_kv(value, module.num_key_value_groups)
@@ -360,16 +360,17 @@ def main():
     print("Toroidal Topology Reduces Hallucination")
     print("=" * 60)
 
-    # Load model
-    print("\nLoading Phi-2...")
+    # Load model - TinyLlama (Phi-2 has issues on transformers 4.57+)
+    model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+    print(f"\nLoading {model_name}...")
     model = AutoModelForCausalLM.from_pretrained(
-        "microsoft/phi-2",
+        model_name,
         torch_dtype=torch.float16 if DEVICE.type == "cuda" else torch.float32,
         device_map="auto" if DEVICE.type == "cuda" else None,
         trust_remote_code=True,
         attn_implementation="eager",  # Start with eager for baseline
     )
-    tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-2", trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
     tokenizer.pad_token = tokenizer.eos_token
 
     if DEVICE.type != "cuda":
