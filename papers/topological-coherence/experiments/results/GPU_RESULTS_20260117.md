@@ -193,6 +193,28 @@ layers = last 1/3 of model  # Only final layers
 
 This consistency across multiple runs with different sample sizes provides strong evidence that the layer_late toroidal topology genuinely reduces hallucinations in Mistral-7B.
 
+---
+
+## Zephyr-7B Results (50 samples) - CRITICAL FINDING
+
+| Config | TruthfulQA | HaluEval | Change |
+|--------|------------|----------|--------|
+| baseline | 94% | 26% | - |
+| layer_late_r2a1 | 90% | 38% | **+46% (WORSE!)** |
+
+### Cross-Model Comparison
+
+| Model | Base | Fine-tuning | layer_late Effect |
+|-------|------|-------------|-------------------|
+| Mistral-7B-Instruct | Mistral | Instruct | **-67% hallucinations** ✅ |
+| Zephyr-7B-beta | Mistral | DPO + SFT | **+46% hallucinations** ❌ |
+
+### Key Insight: Effect is Training-Dependent
+
+Zephyr is Mistral with additional fine-tuning (DPO + SFT). The same base architecture responds **oppositely** to toroidal topology depending on fine-tuning.
+
+**Hypothesis**: Fine-tuning may change how attention patterns relate to hallucination behavior. Models fine-tuned with RLHF/DPO may already have optimized attention patterns that the topology disrupts.
+
 **Hypothesis**: Larger models with more layers benefit more from layer_late because:
 - More distinct "knowledge" vs "generation" layer separation
 - More parameters in final layers that can hallucinate
