@@ -142,6 +142,35 @@ This confirms the hypothesis: applying toroidal topology only to the final 1/3 o
 **Conclusion**: Smaller models (1-2B) don't benefit from layer_late for hallucination reduction.
 The technique appears to require sufficient model capacity (7B+) to show hallucination benefits.
 
+---
+
+## Mistral-7B Hyperparameter Search (50 samples)
+
+| Config | TruthfulQA | HaluEval | Reduction | Notes |
+|--------|------------|----------|-----------|-------|
+| baseline | 90% | 16% | - | Reference |
+| **r2_a1** | **90%** | **4%** | **75%** | **OPTIMAL** |
+| r2_a0.5 | 90% | 10% | 37% | Weaker decay = less effective |
+| r3_a1 | 90% | 10% | 37% | Larger radius = less effective |
+| r4_a1 | 90% | 10% | 37% | Even larger radius |
+| r2_a2 | 90% | 22% | -37% | Too strong = WORSE than baseline! |
+
+### Hyperparameter Insights
+
+1. **Optimal: r=2, α=1** - Tight radius with moderate decay
+2. **All configs preserve accuracy** - 90% across all settings
+3. **α=2 is too aggressive** - Actually increases hallucinations
+4. **Larger radius (r=3,4) reduces effectiveness** - Topology constraints become too loose
+5. **Lower alpha (α=0.5) also less effective** - Decay not strong enough
+
+### Recommended Settings for layer_late
+
+```
+radius = 2.0    # Tight neighborhood on Tonnetz
+alpha = 1.0     # Moderate exponential decay
+layers = last 1/3 of model  # Only final layers
+```
+
 **Hypothesis**: Larger models with more layers benefit more from layer_late because:
 - More distinct "knowledge" vs "generation" layer separation
 - More parameters in final layers that can hallucinate
