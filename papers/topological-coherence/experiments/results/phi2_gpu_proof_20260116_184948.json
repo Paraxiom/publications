@@ -1,0 +1,20 @@
+{
+  "device": "cpu",
+  "gpu": "N/A",
+  "n_samples": 5,
+  "toroidal_params": {
+    "grid_size": 12,
+    "radius": 2.0,
+    "alpha": 1.0
+  },
+  "baseline": {
+    "truthfulqa_accuracy": 1.0,
+    "halueval_score": 0.4,
+    "total_time": 182.67292284965515
+  },
+  "toroidal": {
+    "truthfulqa_accuracy": 1.0,
+    "halueval_score": 0.6,
+    "total_time": 177.0563666820526
+  }
+}

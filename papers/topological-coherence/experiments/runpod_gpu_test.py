@@ -42,18 +42,27 @@ def main():
         attn_implementation="eager",
     )
     tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-2", trust_remote_code=True)
+    # Proper padding setup for Phi-2
     tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.pad_token_id = tokenizer.eos_token_id
+    tokenizer.padding_side = "left"
     model.eval()
     print("   Model loaded successfully!")
 
     # 3. Test baseline
     print("\n3. Testing BASELINE...")
     prompt = "Einstein's theory of relativity states that"
-    inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
+    inputs = tokenizer(prompt, return_tensors="pt", padding=True, return_attention_mask=True).to("cuda")
 
     with torch.no_grad():
         start = time.time()
-        outputs = model.generate(**inputs, max_new_tokens=30, do_sample=False)
+        outputs = model.generate(
+            input_ids=inputs["input_ids"],
+            attention_mask=inputs["attention_mask"],
+            max_new_tokens=30,
+            do_sample=False,
+            pad_token_id=tokenizer.eos_token_id,
+        )
         baseline_time = time.time() - start
 
     baseline_response = tokenizer.decode(outputs[0], skip_special_tokens=True)
@@ -120,11 +129,17 @@ def main():
 
     # 5. Test toroidal
     print("\n5. Testing TOROIDAL...")
-    inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
+    inputs = tokenizer(prompt, return_tensors="pt", padding=True, return_attention_mask=True).to("cuda")
 
     with torch.no_grad():
         start = time.time()
-        outputs = model.generate(**inputs, max_new_tokens=30, do_sample=False)
+        outputs = model.generate(
+            input_ids=inputs["input_ids"],
+            attention_mask=inputs["attention_mask"],
+            max_new_tokens=30,
+            do_sample=False,
+            pad_token_id=tokenizer.eos_token_id,
+        )
         toroidal_time = time.time() - start
 
     toroidal_response = tokenizer.decode(outputs[0], skip_special_tokens=True)
