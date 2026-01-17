@@ -90,7 +90,7 @@ def make_layer_late_attention(model_type="llama"):
     """Create attention function for specific model type."""
 
     def layer_late_attention(module, query, key, value, attention_mask, scaling, dropout=0.0, **kwargs):
-        if model_type in ["llama", "mistral", "qwen", "zephyr", "openchat"]:
+        if model_type in ["llama", "mistral", "qwen", "zephyr", "openchat", "phi2"]:
             from transformers.models.llama.modeling_llama import repeat_kv
         elif model_type == "gemma":
             from transformers.models.gemma.modeling_gemma import repeat_kv
@@ -218,7 +218,7 @@ def evaluate(model, tokenizer, truthfulqa, halueval, desc=""):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="mistral",
-                        choices=["mistral", "gemma", "qwen", "zephyr", "openchat", "all"])
+                        choices=["mistral", "gemma", "qwen", "zephyr", "openchat", "phi2", "all"])
     parser.add_argument("--n-samples", type=int, default=100)
     parser.add_argument("--test", default="layer_late_deep",
                         choices=["layer_late_deep", "hyperparams", "all_models"])
@@ -237,6 +237,7 @@ def main():
         "qwen": "Qwen/Qwen2-1.5B-Instruct",
         "zephyr": "HuggingFaceH4/zephyr-7b-beta",
         "openchat": "openchat/openchat-3.5-0106",
+        "phi2": "microsoft/phi-2",
     }
 
     if args.model == "all" or args.test == "all_models":
