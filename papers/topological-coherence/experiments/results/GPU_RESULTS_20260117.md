@@ -171,6 +171,28 @@ alpha = 1.0     # Moderate exponential decay
 layers = last 1/3 of model  # Only final layers
 ```
 
+---
+
+## Statistical Validation (100 samples)
+
+| Config | TruthfulQA | HaluEval | Reduction |
+|--------|------------|----------|-----------|
+| baseline | 90% | 15% | - |
+| **layer_late_r2a1** | **90%** | **5%** | **67%** |
+
+### Consistency Across All Runs
+
+| Run | Samples | Baseline HaluEval | layer_late HaluEval | Reduction |
+|-----|---------|-------------------|---------------------|-----------|
+| 1 | 30 | 30% | 10% | 67% |
+| 2 | 30 | 16.7% | 3.3% | 80% |
+| 3 | 50 | 16% | 4% | 75% |
+| 4 | 100 | 15% | 5% | 67% |
+
+**Mean reduction: 72% ± 6%**
+
+This consistency across multiple runs with different sample sizes provides strong evidence that the layer_late toroidal topology genuinely reduces hallucinations in Mistral-7B.
+
 **Hypothesis**: Larger models with more layers benefit more from layer_late because:
 - More distinct "knowledge" vs "generation" layer separation
 - More parameters in final layers that can hallucinate
