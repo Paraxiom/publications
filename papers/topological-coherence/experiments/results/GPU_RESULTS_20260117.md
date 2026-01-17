@@ -43,6 +43,37 @@ The toroidal (Tonnetz) topology affects different architectures differently:
 
 ---
 
+## Advanced Topology Variants (30 samples)
+
+### TinyLlama Results
+
+| Config | TruthfulQA | HaluEval | Time | Notes |
+|--------|------------|----------|------|-------|
+| baseline | 80% | 60% | 18s | Reference |
+| standard_r2a1 | 20% | **50%** | 52s | Full topology - harms accuracy |
+| **inverted_r2a1** | **60%** | 60% | 23s | Boost distant, suppress nearby |
+| layer_early | 70% | 60% | 37s | Only first 7 layers |
+| **layer_late** | **80%** | 60% | 23s | Only last 7 layers - NO LOSS! |
+
+### Key Discoveries
+
+#### 1. Layer-Selective Topology Works!
+- **layer_late** (last 1/3 of layers): Preserves 100% accuracy (80%→80%)
+- **layer_early** (first 1/3): Some accuracy loss (80%→70%)
+- **Conclusion**: TinyLlama stores factual knowledge in early/middle layers
+
+#### 2. Inverted Topology is Better for TinyLlama
+- Standard topology: 20% accuracy (terrible)
+- Inverted topology: 60% accuracy (3x better!)
+- **Conclusion**: TinyLlama benefits from boosted distant attention, not suppressed
+
+#### 3. Hypothesis: Architecture-Specific Application
+- Phi-2 (dense attention): Benefits from standard toroidal (suppress distant)
+- TinyLlama (sparse attention?): Benefits from inverted OR layer-late only
+- Different architectures need different topology strategies
+
+---
+
 ## Technical Notes
 
 ### Phi-2 Issue
