@@ -246,16 +246,20 @@ Gemma (Google's 2B model) shows no hallucination benefit and slight accuracy deg
 | TinyLlama | 1.1B | Llama | SFT | 0% |
 | Qwen2 | 1.5B | Qwen | SFT | 0% |
 | Gemma | 2B | Gemma | IT | 0% (slight accuracy loss) |
+| **Phi-2** | **2.7B** | **Phi** | **SFT** | **-50%** ✅ (CPU test) |
 | OpenChat | 7B | Llama | C-RLFT | **0%** |
-| **Mistral-7B-Instruct** | 7B | Mistral | Instruct | **-67% to -80%** ✅ |
+| **Mistral-7B-Instruct** | **7B** | **Mistral** | **Instruct** | **-67% to -80%** ✅ |
 | Zephyr-7B | 7B | Mistral | DPO+SFT | **+46%** ❌ |
+
+**Note**: Phi-2 GPU test failed due to transformers 4.57 compatibility (garbage output), but CPU results confirmed 50% hallucination reduction.
 
 ### Conclusions
 
-1. **The technique works specifically on Mistral-7B-Instruct** - not universally
-2. **Architecture alone is insufficient** - Llama-based models show no effect
-3. **Fine-tuning matters critically** - Zephyr (same base as Mistral) shows opposite effect
-4. **Model size is necessary but not sufficient** - 7B models vary from -67% to +46%
+1. **The technique works on Phi-2 and Mistral-7B-Instruct** - 50% and 67-80% reduction respectively
+2. **Not universal** - 5 of 7 models show no benefit or negative effect
+3. **Architecture matters** - Llama-based models (TinyLlama, OpenChat) show no effect
+4. **Fine-tuning matters critically** - Zephyr (same base as Mistral) shows opposite effect
+5. **Microsoft (Phi-2) and Mistral AI models benefit** - possibly similar training approaches
 
 ### Research Implications
 
