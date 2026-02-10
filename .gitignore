@@ -10,3 +10,6 @@
 *.fls
 *.bbl
 *.blg
+
+# Patent applications — CONFIDENTIAL, do not publish
+patents/
