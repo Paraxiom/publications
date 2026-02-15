@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paraxiom Technologies — Quantum Industry Canada</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: #0a0e1a;
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
+
+  .slide {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    position: relative;
+    border-bottom: 1px solid #1e293b;
+  }
+
+  .slide-number {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  h1 {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #94a3b8;
+  }
+
+  .subtitle {
+    font-size: 22px;
+    color: #64748b;
+    margin-bottom: 40px;
+    line-height: 1.5;
+  }
+
+  .accent-purple { color: #a78bfa; }
+  .accent-green { color: #34d399; }
+  .accent-amber { color: #fbbf24; }
+  .accent-cyan { color: #22d3ee; }
+  .accent-red { color: #f87171; }
+  .accent-blue { color: #60a5fa; }
+
+  .big-number {
+    font-size: 120px;
+    font-weight: 900;
+    opacity: 0.07;
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    line-height: 1;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 20px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+  }
+
+  .card {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 32px;
+  }
+
+  .card h3 {
+    color: #e2e8f0;
+    margin-bottom: 12px;
+    font-size: 20px;
+  }
+
+  .card p, .card li {
+    color: #94a3b8;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  .card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .card ul li::before {
+    content: "\2192  ";
+    color: #475569;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+
+  .tag-green { background: #064e3b; color: #34d399; }
+  .tag-purple { background: #2e1065; color: #a78bfa; }
+  .tag-amber { background: #451a03; color: #fbbf24; }
+  .tag-cyan { background: #083344; color: #22d3ee; }
+  .tag-red { background: #450a0a; color: #f87171; }
+  .tag-blue { background: #172554; color: #60a5fa; }
+
+  .point {
+    margin-bottom: 24px;
+    padding-left: 20px;
+    border-left: 3px solid #1e293b;
+  }
+
+  .point.green { border-color: #34d399; }
+  .point.purple { border-color: #a78bfa; }
+  .point.amber { border-color: #fbbf24; }
+  .point.cyan { border-color: #22d3ee; }
+  .point.red { border-color: #f87171; }
+  .point.blue { border-color: #60a5fa; }
+
+  .point h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .point p {
+    color: #94a3b8;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 50px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 14px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e293b;
+    font-size: 16px;
+  }
+
+  th {
+    color: #64748b;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  td { color: #cbd5e1; }
+
+  .mono {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 14px;
+    color: #a78bfa;
+  }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 30px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .flow-box {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 20px 28px;
+    text-align: center;
+    min-width: 160px;
+  }
+
+  .flow-box h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .flow-box p {
+    font-size: 12px;
+    color: #64748b;
+  }
+
+  .flow-arrow {
+    font-size: 24px;
+    color: #334155;
+    padding: 0 8px;
+  }
+
+  .quote {
+    font-size: 24px;
+    font-style: italic;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin: 30px 0;
+    padding-left: 24px;
+    border-left: 4px solid #a78bfa;
+  }
+
+  .footer-bar {
+    position: absolute;
+    bottom: 30px;
+    left: 80px;
+    right: 80px;
+    display: flex;
+    justify-content: space-between;
+    color: #334155;
+    font-size: 13px;
+  }
+
+  @media (max-width: 900px) {
+    .slide { padding: 40px 30px; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 28px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .stat-value { font-size: 40px; }
+    .flow-diagram { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SLIDE 1: Title -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">01</span>
+  <h3 class="accent-cyan">Quantum Industry Canada &mdash; February 17, 2026</h3>
+  <h1>Paraxiom Technologies</h1>
+  <p class="subtitle">
+    Patent-free post-quantum infrastructure.<br>
+    Built in Rust. Standards-aligned. Canadian.
+  </p>
+  <div style="margin-top: 40px;">
+    <span class="tag tag-green">PQC</span>
+    <span class="tag tag-purple">QKD</span>
+    <span class="tag tag-amber">AI Safety</span>
+    <span class="tag tag-cyan">Formal Verification</span>
+  </div>
+  <div class="footer-bar">
+    <span>Sylvain Cormier &middot; Daryl Loader</span>
+    <span>paraxiom.org &middot; sylvain@paraxiom.org</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2: The Problem -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">02</span>
+  <span class="big-number">!</span>
+  <h2>The Quantum Threat Is <span class="accent-red">Now</span></h2>
+  <p class="subtitle">Harvest-now, decrypt-later is not hypothetical. It is operational.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3 class="accent-red">Classical TLS is Expiring</h3>
+      <ul>
+        <li>RSA-2048 and ECDH will fall to cryptographically relevant quantum computers</li>
+        <li>CNSA 2.0 mandates PQC transition by 2030&ndash;2035</li>
+        <li>EU PQC Roadmap: high-risk migration before end of 2030</li>
+        <li>NSM-10 + OMB M-23-02: US agencies must inventory now</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent-amber">QKD Has a Classical Weakness</h3>
+      <ul>
+        <li>Quantum keys are secure &mdash; but the <em>control channels</em> use classical TLS</li>
+        <li>Toshiba, IDQuantique management APIs: standard X.509 + TLS 1.2/1.3</li>
+        <li>Compromise the control plane &rarr; steal the quantum keys</li>
+        <li>Published: ePrint 2025/106693 (Cormier)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>paraxiom.org</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: What We Build -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">03</span>
+  <span class="big-number">8</span>
+  <h2>The Paraxiom <span class="accent-green">PQC Stack</span></h2>
+  <p class="subtitle">Eight crates on crates.io. One mission: make PQC migration frictionless.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>What It Does</th>
+        <th>crates.io</th>
+        <th>Downloads</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong class="accent-green"><a href="https://crates.io/crates/qssh" style="color: #34d399; text-decoration: none;">qssh</a></strong></td>
+        <td>Post-quantum SSH &mdash; ML-KEM-1024, Falcon-512, SPHINCS+</td>
+        <td><span class="mono">crates.io/crates/qssh</span></td>
+        <td><span class="accent-green" style="font-weight: 700;">799</span></td>
+      </tr>
+      <tr>
+        <td><strong class="accent-green"><a href="https://crates.io/crates/qssl" style="color: #34d399; text-decoration: none;">qssl</a></strong></td>
+        <td>Patent-free post-quantum TLS &mdash; ML-KEM, ML-DSA</td>
+        <td><span class="mono">crates.io/crates/qssl</span></td>
+        <td><span class="accent-green" style="font-weight: 700;">297</span></td>
+      </tr>
+      <tr>
+        <td><strong class="accent-purple"><a href="https://crates.io/crates/qkd-client" style="color: #a78bfa; text-decoration: none;">qkd-client</a></strong></td>
+        <td>ETSI GS QKD 014 with ZK-VRF consensus</td>
+        <td><span class="mono">crates.io/crates/qkd-client</span></td>
+        <td><span class="accent-purple" style="font-weight: 700;">11</span></td>
+      </tr>
+      <tr>
+        <td><strong class="accent-cyan"><a href="https://crates.io/crates/pq-transport-gateway" style="color: #22d3ee; text-decoration: none;">pq-transport-gateway</a></strong></td>
+        <td>PQ Conduit &mdash; streams QKD keys over PQC</td>
+        <td><span class="mono">crates.io/crates/pq-transport-gateway</span></td>
+        <td><span class="accent-cyan" style="font-weight: 700;">11</span></td>
+      </tr>
+      <tr>
+        <td><strong class="accent-red">Kirq Hub</strong></td>
+        <td>Decentralized QRNG &mdash; Crypto4A HSM + Toshiba QKD + IDQ</td>
+        <td><span style="color: #64748b;">GitHub &middot; Paraxiom/kirq-hub</span></td>
+        <td><span class="tag tag-red">Zenodo</span></td>
+      </tr>
+      <tr>
+        <td><strong class="accent-amber">Coherence Shield</strong></td>
+        <td>AI safety proxy + QuantumHarmony attestation</td>
+        <td><span style="color: #64748b;">GitHub only</span></td>
+        <td><span class="tag tag-amber">Deployed</span></td>
+      </tr>
+      <tr>
+        <td><strong class="accent-blue"><a href="https://crates.io/crates/topological-coherence" style="color: #60a5fa; text-decoration: none;">topological-coherence</a></strong></td>
+        <td>Toroidal logit bias for LLM hallucination reduction</td>
+        <td><span class="mono">crates.io/crates/topological-coherence</span></td>
+        <td><span class="accent-blue" style="font-weight: 700;">36</span></td>
+      </tr>
+      <tr>
+        <td><strong class="accent-cyan"><a href="https://crates.io/crates/qcomm-core" style="color: #22d3ee; text-decoration: none;">qcomm-core</a></strong></td>
+        <td>PQ crypto primitives &mdash; ML-KEM-1024, SPHINCS+, Triple Ratchet</td>
+        <td><span class="mono">crates.io/crates/qcomm-core</span></td>
+        <td><span class="accent-cyan" style="font-weight: 700;">11</span></td>
+      </tr>
+      <tr>
+        <td><strong class="accent-blue"><a href="https://crates.io/crates/QuantumTimeSandwich-iterators" style="color: #60a5fa; text-decoration: none;">QuantumTimeSandwich</a></strong></td>
+        <td>Toric code simulator &mdash; anyons, braiding, thresholds</td>
+        <td><span class="mono">crates.io (iterators + macros)</span></td>
+        <td><span class="accent-blue" style="font-weight: 700;">215+ tests</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 16px; font-size: 14px; color: #64748b;">
+    <strong>8 crates</strong> on crates.io &middot; Total downloads: <strong class="accent-green">1,187+</strong> &middot; All MIT licensed, patent-free, pure Rust.
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>All products: Rust &middot; MIT License &middot; Patent-free</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: QKD + PQC Architecture -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">04</span>
+  <h2>The <span class="accent-purple">PQ Conduit</span> &mdash; Streaming Keys Over PQC</h2>
+  <p class="subtitle">
+    <strong>Kirq Hub</strong> aggregates quantum entropy from any source. <strong>pq-transport-gateway</strong> streams it over PQ channels.<br>
+    <strong>QuantumHarmony</strong> governs and attests every delivery on-chain. End-to-end quantum infrastructure.
+  </p>
+
+  <div class="flow-diagram">
+    <div class="flow-box" style="border-color: #fbbf24;">
+      <h4 class="accent-amber">QKD / QRNG Sources</h4>
+      <p>Device agnostic via <strong>Kirq Hub</strong></p>
+      <p style="font-size: 11px; color: #fbbf24;">Toshiba QKD &middot; Crypto4A HSM &middot; IDQ &middot; Any QRNG</p>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-box" style="border-color: #a78bfa; border-width: 2px;">
+      <h4 class="accent-purple">PQ Transport Gateway</h4>
+      <p>Falcon + SPHINCS+</p>
+      <p style="font-size: 11px; color: #a78bfa;">Key + entropy streaming</p>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-box" style="border-color: #22d3ee;">
+      <h4 class="accent-cyan">QKD Client</h4>
+      <p>ETSI GS QKD 014</p>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-box" style="border-color: #34d399;">
+      <h4 class="accent-green">Applications</h4>
+      <p>VPN / TLS / API / Storage</p>
+    </div>
+  </div>
+
+  <div class="flow-diagram" style="margin-top: -10px;">
+    <div style="width: 100px;"></div>
+    <div class="flow-box" style="border-color: #f87171; border-width: 2px; min-width: 580px;">
+      <h4 class="accent-red">QuantumHarmony &mdash; Governance + Attestation Layer</h4>
+      <p>Key deliveries &middot; QRNG entropy &middot; LLM outputs &middot; Agent actions &rarr; Falcon-512 signed extrinsics</p>
+      <p style="font-size: 11px; color: #f87171;">Unified governance for QKD networks &middot; AI pipelines &middot; QRNG infrastructure</p>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top: 24px;">
+    <div class="card">
+      <h3 class="accent-purple">Transport Layer</h3>
+      <ul>
+        <li>Gateway on QKD/QRNG node (localhost)</li>
+        <li>Streams keys + entropy over PQ channels</li>
+        <li>Device-agnostic: any QKD or QRNG hardware</li>
+        <li>Vendor TLS never touches the network</li>
+        <li>Zero classical crypto surface area</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent-red">Governance Layer</h3>
+      <ul>
+        <li>QuantumHarmony governs all networks</li>
+        <li>QKD key delivery &rarr; on-chain receipt</li>
+        <li>AI response &rarr; on-chain attestation</li>
+        <li>Agent action &rarr; on-chain audit</li>
+        <li>QRNG entropy &rarr; on-chain provenance</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent-amber">Kirq Hub &mdash; QRNG Aggregation</h3>
+      <ul>
+        <li>Decentralized quantum entropy network</li>
+        <li>Crypto4A HSM + Toshiba QKD + IDQ sources</li>
+        <li>STARK proofs for verifiable entropy mixing</li>
+        <li>Device-agnostic &mdash; no vendor lock-in</li>
+        <li>Published: DOI 10.5281/zenodo.18200118</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>ePrint 2025/106693</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: ETSI QKD 014 + ZK-VRF -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">05</span>
+  <h2>ETSI QKD 014 + <span class="accent-cyan">Proof of Coherence</span></h2>
+  <p class="subtitle">
+    Full ETSI standard with a novel consensus layer. The <strong>Kirq Network</strong> feeds QKD telemetry<br>
+    (QBER, coherence time, key rate) directly into Proof of Coherence on QuantumHarmony.
+  </p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3 class="accent-green">Kirq Network Sources</h3>
+      <ul>
+        <li>Toshiba QKD (true quantum entropy)</li>
+        <li>Crypto4A HSM (FIPS-certified QRNG)</li>
+        <li>IDQuantique hardware</li>
+        <li>Decentralized QRNG nodes</li>
+        <li>Simulated mode for dev/test</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent-purple">Dual Proof Systems</h3>
+      <ul>
+        <li>Groth16 via Circom: ~100-500ms proofs</li>
+        <li>STARK via Winterfell: post-quantum secure</li>
+        <li>Privacy-preserving leader election via ZK-VRF</li>
+        <li>Byzantine fault tolerance: (n-1)/3</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent-cyan">Proof of Coherence</h3>
+      <ul>
+        <li>QBER as real-time network health signal</li>
+        <li>Coherence time bounds consensus rounds</li>
+        <li>Key rate determines throughput capacity</li>
+        <li>Spectral gap of network graph &rarr; convergence bound</li>
+        <li>Network physics <em>is</em> the consensus</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="point cyan" style="margin-top: 20px;">
+    <h4>QKD Telemetry as Consensus Input</h4>
+    <p>Traditional blockchains use arbitrary difficulty targets. Proof of Coherence uses <strong>real quantum observables</strong>: QBER (quantum bit error rate), coherence time, and key generation rate from QKD hardware. The network's physical state determines consensus eligibility. Healthy links vote; degraded links wait. Governance emerges from physics, not proof of work.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>ETSI GS QKD 014 &middot; SPHINCS+ &middot; Proof of Coherence (Zenodo 2025)</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: qssh -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">06</span>
+  <span class="big-number">110</span>
+  <h2><span class="accent-green">qssh</span> &mdash; Post-Quantum SSH</h2>
+  <p class="subtitle">Drop-in replacement. Same workflow, quantum-safe transport.</p>
+
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-value accent-green">110</div>
+      <div class="stat-label">Passing Tests</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-purple">3</div>
+      <div class="stat-label">PQ Algorithms</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-amber">0</div>
+      <div class="stat-label">Patent Claims</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-cyan">0</div>
+      <div class="stat-label">C Dependencies</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="point green">
+      <h4>Key Exchange</h4>
+      <p>ML-KEM-1024 (NIST FIPS 203). Lattice-based. IND-CCA2 secure. Replaces ECDH/X25519.</p>
+    </div>
+    <div class="point green">
+      <h4>Authentication</h4>
+      <p>Falcon-512 (NIST FIPS 206) for fast signatures. SPHINCS+ (NIST FIPS 205) for stateless hash-based fallback.</p>
+    </div>
+    <div class="point purple">
+      <h4>Pure Rust</h4>
+      <p>No OpenSSL. No liboqs. No C FFI. The Rust ownership model eliminates memory safety bugs at compile time &mdash; the same class of CVEs that has plagued OpenSSL for decades.</p>
+    </div>
+    <div class="point amber">
+      <h4>Migration Path</h4>
+      <p>Designed for sysadmins: same SSH workflow, quantum-safe transport underneath. Every SSH session across government, finance, and critical infrastructure is a harvest-now-decrypt-later target today.</p>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>FIPS 203 &middot; FIPS 205 &middot; FIPS 206</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: qssl -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">07</span>
+  <h2><span class="accent-green">qssl</span> &mdash; Patent-Free PQ TLS</h2>
+  <p class="subtitle">
+    Post-quantum TLS for web and API infrastructure.<br>
+    No licensing friction. No vendor lock-in. Standards-compliant.
+  </p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Why Patent-Free Matters</h3>
+      <p>Cryptographic discovery reveals thousands of TLS endpoints per organization. Per-seat or per-device licensing for PQC libraries stalls migration at scale. PQC is infrastructure, not a product &mdash; it should be as free to deploy as TLS itself.</p>
+    </div>
+    <div class="card">
+      <h3>Canadian Sovereignty</h3>
+      <p>Government departments and critical infrastructure operators migrating to PQC should have access to Canadian-built, patent-free tools. No dependency on foreign IP holders. No licensing negotiations. Just deploy.</p>
+    </div>
+  </div>
+
+  <div class="quote">
+    "A Repeatable Framework for Quantum-Safe Migrations identifies TLS as a priority protocol for PQC transition. qssl is designed to lower that migration barrier."
+    <div style="font-style: normal; font-size: 14px; color: #475569; margin-top: 8px;">&mdash; Aligned with ETSI TR 104 016</div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>ML-KEM &middot; ML-DSA &middot; NIST standardized</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: Coherence Shield -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">08</span>
+  <h2>Coherence Shield &mdash; <span class="accent-amber">AI + PQC</span></h2>
+  <p class="subtitle">
+    Where quantum security meets AI governance.<br>
+    Toroidal logit bias constrains model drift. PQ signatures attest every response.
+  </p>
+
+  <div class="flow-diagram">
+    <div class="flow-box" style="border-color: #fbbf24;">
+      <h4 class="accent-amber">User Prompt</h4>
+      <p>Any OpenAI-compatible client</p>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-box" style="border-color: #a78bfa;">
+      <h4 class="accent-purple">Coherence Shield</h4>
+      <p>Toroidal logit bias applied</p>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-box" style="border-color: #34d399;">
+      <h4 class="accent-green">LLM Backend</h4>
+      <p>Constrained inference</p>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-box" style="border-color: #22d3ee;">
+      <h4 class="accent-cyan">QuantumHarmony</h4>
+      <p>PQ L1 blockchain attestation</p>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-value accent-amber">+2.8</div>
+      <div class="stat-label">pp TruthfulQA improvement</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-purple">7</div>
+      <div class="stat-label">Models validated</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-green">15</div>
+      <div class="stat-label">Zenodo publications</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="point amber">
+      <h4>The Mathematical Connection</h4>
+      <p>The spectral gap of the torus &mdash; the same geometric invariant that bounds error rates in topological quantum error-correcting codes &mdash; also bounds drift in language model outputs. One manifold, multiple domains. Published: DOI 10.5281/zenodo.18516477.</p>
+    </div>
+    <div class="point cyan">
+      <h4>QuantumHarmony &mdash; Same Chain, Both Domains</h4>
+      <p>The same QuantumHarmony blockchain that attests QKD key deliveries (slide 4) also attests every LLM response and agent action. Falcon-512 signed extrinsics, JSONL hash chain mirrored on-chain. One PQ attestation layer for quantum key distribution <em>and</em> AI governance.</p>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>Qwen (0.5B/1.5B/7B) &middot; Mistral 7B &middot; OLMo 7B &middot; Gemma-2 9B &middot; Ouro 1.4B</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9: QuantumTimeSandwich -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">09</span>
+  <span class="big-number">T&sup2;</span>
+  <h2><span class="accent-blue">QuantumTimeSandwich</span> &mdash; Toric Code Simulator</h2>
+  <p class="subtitle">
+    Kitaev toric code on T&sup2;. Anyonic excitations, braiding statistics, error thresholds.<br>
+    8 Rust crates. 215+ tests. Published on crates.io.
+  </p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3 class="accent-blue">Toric Code Sim</h3>
+      <ul>
+        <li>N&times;N torus with 2N&sup2; qubits</li>
+        <li>e-particles (vertex) &amp; m-particles (plaquette)</li>
+        <li>Braiding: e around m &rarr; phase (&minus;1)</li>
+        <li>Greedy + threshold decoder</li>
+        <li>Biased noise threshold sweeps</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent-purple">Spectral Analysis</h3>
+      <ul>
+        <li>Graph Laplacian eigendecomposition</li>
+        <li>Numerical verification: &lambda;&sub1; matches analytic formula</li>
+        <li>Cycle, torus, linear chain topologies</li>
+        <li>Poincar&eacute; constant &amp; mixing time bounds</li>
+        <li>Cross-validated with nalgebra</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent-cyan">Full Platform</h3>
+      <ul>
+        <li>BB84 QKD simulation + eavesdrop detection</li>
+        <li>Tonnetz coherence sim (same torus as TLB)</li>
+        <li>Quantum gate core (Deutsch, Grover, Bell)</li>
+        <li>Interactive toric-Doppler visualization (Egui)</li>
+        <li>Unit circle state machine</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="point blue" style="margin-top: 24px;">
+    <h4>The Unifying Thread</h4>
+    <p>The spectral gap of the torus bounds error correction thresholds in the toric code, convergence rates in distributed consensus, and drift in language model outputs. QuantumTimeSandwich is the numerical engine that verifies these connections. One manifold. Three domains. Same math.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>crates.io/crates/QuantumTimeSandwich &middot; github.com/Paraxiom</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10: Formal Verification -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">10</span>
+  <h2>Toward <span class="accent-purple">Provably Correct</span> PQC</h2>
+  <p class="subtitle">
+    For post-quantum cryptography, "it works" is not enough.<br>
+    The goal is code that is provably correct, panic-free, and secret-independent.
+  </p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3 class="accent-green">Kani (AWS)</h3>
+      <p>Bounded model checking directly on Rust. Proves absence of panics, integer overflows, and undefined behavior across all inputs. Adding to CI pipeline.</p>
+    </div>
+    <div class="card">
+      <h3 class="accent-purple">Verus (MSR)</h3>
+      <p>SMT-based proof obligations written in Rust syntax. Functional correctness verified by Z3 solver. Proof annotations live alongside implementation code.</p>
+    </div>
+    <div class="card">
+      <h3 class="accent-cyan">Lean 4 + Mathlib</h3>
+      <p>Mathematical foundations formalized in a proof assistant. Spectral gap theorems, Poincar&eacute; inequality on T&sup2;. Aeneas bridges Rust &harr; Lean.</p>
+    </div>
+  </div>
+
+  <div class="point purple" style="margin-top: 30px;">
+    <h4>Reference Model: libcrux (Cryspen)</h4>
+    <p>Cryspen's ML-KEM implementation uses <span class="mono">hax</span> to extract Rust into F*, prove correctness, panic freedom, and secret independence, then generate verified Rust. Their ML-KEM is the gold standard. We are building toward the same bar &mdash; same language, same ecosystem, same goal.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>Rust &rarr; Kani/Verus &middot; Rust &rarr; Lean 4 via Aeneas</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 11: Research -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">11</span>
+  <h2><span class="accent-cyan">Research</span> Portfolio</h2>
+  <p class="subtitle">15 publications on Zenodo. Open access. Defensive prior art.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Publication</th>
+        <th>Key Result</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Residual Classical Vulnerabilities in QKD Control Channels</td>
+        <td>QKD management APIs use breakable TLS</td>
+        <td><span class="mono">ePrint 2025/106693</span></td>
+      </tr>
+      <tr>
+        <td>Topological Constraints for Coherent Language Models</td>
+        <td>+2.8pp TruthfulQA via toroidal logit bias</td>
+        <td><span class="mono">Feb 2026</span></td>
+      </tr>
+      <tr>
+        <td>Defensive Technical Disclosure &mdash; All 4 Embodiments</td>
+        <td>Prior art across PQC + AI coherence</td>
+        <td><span class="mono">Feb 2026</span></td>
+      </tr>
+      <tr>
+        <td>Proof of Coherence</td>
+        <td>Spectral-gap-based consensus mechanism</td>
+        <td><span class="mono">2025</span></td>
+      </tr>
+      <tr>
+        <td>Karmonic Mesh / Toroidal Mesh / ERLHS</td>
+        <td>Tonnetz manifold applied to consensus + governance</td>
+        <td><span class="mono">2024&ndash;2025</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="point cyan" style="margin-top: 24px;">
+    <h4>IP Strategy: Defensive Publication</h4>
+    <p>We publish on Zenodo to establish prior art at zero cost. This prevents others from patenting our innovations while keeping everything patent-free. Our business model is services, integration, and support &mdash; not licensing.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>DOI: 10.5281/zenodo.18595753</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 12: By the Numbers -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">12</span>
+  <h2>By the <span class="accent-green">Numbers</span></h2>
+
+  <div class="stat-row" style="justify-content: center;">
+    <div class="stat">
+      <div class="stat-value accent-green">45</div>
+      <div class="stat-label">GitHub Repos</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-purple">8</div>
+      <div class="stat-label">Crates Published</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-amber">15</div>
+      <div class="stat-label">Publications</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-cyan">110+</div>
+      <div class="stat-label">Tests (qssh alone)</div>
+    </div>
+  </div>
+
+  <div class="stat-row" style="justify-content: center;">
+    <div class="stat">
+      <div class="stat-value accent-red">0</div>
+      <div class="stat-label">Patents Filed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-blue">0</div>
+      <div class="stat-label">C Dependencies</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-green">100%</div>
+      <div class="stat-label">Rust</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-amber">MIT</div>
+      <div class="stat-label">License</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top: 20px;">
+    <div class="card">
+      <h3>Algorithms</h3>
+      <ul>
+        <li>ML-KEM-1024 (FIPS 203)</li>
+        <li>ML-DSA (FIPS 204)</li>
+        <li>Falcon-512 (FIPS 206)</li>
+        <li>SPHINCS+ (FIPS 205)</li>
+        <li>STARK proofs (Winterfell)</li>
+        <li>Groth16 proofs (Circom/snarkjs)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Standards Alignment</h3>
+      <ul>
+        <li>NIST FIPS 203/204/205/206</li>
+        <li>ETSI GS QKD 014</li>
+        <li>CNSA 2.0 timeline compatible</li>
+        <li>Algorithm-agile architecture</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>github.com/Paraxiom</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 13: Market -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">13</span>
+  <h2>Three <span class="accent-amber">Market Segments</span></h2>
+
+  <div class="grid-3">
+    <div class="card" style="border-top: 3px solid #34d399;">
+      <h3 class="accent-green">Government + Defence</h3>
+      <ul>
+        <li>SSH migration across federal departments</li>
+        <li>TLS migration for APIs and web infrastructure</li>
+        <li>QKD control channel hardening</li>
+        <li>Aligned with CNSA 2.0 timelines</li>
+        <li>Canadian-built, patent-free, no foreign IP dependency</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #a78bfa;">
+      <h3 class="accent-purple">Financial Services</h3>
+      <ul>
+        <li>Long-duration sensitive data at risk</li>
+        <li>Client records, transaction histories</li>
+        <li>ASC X9 quantum risk alignment</li>
+        <li>Daryl Loader: 25 years RBC wealth management, FCSI, CIM</li>
+        <li>Fiduciary-grade discipline</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #fbbf24;">
+      <h3 class="accent-amber">AI Infrastructure</h3>
+      <ul>
+        <li>Model output integrity &rarr; PQ attestation</li>
+        <li>Drift reduction via toroidal logit bias</li>
+        <li>Quantum + AI convergence</li>
+        <li>Coherence Shield: deployed, working</li>
+        <li>HuggingFace demo available</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>#YQS2026</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 14: Team -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">14</span>
+  <h2>The <span class="accent-blue">Team</span></h2>
+
+  <div class="grid-2">
+    <div class="card" style="border-top: 3px solid #60a5fa;">
+      <h3>Sylvain Cormier</h3>
+      <p style="color: #64748b; margin-bottom: 12px;">Founder &amp; CTO</p>
+      <ul>
+        <li>Systems engineering &amp; applied cryptography</li>
+        <li>15 publications (Zenodo, ePrint)</li>
+        <li>45 repos, primarily Rust</li>
+        <li>ePrint paper on QKD vulnerabilities</li>
+        <li>Montreal, QC</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #60a5fa;">
+      <h3>Daryl G Loader</h3>
+      <p style="color: #64748b; margin-bottom: 12px;">Chief Business Officer</p>
+      <ul>
+        <li>25 years RBC Wealth Management</li>
+        <li>Discretionary Senior Portfolio Manager</li>
+        <li>FCSI, CIM, PFP certifications</li>
+        <li>Scaled practice: $30M &rarr; $150M AUM</li>
+        <li>AI safety &amp; fiduciary alignment focus</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="quote" style="margin-top: 30px;">
+    Post-quantum security is infrastructure, not a product.<br>
+    It should be as free to deploy as TLS itself.
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc. &middot; Montreal, QC &middot; Est. 2023</span>
+    <span>sylvain@paraxiom.org</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 15: The Ask -->
+<!-- ============================================================ -->
+<div class="slide">
+  <span class="slide-number">15</span>
+  <h2>How We Want to <span class="accent-green">Engage</span></h2>
+
+  <div class="grid-2" style="margin-top: 20px;">
+    <div>
+      <div class="point green">
+        <h4>QIC Membership</h4>
+        <p>We want to contribute to the Canadian quantum ecosystem, not just be listed. What does membership look like for a company at our stage?</p>
+      </div>
+
+      <div class="point purple">
+        <h4>Year of Quantum Safety &mdash; #YQS2026</h4>
+        <p>We can contribute tools, migration case studies, and technical content. Our ePrint paper on QKD control channel vulnerabilities is directly relevant.</p>
+      </div>
+
+      <div class="point cyan">
+        <h4>Standards Feedback</h4>
+        <p>Where do our tools fit within the ETSI and NIST migration frameworks? What gaps can we fill? We welcome guidance from QIC's standards expertise.</p>
+      </div>
+
+      <div class="point amber">
+        <h4>QUANTUM NOW &mdash; Montreal, June 2026</h4>
+        <p>Live demo at QUANTUM NOW: Kirq beta testnet, PQ Conduit key streaming, Coherence Shield + QuantumHarmony attestation. All running, all open source.</p>
+      </div>
+    </div>
+
+    <div class="card" style="border-top: 3px solid #f87171;">
+      <h3 class="accent-red">Roadmap</h3>
+      <table style="margin-top: 8px;">
+        <tbody>
+          <tr>
+            <td><span class="tag tag-green" style="min-width: 70px; text-align: center;">NOW</span></td>
+            <td>8 crates on crates.io &middot; 1,187+ downloads &middot; Coherence Shield deployed &middot; 15 publications</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-purple" style="min-width: 70px; text-align: center;">Q2 2026</span></td>
+            <td><strong>Phase 2</strong> &mdash; Kirq beta testnet &middot; Crypto4A + Toshiba QKD integration &middot; Multi-node entropy network</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-cyan" style="min-width: 70px; text-align: center;">Q3 2026</span></td>
+            <td><strong>Kirq mainnet</strong> &mdash; Production QKD/QRNG network &middot; QuantumHarmony governance live &middot; Enterprise API</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-amber" style="min-width: 70px; text-align: center;">Q4 2026</span></td>
+            <td>Enterprise pilots &middot; Government procurement alignment &middot; Formal verification milestones</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>paraxiom.org &middot; github.com/Paraxiom</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 16: Close -->
+<!-- ============================================================ -->
+<div class="slide" style="text-align: center;">
+  <span class="slide-number">16</span>
+  <h1 style="margin-bottom: 24px;">Thank You</h1>
+  <p class="subtitle" style="max-width: 600px; margin: 0 auto 40px;">
+    Patent-free. Pure Rust. Standards-aligned.<br>
+    Canadian-built post-quantum infrastructure.
+  </p>
+  <div style="margin-bottom: 40px;">
+    <span class="tag tag-green">qssh</span>
+    <span class="tag tag-green">qssl</span>
+    <span class="tag tag-purple">qkd-client</span>
+    <span class="tag tag-cyan">pq-transport-gateway</span>
+    <span class="tag tag-red">Kirq Hub</span>
+    <span class="tag tag-amber">Coherence Shield</span>
+    <span class="tag tag-blue">topological-coherence</span>
+    <span class="tag tag-cyan">qcomm-core</span>
+    <span class="tag tag-blue">QuantumTimeSandwich</span>
+  </div>
+  <p style="color: #64748b; font-size: 18px; margin-bottom: 8px;">
+    Sylvain Cormier &middot; sylvain@paraxiom.org<br>
+    Daryl Loader &middot; daryl.loader@gmail.com
+  </p>
+  <p style="color: #475569; font-size: 15px;">
+    paraxiom.org &middot; github.com/Paraxiom &middot; github.com/QuantumVerseProtocols
+  </p>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc. &middot; Montreal, QC</span>
+    <span>February 2026</span>
+  </div>
+</div>
+
+</body>
+</html>
