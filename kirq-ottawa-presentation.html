@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kirq Ottawa — Grassroots Quantum Entropy for Canada's Capital</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: #0a0e1a;
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
+
+  .slide {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    position: relative;
+    border-bottom: 1px solid #1e293b;
+  }
+
+  .slide-number {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .logo {
+    position: absolute;
+    top: 24px;
+    left: 40px;
+    height: 36px;
+    opacity: 0.6;
+  }
+
+  h1 {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #94a3b8;
+  }
+
+  .subtitle {
+    font-size: 22px;
+    color: #64748b;
+    margin-bottom: 40px;
+    line-height: 1.5;
+  }
+
+  .accent-purple { color: #a78bfa; }
+  .accent-green { color: #34d399; }
+  .accent-amber { color: #fbbf24; }
+  .accent-cyan { color: #22d3ee; }
+  .accent-red { color: #f87171; }
+  .accent-blue { color: #60a5fa; }
+
+  .big-number {
+    font-size: 120px;
+    font-weight: 900;
+    opacity: 0.07;
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    line-height: 1;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 20px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .card {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 32px;
+  }
+
+  .card h3 {
+    color: #e2e8f0;
+    margin-bottom: 12px;
+    font-size: 20px;
+  }
+
+  .card p, .card li {
+    color: #94a3b8;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  .card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .card ul li::before {
+    content: "\2192  ";
+    color: #475569;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+
+  .tag-green { background: #064e3b; color: #34d399; }
+  .tag-purple { background: #2e1065; color: #a78bfa; }
+  .tag-amber { background: #451a03; color: #fbbf24; }
+  .tag-cyan { background: #083344; color: #22d3ee; }
+  .tag-red { background: #450a0a; color: #f87171; }
+  .tag-blue { background: #172554; color: #60a5fa; }
+
+  .point {
+    margin-bottom: 24px;
+    padding-left: 20px;
+    border-left: 3px solid #1e293b;
+  }
+
+  .point.green { border-color: #34d399; }
+  .point.purple { border-color: #a78bfa; }
+  .point.amber { border-color: #fbbf24; }
+  .point.cyan { border-color: #22d3ee; }
+  .point.red { border-color: #f87171; }
+  .point.blue { border-color: #60a5fa; }
+
+  .point h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .point p {
+    color: #94a3b8;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 50px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 14px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 14px 20px;
+    border-bottom: 1px solid #1e293b;
+    font-size: 16px;
+  }
+
+  th {
+    color: #64748b;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  td { color: #cbd5e1; }
+
+  .mono {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 14px;
+    color: #a78bfa;
+  }
+
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 30px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .flow-box {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 20px 28px;
+    text-align: center;
+    min-width: 160px;
+  }
+
+  .flow-box h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .flow-box p {
+    font-size: 12px;
+    color: #64748b;
+  }
+
+  .flow-arrow {
+    font-size: 24px;
+    color: #334155;
+    padding: 0 8px;
+  }
+
+  .quote {
+    font-size: 24px;
+    font-style: italic;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin: 30px 0;
+    padding-left: 24px;
+    border-left: 4px solid #a78bfa;
+  }
+
+  .footer-bar {
+    position: absolute;
+    bottom: 30px;
+    left: 80px;
+    right: 80px;
+    display: flex;
+    justify-content: space-between;
+    color: #334155;
+    font-size: 13px;
+  }
+
+  .map-label {
+    font-size: 15px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: inline-block;
+    margin: 4px;
+  }
+
+  .cost-row {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #1e293b;
+  }
+
+  .cost-item {
+    flex: 2;
+    font-size: 16px;
+  }
+
+  .cost-amount {
+    flex: 1;
+    text-align: right;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  @media (max-width: 900px) {
+    .slide { padding: 40px 30px; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 28px; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .stat-value { font-size: 40px; }
+    .flow-diagram { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SLIDE 1: Title -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">01</span>
+  <h3 class="accent-cyan">Paraxiom Technologies &mdash; 2026</h3>
+  <h1>Kirq Ottawa</h1>
+  <p class="subtitle">
+    A grassroots quantum entropy node for Canada's capital.<br>
+    Build it and they will come.
+  </p>
+  <div style="margin-top: 40px;">
+    <span class="tag tag-green">QRNG</span>
+    <span class="tag tag-purple">QKD</span>
+    <span class="tag tag-cyan">Ottawa</span>
+    <span class="tag tag-amber">Open Source</span>
+    <span class="tag tag-red">Grassroots</span>
+  </div>
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>paraxiom.org &middot; sylvain@paraxiom.org</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2: The Global Race -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">02</span>
+  <span class="big-number">12k</span>
+  <h2>The World Is Building <span class="accent-red">Quantum Networks</span></h2>
+  <p class="subtitle">Every major economy is deploying QKD infrastructure. Canada has one testbed.</p>
+
+  <div class="grid-3">
+    <div class="card" style="border-top: 3px solid #f87171;">
+      <h3 class="accent-red">China</h3>
+      <ul>
+        <li><strong>12,000+ km</strong> of QKD fiber</li>
+        <li>145 backbone nodes, 80 cities</li>
+        <li>Micius satellite &mdash; operational since 2016</li>
+        <li>3,700 km without trusted relays (Feb 2026)</li>
+        <li>China Telecom: quantum-encrypted calls in 16 cities</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #60a5fa;">
+      <h3 class="accent-blue">European Union</h3>
+      <ul>
+        <li><strong>EuroQCI</strong> &mdash; all 27 member states</li>
+        <li>&euro;90M call for terrestrial deployment</li>
+        <li>Eagle-1 satellite launching 2026</li>
+        <li>Cross-border QKD links 2025&ndash;2030</li>
+        <li>Operational capability starting 2026</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #a78bfa;">
+      <h3 class="accent-purple">United Kingdom</h3>
+      <ul>
+        <li>&pound;2.5B National Quantum Strategy</li>
+        <li>410 km Bristol&ndash;Cambridge QKD link (2025)</li>
+        <li>Entanglement + QKD integrated</li>
+        <li>EPSRC Integrated Quantum Networks Hub</li>
+        <li>Live quantum-secure video conferencing</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-4" style="margin-top: 20px;">
+    <div class="card">
+      <h3 class="accent-amber" style="font-size: 16px;">Japan</h3>
+      <p style="font-size: 14px;">600 km Tokyo&ndash;Osaka backbone by 2027. Toshiba + NEC. Multi-vendor quantum/classical co-existence on same fiber.</p>
+    </div>
+    <div class="card">
+      <h3 class="accent-cyan" style="font-size: 16px;">South Korea</h3>
+      <p style="font-size: 14px;">$250M+ quantum budget (2025). SK Telecom QKD deployments. National five-year quantum plan.</p>
+    </div>
+    <div class="card">
+      <h3 class="accent-green" style="font-size: 16px;">Singapore</h3>
+      <p style="font-size: 14px;">NQSN testbed. SpeQtral satellite QKD launching 2025&ndash;27. First entanglement-based QKD outside China.</p>
+    </div>
+    <div class="card">
+      <h3 class="accent-red" style="font-size: 16px;">United States</h3>
+      <p style="font-size: 14px;">$625M DOE quantum centers. 80-mile Chicago loop. 300+ km Oak Ridge testbed. Q-NEXT: $125M.</p>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>Sources: Nature, ESA, DOE, EPSRC, NICT</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: Canada's Gap -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">03</span>
+  <span class="big-number">1</span>
+  <h2>Canada Has <span class="accent-amber">One</span> QKD Testbed</h2>
+  <p class="subtitle">
+    The Kirq testbed in Quebec (Numana). Nothing in Ontario. Nothing in Western Canada.<br>
+    The nation's capital &mdash; home to CSE, DRDC, and NRC &mdash; has zero quantum network infrastructure.
+  </p>
+
+  <div class="grid-2">
+    <div class="card" style="border-top: 3px solid #34d399;">
+      <h3 class="accent-green">What Exists</h3>
+      <ul>
+        <li><strong>Kirq testbed</strong> (Numana) &mdash; Sherbrooke, Montreal, Quebec City</li>
+        <li>CAD $10M+ investment, TELUS partnership</li>
+        <li>Quantum eMotion joined Dec 2025</li>
+        <li>Quebec City expansion opened Jan 2026 at Universit&eacute; Laval</li>
+        <li>QEYSSat satellite &mdash; launching late 2026</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #f87171;">
+      <h3 class="accent-red">What's Missing</h3>
+      <ul>
+        <li><strong>No QKD testbed in Ontario</strong></li>
+        <li>No quantum network at the seat of government</li>
+        <li>CSE and DRDC have no local quantum comms infrastructure</li>
+        <li>No cross-provincial quantum link (QC &harr; ON)</li>
+        <li>No QRNG aggregation network anywhere in Canada</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="quote">
+    China has 12,000 km of QKD fiber across 80 cities.<br>
+    Canada has three nodes in Quebec.
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>#YQS2026 &middot; Year of Quantum Safety</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: Why Ottawa -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">04</span>
+  <h2>Why <span class="accent-cyan">Ottawa</span></h2>
+  <p class="subtitle">
+    Canada's capital already has the people, the labs, the hardware manufacturers, and the government demand.<br>
+    What it doesn't have is a network connecting them.
+  </p>
+
+  <div class="grid-3">
+    <div class="card" style="border-top: 3px solid #22d3ee;">
+      <h3 class="accent-cyan">Government &amp; Defence</h3>
+      <ul>
+        <li><strong>CSE</strong> &mdash; Communications Security Establishment</li>
+        <li><strong>DRDC</strong> &mdash; Defence Research &amp; Development Canada</li>
+        <li><strong>NRC</strong> &mdash; Quantum &amp; Nanotechnologies Research Centre</li>
+        <li>Federal departments with quantum-safe mandates</li>
+        <li>DRDC goal: QKD comms network by 2030</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #a78bfa;">
+      <h3 class="accent-purple">Research</h3>
+      <ul>
+        <li><strong>University of Ottawa</strong> &mdash; NexQT Institute, Max Planck Centre</li>
+        <li><strong>Carleton University</strong> &mdash; QuARC: 100+ faculty, 30+ labs</li>
+        <li><strong>NRC</strong> &mdash; Photonics, quantum optics, quantum sensing</li>
+        <li><strong>5.4 km free-space QKD link</strong> demonstrated (NRC &harr; uOttawa)</li>
+        <li>160+ quantum-related courses at Carleton alone</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top: 3px solid #fbbf24;">
+      <h3 class="accent-amber">Local Industry</h3>
+      <ul>
+        <li><strong>Crypto4A</strong> &mdash; Quantum-safe HSMs, manufactured in Ottawa</li>
+        <li><strong>Quantropi</strong> &mdash; Digital QKD, QRNG distribution</li>
+        <li>FedDev Ontario: $17.2M across 12 quantum companies</li>
+        <li>Crypto4A: $3.75M FedDev contribution, 50+ new jobs</li>
+        <li>Hardware + talent + government demand = missing only the network</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="point cyan" style="margin-top: 24px;">
+    <h4>The 5.4 km QKD Link Already Exists</h4>
+    <p>NRC and the University of Ottawa have already demonstrated a free-space QKD link using structured photons and adaptive optics. The infrastructure foundation is in place. What's needed is a persistent, multi-source QRNG aggregation network that builds on this work and opens it to industry.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>NRC &middot; uOttawa &middot; Carleton &middot; Crypto4A &middot; Quantropi</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: What We'd Build -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">05</span>
+  <h2>Kirq Ottawa &mdash; <span class="accent-green">The Architecture</span></h2>
+  <p class="subtitle">
+    A multi-source quantum entropy node in Ottawa, aggregating QRNG from local hardware<br>
+    via Kirq Hub, governed by Proof of Coherence, and open to any application.
+  </p>
+
+  <div class="flow-diagram">
+    <div class="flow-box" style="border-color: #fbbf24; border-width: 2px;">
+      <h4 class="accent-amber">Crypto4A QxHSM</h4>
+      <p>FIPS-certified QRNG</p>
+      <p style="font-size: 11px; color: #fbbf24;">Ottawa-manufactured</p>
+    </div>
+    <span class="flow-arrow">+</span>
+    <div class="flow-box" style="border-color: #22d3ee;">
+      <h4 class="accent-cyan">NRC / uOttawa QKD</h4>
+      <p>Free-space &amp; fiber sources</p>
+      <p style="font-size: 11px; color: #22d3ee;">Existing 5.4 km link</p>
+    </div>
+    <span class="flow-arrow">+</span>
+    <div class="flow-box" style="border-color: #34d399;">
+      <h4 class="accent-green">Additional QRNG</h4>
+      <p>IDQ &middot; QeM &middot; Quantropi</p>
+      <p style="font-size: 11px; color: #34d399;">Device-agnostic</p>
+    </div>
+  </div>
+
+  <div class="flow-diagram" style="margin-top: -10px;">
+    <span class="flow-arrow" style="transform: rotate(90deg);">&darr;</span>
+  </div>
+
+  <div class="flow-diagram" style="margin-top: -10px;">
+    <div class="flow-box" style="border-color: #a78bfa; border-width: 2px; min-width: 400px;">
+      <h4 class="accent-purple">Kirq Hub &mdash; Ottawa Node</h4>
+      <p>K-of-M Shamir aggregation &middot; STARK proofs &middot; PQ transport</p>
+      <p style="font-size: 11px; color: #a78bfa;">Open source &middot; MIT licensed &middot; Device-agnostic</p>
+    </div>
+    <span class="flow-arrow">&rarr;</span>
+    <div class="flow-box" style="border-color: #f87171; border-width: 2px; min-width: 300px;">
+      <h4 class="accent-red">Proof of Coherence</h4>
+      <p>On-chain attestation &middot; Governance</p>
+      <p style="font-size: 11px; color: #f87171;">QuantumHarmony L1</p>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top: 20px;">
+    <div class="card">
+      <h3 class="accent-amber">QRNG Aggregation</h3>
+      <ul>
+        <li>Multiple hardware vendors, single API</li>
+        <li>2-of-3 Shamir threshold (Byzantine tolerant)</li>
+        <li>STARK proofs certify quantum origin</li>
+        <li>No single point of failure</li>
+        <li>Priority queue by QBER</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent-purple">PQ Transport</h3>
+      <ul>
+        <li>All entropy streams over PQ channels</li>
+        <li>Falcon-512 + SPHINCS+ signatures</li>
+        <li>ML-KEM-1024 key exchange</li>
+        <li>Zero classical crypto surface area</li>
+        <li>ETSI GS QKD 014 compliant</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="accent-green">Open &amp; Extensible</h3>
+      <ul>
+        <li>Open source, MIT licensed</li>
+        <li>Any QRNG/QKD hardware can join</li>
+        <li>REST + WebSocket APIs for consumers</li>
+        <li>Cross-link to Quebec Kirq testbed</li>
+        <li>QEYSSat ground station integration</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>Kirq Hub: DOI 10.5281/zenodo.18200118</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: Global Comparison -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">06</span>
+  <h2>Kirq Equivalents <span class="accent-blue">Worldwide</span></h2>
+  <p class="subtitle">No one else is doing exactly what Kirq does &mdash; decentralized, device-agnostic, Byzantine-tolerant QRNG aggregation.<br>But many are building the components.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Network / Project</th>
+        <th>Country</th>
+        <th>Approach</th>
+        <th>Kirq Difference</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong class="accent-red">CN-QCN</strong></td>
+        <td>China</td>
+        <td>Point-to-point QKD, trusted relays, centralized</td>
+        <td>Kirq is decentralized, no trusted relay</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-blue">EuroQCI</strong></td>
+        <td>EU</td>
+        <td>National QKD networks, satellite + terrestrial</td>
+        <td>Kirq aggregates multiple sources, not just QKD</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-purple">UKQN</strong></td>
+        <td>UK</td>
+        <td>Metro QKD links, entanglement + QKD hybrid</td>
+        <td>Kirq adds STARK proofs + blockchain governance</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-cyan">Quantum Blockchains</strong></td>
+        <td>Poland</td>
+        <td>QRNG-as-a-Service API</td>
+        <td>Closest analog; Kirq adds threshold crypto + PQC</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-amber">BTQ QRiNG</strong></td>
+        <td>Canada/Singapore</td>
+        <td>Blockchain + QRNG via Ethereum smart contracts</td>
+        <td>Kirq uses dedicated PQ L1, not EVM</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-green">API3 QRNG</strong></td>
+        <td>US</td>
+        <td>Quantum randomness for dApps (single source)</td>
+        <td>Kirq aggregates multiple sources with BFT</td>
+      </tr>
+      <tr>
+        <td><strong>Quantinuum Origin</strong></td>
+        <td>US/UK</td>
+        <td>Cloud QRNG from quantum computer</td>
+        <td>Single source, centralized; Kirq is distributed</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="point purple" style="margin-top: 20px;">
+    <h4>The Gap Kirq Fills</h4>
+    <p>Existing networks are either <strong>point-to-point QKD</strong> (trusted relays, single vendor) or <strong>single-source QRNG APIs</strong> (centralized, no verification). Kirq is the first to combine <strong>multi-vendor QRNG aggregation + Byzantine fault tolerance + STARK proofs + PQ transport</strong> into a single open-source stack. Nobody else does all four.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>Competitive landscape as of Feb 2026</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: Cost Estimate -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">07</span>
+  <span class="big-number">$</span>
+  <h2>What It <span class="accent-green">Costs</span></h2>
+  <p class="subtitle">
+    Three tiers: minimum viable node, metro testbed, and cross-provincial link.<br>
+    Grassroots means starting small and proving value before scaling.
+  </p>
+
+  <div class="grid-3">
+    <div class="card" style="border-top: 3px solid #34d399;">
+      <h3 class="accent-green">Tier 1: Seed Node</h3>
+      <p style="font-size: 14px; color: #64748b; margin-bottom: 16px;">Minimum viable Kirq Ottawa node</p>
+      <table style="margin-top: 0;">
+        <tbody>
+          <tr><td>Crypto4A QxHSM (QRNG)</td><td class="accent-green" style="text-align: right; font-weight: 700;">$50&ndash;100K</td></tr>
+          <tr><td>IDQ Quantis PCIe (QRNG #2)</td><td class="accent-green" style="text-align: right; font-weight: 700;">$3&ndash;5K</td></tr>
+          <tr><td>Server hardware (2 nodes)</td><td class="accent-green" style="text-align: right; font-weight: 700;">$15&ndash;25K</td></tr>
+          <tr><td>Kirq Hub software (open source)</td><td class="accent-green" style="text-align: right; font-weight: 700;">$0</td></tr>
+          <tr><td>Hosting / colocation (1 year)</td><td class="accent-green" style="text-align: right; font-weight: 700;">$12&ndash;24K</td></tr>
+          <tr><td>Integration &amp; ops (1 FTE, 6 mo)</td><td class="accent-green" style="text-align: right; font-weight: 700;">$50&ndash;75K</td></tr>
+          <tr style="border-top: 2px solid #34d399;"><td><strong>TOTAL</strong></td><td class="accent-green" style="text-align: right; font-weight: 900; font-size: 20px;">$130&ndash;230K</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="border-top: 3px solid #a78bfa;">
+      <h3 class="accent-purple">Tier 2: Metro Testbed</h3>
+      <p style="font-size: 14px; color: #64748b; margin-bottom: 16px;">Multi-node Ottawa network</p>
+      <table style="margin-top: 0;">
+        <tbody>
+          <tr><td>Tier 1 seed node</td><td class="accent-purple" style="text-align: right; font-weight: 700;">$180K</td></tr>
+          <tr><td>QKD endpoint pair (fiber)</td><td class="accent-purple" style="text-align: right; font-weight: 700;">$150&ndash;400K</td></tr>
+          <tr><td>Dark fiber lease (10 km, 1 yr)</td><td class="accent-purple" style="text-align: right; font-weight: 700;">$30&ndash;50K</td></tr>
+          <tr><td>3 additional QRNG sources</td><td class="accent-purple" style="text-align: right; font-weight: 700;">$15&ndash;30K</td></tr>
+          <tr><td>NRC/university lab integration</td><td class="accent-purple" style="text-align: right; font-weight: 700;">$50&ndash;100K</td></tr>
+          <tr><td>Staff (2 FTEs, 1 year)</td><td class="accent-purple" style="text-align: right; font-weight: 700;">$200&ndash;250K</td></tr>
+          <tr style="border-top: 2px solid #a78bfa;"><td><strong>TOTAL</strong></td><td class="accent-purple" style="text-align: right; font-weight: 900; font-size: 20px;">$625K&ndash;$1M</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="border-top: 3px solid #fbbf24;">
+      <h3 class="accent-amber">Tier 3: QC &harr; ON Link</h3>
+      <p style="font-size: 14px; color: #64748b; margin-bottom: 16px;">Cross-provincial quantum corridor</p>
+      <table style="margin-top: 0;">
+        <tbody>
+          <tr><td>Tier 2 metro testbed</td><td class="accent-amber" style="text-align: right; font-weight: 700;">$800K</td></tr>
+          <tr><td>Long-haul dark fiber (Ottawa&ndash;Montreal, ~200 km)</td><td class="accent-amber" style="text-align: right; font-weight: 700;">$200&ndash;500K/yr</td></tr>
+          <tr><td>QKD repeater nodes (2&ndash;3)</td><td class="accent-amber" style="text-align: right; font-weight: 700;">$400K&ndash;$1M</td></tr>
+          <tr><td>QEYSSat ground station link</td><td class="accent-amber" style="text-align: right; font-weight: 700;">TBD (CSA)</td></tr>
+          <tr><td>Staff (4 FTEs, 1 year)</td><td class="accent-amber" style="text-align: right; font-weight: 700;">$400&ndash;500K</td></tr>
+          <tr style="border-top: 2px solid #fbbf24;"><td><strong>TOTAL</strong></td><td class="accent-amber" style="text-align: right; font-weight: 900; font-size: 20px;">$2&ndash;$3M</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="point green" style="margin-top: 20px;">
+    <h4>Grassroots Strategy</h4>
+    <p>Start with <strong>Tier 1 ($130&ndash;230K)</strong>. Prove the aggregation works with 2&ndash;3 QRNG sources. Publish results. Use that to secure funding for Tier 2. The software is already built &mdash; Kirq Hub is open source on GitHub. The cost is hardware + operations.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>All estimates CAD &middot; 2026 pricing</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: Funding -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">08</span>
+  <h2>How to <span class="accent-amber">Fund</span> It</h2>
+  <p class="subtitle">
+    Canada is spending $334M on quantum in the defence budget alone.<br>
+    Multiple programs are designed for exactly this kind of initiative.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Program</th>
+        <th>Amount</th>
+        <th>Fit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong class="accent-green">NRC Quantum Internetworking Challenge</strong></td>
+        <td>Launching 2026</td>
+        <td><span class="tag tag-green" style="font-size: 12px;">PERFECT</span> &mdash; explicitly seeks quantum networking commercialization</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-green">NRC IRAP</strong></td>
+        <td>Ongoing</td>
+        <td><span class="tag tag-green" style="font-size: 12px;">STRONG</span> &mdash; SME innovation funding, advisory, connections</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-purple">NSERC Alliance Quantum Grants</strong></td>
+        <td>$62.4M</td>
+        <td><span class="tag tag-purple" style="font-size: 12px;">STRONG</span> &mdash; university + industry partnerships (uOttawa, Carleton)</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-amber">FedDev Ontario Regional Quantum Initiative</strong></td>
+        <td>$17.2M (12 companies)</td>
+        <td><span class="tag tag-amber" style="font-size: 12px;">STRONG</span> &mdash; already funded Crypto4A; Ottawa is in Southern Ontario</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-cyan">DRDC IDEaS</strong></td>
+        <td>Defence budget</td>
+        <td><span class="tag tag-cyan" style="font-size: 12px;">GOOD</span> &mdash; quantum sensing &amp; comms micro-nets</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-red">National Quantum Strategy (Budget 2025)</strong></td>
+        <td>$334.3M / 5 yr</td>
+        <td><span class="tag tag-red" style="font-size: 12px;">GOOD</span> &mdash; defence-linked, managed by ISED + NRC + NSERC</td>
+      </tr>
+      <tr>
+        <td><strong class="accent-blue">MITACS</strong></td>
+        <td>Per-intern funding</td>
+        <td><span class="tag tag-blue" style="font-size: 12px;">GOOD</span> &mdash; research interns from uOttawa/Carleton at subsidized cost</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="point amber" style="margin-top: 20px;">
+    <h4>Strategy: Stack Multiple Programs</h4>
+    <p><strong>IRAP</strong> funds the SME operations. <strong>NSERC Alliance</strong> funds the university collaboration. <strong>FedDev Ontario</strong> funds the hardware. <strong>MITACS</strong> funds the grad students. <strong>NRC Quantum Internetworking</strong> provides the research partnership. A $200K grassroots node can attract $500K+ in matching grants within 12 months.</p>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>National Quantum Strategy &middot; Budget 2025</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9: The Thesis -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">09</span>
+  <h2>Build It and <span class="accent-purple">They Will Come</span></h2>
+  <p class="subtitle">
+    The demand side is guaranteed. CSE, DRDC, and federal departments have quantum-safe mandates.<br>
+    What they lack is local infrastructure to test against.
+  </p>
+
+  <div class="grid-2">
+    <div>
+      <div class="point green">
+        <h4>Government Pull</h4>
+        <p>CNSA 2.0 mandates PQC transition by 2030&ndash;2035. DRDC's Quantum 2030 plan explicitly calls for a QKD communications network. CSE needs to evaluate quantum-safe solutions. <strong>All of them are in Ottawa.</strong> They need a local testbed, not a trip to Sherbrooke.</p>
+      </div>
+
+      <div class="point purple">
+        <h4>Academic Pull</h4>
+        <p>University of Ottawa and Carleton have 130+ quantum faculty combined. They're already doing quantum optics and QKD research. What they lack is a <strong>persistent, open testbed</strong> to validate against. A Kirq node becomes a shared research platform.</p>
+      </div>
+
+      <div class="point amber">
+        <h4>Industry Pull</h4>
+        <p>Crypto4A manufactures quantum HSMs <em>in Ottawa</em>. Quantropi does digital QKD from Ottawa. They need a local network to demonstrate their products. <strong>A Kirq node is a showroom for Canadian quantum hardware.</strong></p>
+      </div>
+
+      <div class="point cyan">
+        <h4>Network Effects</h4>
+        <p>Once the node exists, connecting to Quebec's Kirq testbed creates Canada's first <strong>interprovincial quantum corridor</strong>. QEYSSat launches in late 2026 &mdash; an Ottawa ground station link creates a <strong>satellite&ndash;terrestrial quantum network</strong>. Each connection multiplies the value.</p>
+      </div>
+    </div>
+
+    <div class="card" style="border-top: 3px solid #f87171;">
+      <h3 class="accent-red">The Flywheel</h3>
+      <div style="padding: 20px 0;">
+        <div style="text-align: center; padding: 16px; background: #0a0e1a; border-radius: 8px; margin-bottom: 12px;">
+          <span style="font-size: 18px; font-weight: 700;" class="accent-green">1. Deploy seed node</span>
+          <p style="font-size: 13px; color: #64748b;">2&ndash;3 QRNG sources, Kirq Hub, open API</p>
+        </div>
+        <div style="text-align: center; color: #334155; font-size: 20px;">&darr;</div>
+        <div style="text-align: center; padding: 16px; background: #0a0e1a; border-radius: 8px; margin-bottom: 12px;">
+          <span style="font-size: 18px; font-weight: 700;" class="accent-purple">2. Publish results</span>
+          <p style="font-size: 13px; color: #64748b;">Zenodo, ETSI, Quantum Reports</p>
+        </div>
+        <div style="text-align: center; color: #334155; font-size: 20px;">&darr;</div>
+        <div style="text-align: center; padding: 16px; background: #0a0e1a; border-radius: 8px; margin-bottom: 12px;">
+          <span style="font-size: 18px; font-weight: 700;" class="accent-amber">3. Attract partners</span>
+          <p style="font-size: 13px; color: #64748b;">NRC, uOttawa, Carleton, Crypto4A</p>
+        </div>
+        <div style="text-align: center; color: #334155; font-size: 20px;">&darr;</div>
+        <div style="text-align: center; padding: 16px; background: #0a0e1a; border-radius: 8px; margin-bottom: 12px;">
+          <span style="font-size: 18px; font-weight: 700;" class="accent-cyan">4. Secure grants</span>
+          <p style="font-size: 13px; color: #64748b;">IRAP, NSERC, FedDev, DRDC</p>
+        </div>
+        <div style="text-align: center; color: #334155; font-size: 20px;">&darr;</div>
+        <div style="text-align: center; padding: 16px; background: #0a0e1a; border-radius: 8px; margin-bottom: 12px;">
+          <span style="font-size: 18px; font-weight: 700;" class="accent-red">5. Scale to metro &amp; cross-provincial</span>
+          <p style="font-size: 13px; color: #64748b;">QKD fiber, QEYSSat link, Ottawa&ndash;Montreal corridor</p>
+        </div>
+        <div style="text-align: center; color: #334155; font-size: 20px;">&darr;</div>
+        <div style="text-align: center; padding: 16px; background: #0a0e1a; border-radius: 8px;">
+          <span style="font-size: 18px; font-weight: 700; color: #e2e8f0;">6. Canada has a quantum network</span>
+          <p style="font-size: 13px; color: #64748b;">Not just Quebec &mdash; a national fabric</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>DRDC Quantum 2030 &middot; CNSA 2.0 &middot; QEYSSat</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10: Timeline -->
+<!-- ============================================================ -->
+<div class="slide">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">10</span>
+  <h2><span class="accent-green">Timeline</span></h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>When</th>
+        <th>What</th>
+        <th>Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-green">Seed</span></td>
+        <td>Q2&ndash;Q3 2026</td>
+        <td>Deploy 2&ndash;3 QRNG sources + Kirq Hub in Ottawa colocation. Open API. Publish on Zenodo.</td>
+        <td class="accent-green" style="font-weight: 700;">$130&ndash;230K</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-purple">Validate</span></td>
+        <td>Q3&ndash;Q4 2026</td>
+        <td>NSERC Alliance application with uOttawa/Carleton. IRAP advisory. QUANTUM NOW demo (June).</td>
+        <td class="accent-purple" style="font-weight: 700;">Grant applications</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-amber">Expand</span></td>
+        <td>Q1&ndash;Q2 2027</td>
+        <td>Add QKD endpoints. Dark fiber lease. NRC collaboration. 3&ndash;5 node metro network.</td>
+        <td class="accent-amber" style="font-weight: 700;">$400&ndash;800K</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-cyan">Connect</span></td>
+        <td>Q3 2027+</td>
+        <td>Ottawa&ndash;Montreal quantum corridor. QEYSSat ground station. Cross-provincial Kirq network.</td>
+        <td class="accent-cyan" style="font-weight: 700;">$1&ndash;3M</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="stat-row" style="justify-content: center; margin-top: 40px;">
+    <div class="stat">
+      <div class="stat-value accent-green">$180K</div>
+      <div class="stat-label">To Start</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-purple">6 mo</div>
+      <div class="stat-label">To First Node</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-amber">200 km</div>
+      <div class="stat-label">Ottawa&ndash;Montreal</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value accent-cyan">0</div>
+      <div class="stat-label">Ontario QKD Testbeds Today</div>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc.</span>
+    <span>paraxiom.org</span>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 11: Close -->
+<!-- ============================================================ -->
+<div class="slide" style="text-align: center;">
+  <img src="paraxiom_logo.png" class="logo" alt="Paraxiom">
+  <span class="slide-number">11</span>
+  <h1 style="margin-bottom: 24px;">Kirq Ottawa</h1>
+  <p class="subtitle" style="max-width: 700px; margin: 0 auto 40px;">
+    The world's first open-source, device-agnostic, Byzantine-tolerant<br>
+    quantum entropy node &mdash; in Canada's capital.
+  </p>
+
+  <div class="quote" style="text-align: left; max-width: 600px; margin: 0 auto 40px;">
+    Ontario has zero QKD testbeds.<br>
+    Ottawa has 130+ quantum researchers, two quantum companies,<br>
+    NRC, CSE, DRDC, and a government mandate to go quantum-safe.<br><br>
+    The only thing missing is the network.
+  </div>
+
+  <div style="margin-bottom: 40px;">
+    <span class="tag tag-green">QRNG Aggregation</span>
+    <span class="tag tag-purple">PQ Transport</span>
+    <span class="tag tag-amber">STARK Proofs</span>
+    <span class="tag tag-cyan">Proof of Coherence</span>
+    <span class="tag tag-red">Open Source</span>
+    <span class="tag tag-blue">Device Agnostic</span>
+  </div>
+
+  <p style="color: #64748b; font-size: 18px; margin-bottom: 8px;">
+    Sylvain Cormier &middot; sylvain@paraxiom.org<br>
+    Daryl Loader &middot; daryl.loader@gmail.com
+  </p>
+  <p style="color: #475569; font-size: 15px;">
+    paraxiom.org &middot; github.com/Paraxiom &middot; github.com/Paraxiom/kirq-hub
+  </p>
+
+  <div class="footer-bar">
+    <span>Paraxiom Technologies Inc. &middot; Montreal &amp; Ottawa, QC/ON</span>
+    <span>2026</span>
+  </div>
+</div>
+
+</body>
+</html>
