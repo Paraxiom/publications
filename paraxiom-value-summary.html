@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paraxiom — Engineering Value Summary</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: #0a0e1a;
+    color: #e2e8f0;
+    padding: 60px 40px;
+    line-height: 1.6;
+  }
+  .container { max-width: 800px; margin: 0 auto; }
+  h1 { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
+  h2 { font-size: 28px; font-weight: 700; margin: 48px 0 20px; color: #a78bfa; }
+  h3 { font-size: 18px; font-weight: 600; margin: 24px 0 12px; color: #94a3b8; }
+  p { color: #94a3b8; margin-bottom: 16px; font-size: 16px; }
+  .subtitle { font-size: 16px; color: #64748b; margin-bottom: 8px; }
+  .accent-purple { color: #a78bfa; }
+  .accent-green { color: #34d399; }
+  .accent-amber { color: #fbbf24; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 32px; }
+  th { text-align: left; padding: 12px 16px; border-bottom: 2px solid #334155; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; }
+  td { padding: 12px 16px; border-bottom: 1px solid #1e293b; color: #cbd5e1; font-size: 15px; }
+  tr:hover td { background: #111827; }
+  .highlight {
+    background: linear-gradient(135deg, #7c3aed22, #06b6d422);
+    border: 1px solid #7c3aed44;
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin: 24px 0;
+    font-size: 18px;
+  }
+  .stat-row { display: flex; gap: 48px; margin: 24px 0; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat .number { font-size: 56px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+  .stat .label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+  .quote-box {
+    border-left: 3px solid #a78bfa;
+    padding: 20px 24px;
+    margin: 24px 0;
+    background: #111827;
+    border-radius: 0 8px 8px 0;
+    font-size: 16px;
+    color: #cbd5e1;
+    font-style: italic;
+  }
+  ul { list-style: none; padding: 0; }
+  ul li { padding: 8px 0; font-size: 15px; color: #94a3b8; }
+  ul li strong { color: #e2e8f0; }
+  ul li::before { content: ">"; color: #a78bfa; font-weight: 700; margin-right: 10px; }
+  .footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #1e293b; font-size: 13px; color: #475569; }
+</style>
+</head>
+<body>
+<div class="container">
+  <p class="subtitle">Paraxiom Technologies Inc. &middot; February 17, 2026</p>
+  <h1>Engineering Value <span class="accent-purple">Summary</span></h1>
+  <p style="font-size: 18px; color: #64748b; margin-bottom: 40px;">For Daryl G Loader, CBO &middot; From Sylvain Cormier, Founder &amp; CEO</p>
+
+  <h2>What Has Been Built (6 Months)</h2>
+  <table>
+    <tr><th>Product</th><th>Description</th><th>Tests</th></tr>
+    <tr><td><strong class="accent-purple">QuantumHarmony</strong></td><td>PQ Layer 1 blockchain &mdash; LIVE, 3 validators</td><td>950</td></tr>
+    <tr><td><strong class="accent-green">QSSH</strong></td><td>Post-quantum SSH (Falcon/SPHINCS+/ML-KEM)</td><td>124</td></tr>
+    <tr><td><strong class="accent-green">QSSL</strong></td><td>Patent-free post-quantum TLS</td><td>40</td></tr>
+    <tr><td><strong class="accent-amber">Drista</strong></td><td>PQ encrypted chat with ZK proofs</td><td>76</td></tr>
+    <tr><td><strong class="accent-amber">Coherence Shield</strong></td><td>Responsible AI proxy &mdash; deployed</td><td>35</td></tr>
+    <tr><td><strong style="color: #60a5fa;">TAO Signal</strong></td><td>B2B signal API + X402 payments</td><td>2</td></tr>
+    <tr><td><strong style="color: #94a3b8;">QTS</strong></td><td>Quantum spectral simulation</td><td>241</td></tr>
+  </table>
+
+  <div class="stat-row">
+    <div class="stat"><div class="number accent-purple">7</div><div class="label">Production Systems</div></div>
+    <div class="stat"><div class="number accent-green">549</div><div class="label">Lean 4 Theorems</div></div>
+    <div class="stat"><div class="number" style="color: #22d3ee;">1,468</div><div class="label">Passing Tests</div></div>
+    <div class="stat"><div class="number accent-amber">16</div><div class="label">Publications</div></div>
+  </div>
+
+  <h2>Formal Verification (Our Moat)</h2>
+  <table>
+    <tr><th>Tier</th><th>Tool</th><th>Count</th></tr>
+    <tr><td>Panic-freedom</td><td>Kani (AWS)</td><td><strong>102 harnesses</strong></td></tr>
+    <tr><td>Functional correctness</td><td>Verus (Microsoft Research)</td><td><strong>49 proofs</strong></td></tr>
+    <tr><td>Mathematical foundations</td><td>Lean 4 + Mathlib</td><td><strong>549 theorems</strong></td></tr>
+  </table>
+  <p style="color: #cbd5e1;">No other company in the post-quantum space has this. Not PQShield. Not SandboxAQ. Not IBM.</p>
+
+  <h2>Market Replacement Cost</h2>
+  <h3>Roles Required (Minimum)</h3>
+  <table>
+    <tr><th>Role</th><th>Annual Rate (Fully Loaded)</th></tr>
+    <tr><td>Senior Blockchain Engineer</td><td>$250,000 &ndash; $350,000</td></tr>
+    <tr><td>Post-Quantum Crypto Engineer</td><td>$250,000 &ndash; $350,000</td></tr>
+    <tr><td>Formal Verification Specialist (Lean 4)</td><td>$300,000 &ndash; $400,000</td></tr>
+    <tr><td>Backend / API Engineer</td><td>$180,000 &ndash; $250,000</td></tr>
+    <tr><td>DevOps / Infrastructure</td><td>$180,000 &ndash; $250,000</td></tr>
+    <tr><td>Research Scientist</td><td>$200,000 &ndash; $300,000</td></tr>
+  </table>
+  <p style="color: #cbd5e1;">That's <strong>5&ndash;6 senior engineers</strong> working full-time for 6 months.</p>
+
+  <h3>By Deliverable</h3>
+  <table>
+    <tr><th>Deliverable</th><th>Market Cost</th></tr>
+    <tr><td>Custom L1 blockchain (live, 950 tests)</td><td>$1,500,000 &ndash; $2,500,000</td></tr>
+    <tr><td>3 PQ protocol implementations</td><td>$1,000,000 &ndash; $2,000,000</td></tr>
+    <tr><td>549 Lean 4 formal proofs</td><td>$500,000 &ndash; $1,000,000</td></tr>
+    <tr><td>Coherence Shield + TAO Signal</td><td>$500,000 &ndash; $1,000,000</td></tr>
+    <tr><td>16 research publications</td><td>$200,000 &ndash; $400,000</td></tr>
+    <tr><td>Infrastructure (4 servers)</td><td>$100,000 &ndash; $200,000</td></tr>
+  </table>
+
+  <div class="highlight">
+    <strong>Total engineering value: <span class="accent-green">$4,000,000 &ndash; $6,000,000</span></strong> (mid-market)
+    <br>At Bay Area rates: <strong class="accent-amber">$8,000,000 &ndash; $10,000,000</strong>
+  </div>
+
+  <h2>Effective Hourly Rate</h2>
+  <p style="color: #cbd5e1;">6 months = ~1,040 working hours. One engineer.</p>
+  <table>
+    <tr><th>Basis</th><th>Effective Rate</th></tr>
+    <tr><td>At $4M value</td><td><strong class="accent-green">$3,846 / hour</strong></td></tr>
+    <tr><td>At $6M value</td><td><strong class="accent-purple">$5,769 / hour</strong></td></tr>
+    <tr><td>At $8M value</td><td><strong class="accent-amber">$7,692 / hour</strong></td></tr>
+  </table>
+
+  <h2>What to Say in Sales Calls</h2>
+  <div class="quote-box">
+    "Paraxiom has 7 production post-quantum systems backed by 549 mathematical proofs &mdash; more formal verification than any other company in the PQC space. Our protocol suite is patent-free, open source, and ready for enterprise deployment. The NIST 2035 deadline means every regulated organization needs what we've already built."
+  </div>
+
+  <h3>Key Differentiators</h3>
+  <ul>
+    <li><strong>Patent-free</strong> &mdash; No licensing fees. No procurement friction. Government-friendly.</li>
+    <li><strong>Formally verified</strong> &mdash; 549 Lean 4 proofs. Auditable by anyone. No trust required.</li>
+    <li><strong>Already built</strong> &mdash; Not a roadmap. Not a whitepaper. 7 working systems, 1,468 tests.</li>
+    <li><strong>Canadian</strong> &mdash; Montreal-based. IRAP-eligible. Canadian data sovereignty.</li>
+    <li><strong>Open source</strong> &mdash; Customers can audit everything. Transparency is the product.</li>
+  </ul>
+
+  <div class="footer">
+    <p>Paraxiom Technologies Inc. &middot; Montreal, QC &middot; paraxiom.org &middot; sylvain@paraxiom.org</p>
+  </div>
+</div>
+</body>
+</html>

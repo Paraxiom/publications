@@ -55,13 +55,13 @@ All products use Lean 4 + Mathlib v4.27.0 with zero sorries.
 
 | Product | Description | Rust Tests | Lean Theorems |
 |---------|-------------|------------|---------------|
-| [QuantumHarmony](https://github.com/Paraxiom/quantumharmony) | PQ L1 blockchain | 808 | 33 |
+| [QuantumHarmony](https://github.com/Paraxiom/quantumharmony) | PQ L1 blockchain | 950 | 32 |
 | [QSSH](https://github.com/Paraxiom/paraxiom-qssh) | PQ SSH replacement (Falcon, SPHINCS+, ML-KEM) | 124 | 67 |
-| [QSSL](https://github.com/Paraxiom/qssl) | Patent-free PQ TLS | 35 | 100 |
-| [Drista](https://github.com/Paraxiom/drista) | PQ encrypted chat (ML-KEM-1024, STARK, Nostr+IPFS) | 43 | 100 |
+| [QSSL](https://github.com/Paraxiom/qssl) | Patent-free PQ TLS | 40 | 100 |
+| [Drista](https://github.com/Paraxiom/drista) | PQ encrypted chat (ML-KEM-1024, STARK, Nostr+IPFS) | 76 | 100 |
 | [Coherence Shield](https://github.com/Paraxiom/coherence-shield) | Responsible AI proxy with toroidal logit bias | 35 | 102 |
-| [TAO Signal](https://github.com/Paraxiom/tao-signal-agent) | B2B signal API with PQ attestation | 50+ | 100 |
-| [QuantumTimeSandwich](https://github.com/Paraxiom/QuantumTimeSandwich) | Quantum spectral simulation | 229 | 48 |
+| [TAO Signal](https://github.com/Paraxiom/tao-signal-agent) | B2B signal API with PQ attestation | 2 | 100 |
+| [QuantumTimeSandwich](https://github.com/Paraxiom/QuantumTimeSandwich) | Quantum spectral simulation | 241 | 48 |
 
 ---
 

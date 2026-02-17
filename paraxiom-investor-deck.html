@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paraxiom Technologies — Investor Deck</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: #0a0e1a;
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
+
+  .slide {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    position: relative;
+    border-bottom: 1px solid #1e293b;
+  }
+
+  .slide-number {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .company-tag {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+
+  h2 {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #94a3b8;
+  }
+
+  .subtitle {
+    font-size: 22px;
+    color: #64748b;
+    margin-bottom: 40px;
+    line-height: 1.5;
+  }
+
+  .accent-purple { color: #a78bfa; }
+  .accent-green { color: #34d399; }
+  .accent-amber { color: #fbbf24; }
+  .accent-cyan { color: #22d3ee; }
+  .accent-red { color: #f87171; }
+  .accent-blue { color: #60a5fa; }
+  .accent-white { color: #f1f5f9; }
+
+  .big-number {
+    font-size: 120px;
+    font-weight: 900;
+    opacity: 0.07;
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    line-height: 1;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 20px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 20px;
+  }
+
+  .card {
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 28px;
+  }
+
+  .card h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .card p, .card li {
+    font-size: 15px;
+    color: #94a3b8;
+    line-height: 1.7;
+  }
+
+  .card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .card ul li::before {
+    content: ">";
+    color: #a78bfa;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 60px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat .number {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat .label {
+    font-size: 14px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 15px;
+  }
+
+  th {
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 2px solid #334155;
+    color: #64748b;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #1e293b;
+    color: #cbd5e1;
+  }
+
+  tr:hover td {
+    background: #111827;
+  }
+
+  .highlight-bar {
+    background: linear-gradient(135deg, #7c3aed22, #06b6d422);
+    border: 1px solid #7c3aed44;
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin: 24px 0;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #334155;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 28px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -34px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #a78bfa;
+    border: 2px solid #0a0e1a;
+  }
+
+  .timeline-item h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .timeline-item p {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  .footer-note {
+    position: absolute;
+    bottom: 30px;
+    left: 80px;
+    right: 80px;
+    font-size: 13px;
+    color: #334155;
+    border-top: 1px solid #1e293b;
+    padding-top: 16px;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+
+  .pill-green { background: #34d39922; color: #34d399; border: 1px solid #34d39944; }
+  .pill-purple { background: #a78bfa22; color: #a78bfa; border: 1px solid #a78bfa44; }
+  .pill-amber { background: #fbbf2422; color: #fbbf24; border: 1px solid #fbbf2444; }
+  .pill-cyan { background: #22d3ee22; color: #22d3ee; border: 1px solid #22d3ee44; }
+  .pill-red { background: #f8717122; color: #f87171; border: 1px solid #f8717144; }
+
+  .quote {
+    border-left: 3px solid #a78bfa;
+    padding-left: 24px;
+    font-style: italic;
+    font-size: 20px;
+    color: #cbd5e1;
+    margin: 30px 0;
+    line-height: 1.6;
+  }
+
+  @media print {
+    .slide { page-break-after: always; min-height: auto; padding: 40px; }
+    body { background: white; color: #1e293b; }
+    .card { border-color: #e2e8f0; }
+    th { color: #475569; border-color: #e2e8f0; }
+    td { color: #1e293b; border-color: #f1f5f9; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title -->
+<div class="slide" style="justify-content: center; align-items: center; text-align: center;">
+  <div class="slide-number">01</div>
+  <h3 style="color: #a78bfa; margin-bottom: 24px; letter-spacing: 3px; text-transform: uppercase; font-size: 16px;">Paraxiom Technologies Inc.</h3>
+  <h1 style="font-size: 56px; max-width: 900px;">Post-Quantum Infrastructure<br><span class="accent-purple">Formally Verified</span></h1>
+  <p class="subtitle" style="max-width: 700px; margin: 24px auto 40px;">7 production systems. 549 mathematical proofs. Zero trust assumptions.</p>
+  <div style="display: flex; gap: 16px; justify-content: center;">
+    <span class="pill pill-green">Montreal, Canada</span>
+    <span class="pill pill-purple">Est. 2023</span>
+    <span class="pill pill-cyan">Open Source</span>
+  </div>
+  <div class="footer-note" style="text-align: center;">
+    Sylvain Cormier, Founder &amp; CEO &nbsp;|&nbsp; sylvain@paraxiom.org &nbsp;|&nbsp; paraxiom.org &nbsp;|&nbsp; February 2026
+  </div>
+</div>
+
+<!-- SLIDE 2: The Problem -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">02</div>
+  <div class="big-number">Q</div>
+  <h2>The <span class="accent-red">$10 Trillion</span> Problem</h2>
+  <p class="subtitle">Every encrypted system on Earth must migrate to post-quantum cryptography before large-scale quantum computers arrive. Current timeline: 5-15 years.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <h4 class="accent-red">Harvest Now, Decrypt Later</h4>
+      <p>State actors are already collecting encrypted traffic today to decrypt with future quantum computers. Financial data, health records, national security — all at risk.</p>
+    </div>
+    <div class="card">
+      <h4 class="accent-amber">NIST Mandate</h4>
+      <p>NIST finalized PQC standards (FIPS 203/205/206) in 2024. Federal agencies have <strong>2035 deadlines</strong>. Regulated industries must follow.</p>
+    </div>
+    <div class="card">
+      <h4 class="accent-green">Zero Verified Alternatives</h4>
+      <p>Existing PQC implementations lack mathematical proof of parameter correctness. One wrong constant can compromise everything — and has (Minerva 2019, ROCA 2017).</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: The Solution -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">03</div>
+  <h2>Our Solution: <span class="accent-purple">Three-Tier Verified</span> PQC</h2>
+  <p class="subtitle">We don't just implement post-quantum cryptography. We prove it correct — at three independent levels.</p>
+
+  <table>
+    <tr>
+      <th>Tier</th>
+      <th>Tool</th>
+      <th>What It Proves</th>
+      <th>Count</th>
+    </tr>
+    <tr>
+      <td><span class="accent-cyan">Tier 1</span></td>
+      <td>Kani (AWS)</td>
+      <td>No panics, no integer overflows, no undefined behavior</td>
+      <td><strong>102 harnesses</strong></td>
+    </tr>
+    <tr>
+      <td><span class="accent-amber">Tier 2</span></td>
+      <td>Verus (Microsoft Research)</td>
+      <td>Functional correctness via SMT solver (Z3)</td>
+      <td><strong>49 proofs</strong></td>
+    </tr>
+    <tr>
+      <td><span class="accent-purple">Tier 3</span></td>
+      <td>Lean 4 + Mathlib</td>
+      <td>Mathematical foundations — cryptographic parameters, protocol invariants</td>
+      <td><strong>549 theorems</strong></td>
+    </tr>
+  </table>
+
+  <div class="highlight-bar" style="margin-top: 30px;">
+    <strong>549 machine-checked theorems.</strong> Zero <code>sorry</code> axioms. Zero axiomatized transcendentals. Every proof verifiable by anyone with a Lean 4 installation.
+  </div>
+</div>
+
+<!-- SLIDE 4: The Numbers -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">04</div>
+  <h2>By the Numbers</h2>
+
+  <div class="stat-row">
+    <div class="stat">
+      <div class="number accent-purple">7</div>
+      <div class="label">Production Systems</div>
+    </div>
+    <div class="stat">
+      <div class="number accent-green">549</div>
+      <div class="label">Lean 4 Theorems</div>
+    </div>
+    <div class="stat">
+      <div class="number accent-cyan">1,468</div>
+      <div class="label">Passing Tests</div>
+    </div>
+    <div class="stat">
+      <div class="number accent-amber">16</div>
+      <div class="label">Publications</div>
+    </div>
+  </div>
+
+  <div class="stat-row" style="margin-top: 10px;">
+    <div class="stat">
+      <div class="number accent-red" style="font-size: 56px;">$0</div>
+      <div class="label">Patent Licensing Cost</div>
+    </div>
+    <div class="stat">
+      <div class="number accent-green" style="font-size: 56px;">$0</div>
+      <div class="label">External Funding Used</div>
+    </div>
+    <div class="stat">
+      <div class="number" style="font-size: 56px; color: #f1f5f9;">1</div>
+      <div class="label">Engineer (Solo Founder)</div>
+    </div>
+  </div>
+
+  <div class="highlight-bar">
+    Equivalent build cost at market rates: <strong class="accent-green">$4 &ndash; 6 million</strong> &nbsp;|&nbsp; At Bay Area rates: <strong class="accent-amber">$8 &ndash; 10 million</strong>
+  </div>
+</div>
+
+<!-- SLIDE 5: Product Portfolio -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">05</div>
+  <h2>Product Portfolio</h2>
+
+  <table>
+    <tr>
+      <th>Product</th>
+      <th>What It Does</th>
+      <th>Status</th>
+      <th>Tests</th>
+      <th>Lean Proofs</th>
+    </tr>
+    <tr>
+      <td><strong class="accent-purple">QuantumHarmony</strong></td>
+      <td>PQ Layer 1 blockchain</td>
+      <td><span class="pill pill-green" style="margin: 0;">LIVE</span></td>
+      <td>950</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <td><strong class="accent-cyan">QSSH</strong></td>
+      <td>Post-quantum SSH replacement</td>
+      <td><span class="pill pill-green" style="margin: 0;">Complete</span></td>
+      <td>124</td>
+      <td>67</td>
+    </tr>
+    <tr>
+      <td><strong class="accent-green">QSSL</strong></td>
+      <td>Patent-free PQ TLS</td>
+      <td><span class="pill pill-green" style="margin: 0;">Complete</span></td>
+      <td>40</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td><strong class="accent-amber">Drista</strong></td>
+      <td>PQ encrypted messaging (ZK proofs)</td>
+      <td><span class="pill pill-green" style="margin: 0;">Complete</span></td>
+      <td>76</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td><strong class="accent-red">Coherence Shield</strong></td>
+      <td>Responsible AI proxy + attestation</td>
+      <td><span class="pill pill-green" style="margin: 0;">Deployed</span></td>
+      <td>35</td>
+      <td>102</td>
+    </tr>
+    <tr>
+      <td><strong class="accent-blue">TAO Signal</strong></td>
+      <td>B2B signal API + X402 payments</td>
+      <td><span class="pill pill-green" style="margin: 0;">Complete</span></td>
+      <td>2</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td><strong style="color: #94a3b8;">QTS</strong></td>
+      <td>Quantum spectral simulation</td>
+      <td><span class="pill pill-green" style="margin: 0;">Complete</span></td>
+      <td>241</td>
+      <td>48</td>
+    </tr>
+  </table>
+</div>
+
+<!-- SLIDE 6: Why Formal Verification Matters -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">06</div>
+  <h2>Why <span class="accent-purple">549 Proofs</span> Matter</h2>
+
+  <div class="grid-2">
+    <div>
+      <h3>The Crypto Bug Graveyard</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <h4 class="accent-red">Minerva (2019)</h4>
+          <p>Timing leaks from wrong parameter constants. Affected smart cards worldwide.</p>
+        </div>
+        <div class="timeline-item">
+          <h4 class="accent-red">ROCA (2017)</h4>
+          <p>RSA key generation flaw in Infineon TPMs. 760K+ Estonian ID cards revoked.</p>
+        </div>
+        <div class="timeline-item">
+          <h4 class="accent-red">Heartbleed (2014)</h4>
+          <p>Buffer over-read in OpenSSL. 17% of all HTTPS servers compromised.</p>
+        </div>
+        <div class="timeline-item">
+          <h4 class="accent-red">Debian OpenSSL (2008)</h4>
+          <p>One line of code broke all key generation for 2 years. Undetected.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>What Our Proofs Guarantee</h3>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4 class="accent-purple">Cryptographic Parameters</h4>
+        <p>q=3329 is prime. q=12289 is prime. NTT-compatible. Z/3329Z is a field. Not assumed &mdash; <em>proven</em>.</p>
+      </div>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4 class="accent-green">Protocol Invariants</h4>
+        <p>TLS record fragmentation bounds. Cipher suite code injectivity. HKDF domain separation. Frame algebra.</p>
+      </div>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4 class="accent-cyan">Consensus Safety</h4>
+        <p>BFT quorum intersection. Finality uniqueness. Supermajority implies majority.</p>
+      </div>
+      <div class="card">
+        <h4 class="accent-amber">Spectral Theory</h4>
+        <p>Eigenvector proofs. Product spectral gaps. Toroidal mixing bounds. Zero axiomatized transcendentals.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: Competitive Landscape -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">07</div>
+  <h2>Competitive Landscape</h2>
+
+  <table>
+    <tr>
+      <th>Company</th>
+      <th>PQC Products</th>
+      <th>Formal Verification</th>
+      <th>Patent-Free</th>
+      <th>Open Source</th>
+    </tr>
+    <tr>
+      <td>PQShield (UK)</td>
+      <td>IP cores</td>
+      <td>None public</td>
+      <td style="color: #f87171;">No (patented)</td>
+      <td style="color: #f87171;">No</td>
+    </tr>
+    <tr>
+      <td>Cryspen (Austria)</td>
+      <td>libcrux (ML-KEM)</td>
+      <td>F* extraction (1 algorithm)</td>
+      <td style="color: #34d399;">Yes</td>
+      <td style="color: #34d399;">Yes</td>
+    </tr>
+    <tr>
+      <td>SandboxAQ (US)</td>
+      <td>Crypto agility scanner</td>
+      <td>None public</td>
+      <td style="color: #94a3b8;">N/A</td>
+      <td style="color: #f87171;">No</td>
+    </tr>
+    <tr>
+      <td>IBM / Thales</td>
+      <td>HSM upgrades</td>
+      <td>None public</td>
+      <td style="color: #f87171;">Proprietary</td>
+      <td style="color: #f87171;">No</td>
+    </tr>
+    <tr style="background: #7c3aed11;">
+      <td><strong class="accent-purple">Paraxiom</strong></td>
+      <td><strong>7 systems (SSH, TLS, blockchain, chat, AI, payments)</strong></td>
+      <td><strong class="accent-green">549 Lean 4 theorems + Kani + Verus</strong></td>
+      <td style="color: #34d399;"><strong>Yes</strong></td>
+      <td style="color: #34d399;"><strong>Yes</strong></td>
+    </tr>
+  </table>
+
+  <div class="highlight-bar" style="margin-top: 30px;">
+    No other company in the PQC space has three-tier formal verification across multiple production systems. Paraxiom's 549 Lean 4 theorems are publicly auditable by anyone.
+  </div>
+</div>
+
+<!-- SLIDE 8: Research -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">08</div>
+  <h2>Research &amp; IP Strategy</h2>
+
+  <div class="grid-2">
+    <div>
+      <h3>16 Zenodo Publications</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <h4>Toroidal Logit Bias</h4>
+          <p>+2.8pp TruthfulQA improvement. 4 models tested (Qwen, OLMo, Mistral, Gemma-2). Novel ML contribution.</p>
+        </div>
+        <div class="timeline-item">
+          <h4>562 Lean 4 Theorems</h4>
+          <p>Largest public collection of Lean 4 proofs for PQC infrastructure.</p>
+        </div>
+        <div class="timeline-item">
+          <h4>Defensive Technical Disclosure</h4>
+          <p>4 embodiments published. Establishes prior art. Blocks competitor patents.</p>
+        </div>
+        <div class="timeline-item">
+          <h4>Proof of Coherence</h4>
+          <p>Novel QKD-based consensus mechanism for distributed systems.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>IP Strategy: Defensive Publication</h3>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4 class="accent-green">$0 Patent Cost</h4>
+        <p>Zenodo publications with DOIs serve as citable prior art. Blocks others from patenting our innovations. No licensing fees to pass to customers.</p>
+      </div>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4 class="accent-purple">Open Source Moat</h4>
+        <p>Code is open. Proofs are open. Competitors can audit but can't easily replicate 549 theorems of formal verification. The expertise is the moat.</p>
+      </div>
+      <div class="card">
+        <h4 class="accent-cyan">Unifying Theory</h4>
+        <p>Tonnetz toroidal manifold applied across consensus, machine learning, and governance. Single mathematical framework, multiple commercial applications.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: Market Opportunity -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">09</div>
+  <h2>Market Opportunity</h2>
+
+  <div class="grid-3">
+    <div class="card">
+      <h4 class="accent-green">Immediate (2026)</h4>
+      <ul>
+        <li>PQC migration consulting</li>
+        <li>Coherence Shield SaaS for responsible AI</li>
+        <li>QSSL/QSSH licensing for regulated industries</li>
+      </ul>
+      <p style="margin-top: 16px; font-size: 13px; color: #64748b;">TAM: Canadian financial sector alone requires PQC migration for $5T+ in managed assets</p>
+    </div>
+    <div class="card">
+      <h4 class="accent-amber">Near-Term (2027-28)</h4>
+      <ul>
+        <li>Government contracts (CCCS/DND)</li>
+        <li>Enterprise PQ protocol suite</li>
+        <li>Drista for regulated communications</li>
+        <li>TAO Signal B2B data marketplace</li>
+      </ul>
+      <p style="margin-top: 16px; font-size: 13px; color: #64748b;">Global PQC market projected to reach $17.3B by 2030</p>
+    </div>
+    <div class="card">
+      <h4 class="accent-cyan">Long-Term (2029+)</h4>
+      <ul>
+        <li>QuantumHarmony as PQ settlement layer</li>
+        <li>Formal verification as a service (FVaaS)</li>
+        <li>Standards body participation</li>
+      </ul>
+      <p style="margin-top: 16px; font-size: 13px; color: #64748b;">NIST 2035 deadline drives mandatory adoption across all federal contractors</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: Go-To-Market -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">10</div>
+  <h2>Go-To-Market: <span class="accent-green">Canada First</span></h2>
+  <p class="subtitle">Montreal is the world's second-largest AI hub and home to Canada's quantum corridor. We sell where we live.</p>
+
+  <div class="grid-2">
+    <div>
+      <h3>Target Verticals</h3>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4>Financial Services</h4>
+        <p>Desjardins, National Bank, Caisse de d&eacute;p&ocirc;t. OSFI will mandate PQC migration. We're ready before they ask.</p>
+      </div>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4>Aviation / Critical Infrastructure</h4>
+        <p>SITA (Montreal HQ), Nav Canada, Hydro-Qu&eacute;bec. SCADA and flight systems need quantum-safe comms.</p>
+      </div>
+      <div class="card">
+        <h4>Government / Defense</h4>
+        <p>Canadian Centre for Cyber Security, DND, Shared Services Canada. Patent-free = no procurement friction.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Revenue Model</h3>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4 class="accent-green">Consulting + Integration</h4>
+        <p>PQC migration assessments. Protocol integration. Custom formal verification. <strong>$200-500/hr.</strong></p>
+      </div>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4 class="accent-purple">SaaS Subscriptions</h4>
+        <p>Coherence Shield proxy. TAO Signal API. QuantumHarmony validator nodes. <strong>$2-20K/month.</strong></p>
+      </div>
+      <div class="card">
+        <h4 class="accent-amber">Enterprise Licensing</h4>
+        <p>QSSL/QSSH protocol suite for on-premise deployment. Annual site license. <strong>$50-200K/year.</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11: Team -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">11</div>
+  <h2>Team</h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4 style="font-size: 22px;">Sylvain Cormier</h4>
+      <p style="color: #a78bfa; font-weight: 600; margin-bottom: 12px;">Founder &amp; CEO</p>
+      <ul>
+        <li>Solo-built 7 production PQC systems in 6 months</li>
+        <li>549 Lean 4 formal proofs (Mathlib contributor)</li>
+        <li>16 research publications</li>
+        <li>Rust, Lean 4, Python, Substrate/Polkadot</li>
+        <li>Background: distributed systems, cryptography</li>
+      </ul>
+      <p style="margin-top: 16px; font-size: 13px; color: #64748b;">Output equivalent: $4-6M of engineering by market rates</p>
+    </div>
+    <div class="card">
+      <h4 style="font-size: 22px;">Daryl G Loader</h4>
+      <p style="color: #a78bfa; font-weight: 600; margin-bottom: 12px;">CBO (Chief Business Officer)</p>
+      <ul>
+        <li>Enterprise sales and partnership development</li>
+        <li>Agentic Flow AI background</li>
+        <li>LinkedIn enterprise network</li>
+      </ul>
+      <p style="margin-top: 24px; color: #64748b; font-size: 14px;"><strong>Hiring plan:</strong> First hires are a DevRel engineer and a second Rust/Lean developer to accelerate Tier 1-2 coverage.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: The Ask -->
+<div class="slide">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">12</div>
+  <h2>The Ask</h2>
+
+  <div class="grid-2">
+    <div>
+      <h3 style="color: #a78bfa;">Non-Dilutive (Immediate)</h3>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4>NRC IRAP</h4>
+        <p>R&D funding for Canadian SMEs. Our formal verification work is a textbook IRAP project.</p>
+      </div>
+      <div class="card" style="margin-bottom: 16px;">
+        <h4>Mitacs Accelerate</h4>
+        <p>Internship co-funding. Already have one student contributor (Edwin). Scale to 3-4 interns.</p>
+      </div>
+      <div class="card">
+        <h4>SDTC / NSERC Alliance</h4>
+        <p>Partnered research grants with Mila/IVADO for toroidal logit bias research.</p>
+      </div>
+    </div>
+    <div>
+      <h3 style="color: #34d399;">Seed Round (Q3 2026)</h3>
+      <div class="card">
+        <h4>Target: $1.5 &ndash; 2.5M CAD</h4>
+        <p style="margin-bottom: 16px;">Use of funds:</p>
+        <ul>
+          <li>2 senior Rust/Lean engineers &mdash; $400K</li>
+          <li>1 DevRel / developer advocate &mdash; $150K</li>
+          <li>Cloud infra + security audit &mdash; $100K</li>
+          <li>Sales &amp; marketing (Daryl's team) &mdash; $200K</li>
+          <li>Working capital (18 months runway) &mdash; remainder</li>
+        </ul>
+        <p style="margin-top: 16px; font-size: 13px; color: #64748b;">Pre-money valuation anchored on $4-6M of built technology + market timing (NIST 2035 mandate).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13: Contact -->
+<div class="slide" style="justify-content: center; align-items: center; text-align: center;">
+  <div class="company-tag">Paraxiom Technologies</div>
+  <div class="slide-number">13</div>
+  <h1 style="margin-bottom: 32px;">Let's Talk</h1>
+  <p style="font-size: 24px; color: #94a3b8; margin-bottom: 48px;">The quantum transition is not a future problem. It's a present one.<br>We have the verified infrastructure to solve it.</p>
+
+  <div style="display: flex; gap: 60px; justify-content: center; margin-bottom: 48px;">
+    <div>
+      <p style="color: #64748b; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">Email</p>
+      <p style="font-size: 20px; color: #a78bfa;">sylvain@paraxiom.org</p>
+    </div>
+    <div>
+      <p style="color: #64748b; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">Web</p>
+      <p style="font-size: 20px; color: #a78bfa;">paraxiom.org</p>
+    </div>
+    <div>
+      <p style="color: #64748b; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">GitHub</p>
+      <p style="font-size: 20px; color: #a78bfa;">github.com/Paraxiom</p>
+    </div>
+  </div>
+
+  <p style="font-size: 14px; color: #334155;">Paraxiom Technologies Inc. &nbsp;|&nbsp; Montreal, Canada &nbsp;|&nbsp; Est. 2023</p>
+</div>
+
+</body>
+</html>
