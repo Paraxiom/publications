@@ -27,7 +27,9 @@ Paraxiom develops theoretical foundations and practical implementations for **co
 
 ---
 
-## Publications (December 2025)
+## Publications (February 2026)
+
+### Foundational Papers (2025)
 
 | Paper | Topic | DOI |
 |-------|-------|-----|
@@ -39,11 +41,33 @@ Paraxiom develops theoretical foundations and practical implementations for **co
 | [Augmented Democracy](papers/cormier_augmented_democracy_2025.pdf) | Coherence-constrained democratic infrastructure with epistemic gates | *Preprint* |
 | [Conservation-Constrained Aggregation](papers/CONSERVATION_CONSTRAINED_AGGREGATION.md) | Doubly-stochastic normalization for distributed trust networks | *Technical Note* |
 
+### Recent Publications (February 2026)
+
+| Paper | Topic | DOI |
+|-------|-------|-----|
+| 562 Lean 4 Theorems | Formal verification across seven post-quantum systems | [10.5281/zenodo.18663125](https://doi.org/10.5281/zenodo.18663125) |
+| Defensive Technical Disclosure | Toroidal coherence methods — 4 embodiments | [10.5281/zenodo.18595753](https://doi.org/10.5281/zenodo.18595753) |
+| Toroidal Logit Bias | Geometric constraints for language model truthfulness (+2.8pp TruthfulQA) | [10.5281/zenodo.18516477](https://doi.org/10.5281/zenodo.18516477) |
+
+### Formally Verified Products
+
+All products use Lean 4 + Mathlib v4.27.0 with zero sorries.
+
+| Product | Description | Rust Tests | Lean Theorems |
+|---------|-------------|------------|---------------|
+| [QuantumHarmony](https://github.com/Paraxiom/quantumharmony) | PQ L1 blockchain | 808 | 33 |
+| [QSSH](https://github.com/Paraxiom/paraxiom-qssh) | PQ SSH replacement (Falcon, SPHINCS+, ML-KEM) | 124 | 67 |
+| [QSSL](https://github.com/Paraxiom/qssl) | Patent-free PQ TLS | 35 | 100 |
+| [Drista](https://github.com/Paraxiom/drista) | PQ encrypted chat (ML-KEM-1024, STARK, Nostr+IPFS) | 43 | 100 |
+| [Coherence Shield](https://github.com/Paraxiom/coherence-shield) | Responsible AI proxy with toroidal logit bias | 35 | 102 |
+| [TAO Signal](https://github.com/Paraxiom/tao-signal-agent) | B2B signal API with PQ attestation | 50+ | 100 |
+| [QuantumTimeSandwich](https://github.com/Paraxiom/QuantumTimeSandwich) | Quantum spectral simulation | 229 | 48 |
+
 ---
 
 ## Implementation
 
-The [QuantumHarmony](https://github.com/QuantumVerseProtocols/quantumharmony) blockchain implements concepts from these papers:
+The [QuantumHarmony](https://github.com/Paraxiom/quantumharmony) blockchain implements concepts from these papers:
 
 - SPHINCS+-256s post-quantum transaction signatures
 - Coherence-based validator selection

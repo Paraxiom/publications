@@ -13,3 +13,6 @@
 
 # Patent applications — CONFIDENTIAL, do not publish
 patents/
+
+# Working notes (not for repo)
+PAPERS_TO_CITE.md
